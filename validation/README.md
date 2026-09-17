@@ -1,0 +1,1 @@
+(trống — xem spec.md)
