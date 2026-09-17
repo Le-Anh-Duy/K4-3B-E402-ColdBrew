@@ -20,6 +20,8 @@
 
 Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, không sửa code — phòng khi rate-limit lúc demo.
 
+Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa gọi AI**, chạy được trên GitHub Pages. Sơ đồ luồng và quy tắc chẩn đoán: `mockup/flow.md`.
+
 ---
 
 ## §1. User & Job
@@ -53,12 +55,30 @@ Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, kh�
   3. Sinh nội dung bài học mới — chỉ trỏ về nội dung/slide đã có.
   4. Bank câu hỏi lớn — quiz cố định ~10–15 câu map sẵn vào concept.
   5. Bayesian knowledge tracing đầy đủ — dùng mastery theo rule, nêu rõ ngưỡng.
+- **Hai tính năng AI, tách rời nhau:**
+
+  | | Trả lời câu hỏi gì | Đầu vào | Đầu ra | Nguồn |
+  |---|---|---|---|---|
+  | **AI #1 · Giải thích đáp án** | "Mình sai **cái gì**?" | một câu + phương án học viên chọn | vì sao đáp án đúng · bẫy của phương án đã chọn · cờ theo thời gian trả lời | node lá của câu đó |
+  | **AI #2 · Chẩn đoán nền** | "**Vì sao** mình sai?" | toàn bộ tín hiệu yếu của bài quiz | các vòng câu hỏi leo cây → chỗ hổng + lộ trình ôn + giải thích | node cha trên cây |
+
+  AI #1 gọi được **ở từng câu một** (nút "✨ AI phân tích câu này" trên mỗi thẻ đáp án), **theo cả vòng** ("Nhận xét & giải thích đáp án vòng này") hoặc **cả bài** (màn "Giải thích đáp án"). Học viên chọn, hệ thống không tự sinh.
+
 - **Mức prototype:** [ ] Sketch [ ] Mock [x] Working
-  - Thật: chấm quiz, suy luận prerequisite trên graph, LLM viết lời giải thích + gợi ý ôn, provenance (slide/trang), resume phiên.
+  - Thật: chấm quiz, tín hiệu theo thời gian trả lời, suy luận prerequisite trên graph (rule), LLM viết lời giải thích + gợi ý ôn, provenance (slide/trang), resume phiên.
   - Mock: graph tự dựng tay; nội dung ôn là trích dẫn slide có sẵn; learner state lưu file JSON.
+  - Đã có ở CP2 (`mockup/`, mock data): toàn bộ luồng bấm được, cây tri thức, dấu vết quyết định, provenance, resume bằng `localStorage`.
 - **Automation:** [x] augment  [ ] conditional  [ ] automate
   - Cost-of-error: chỉ dẫn sai khiến học viên ôn nhầm phần → mất thời gian, mất niềm tin. Nên hệ thống **đề xuất + giải thích**, học viên (và giảng viên) thấy được căn cứ và bỏ qua được. Quyết định chọn nhánh do **rule trên graph**, LLM chỉ diễn giải — không để LLM tự bịa prerequisite.
-- **§4b. Nguyên tắc đã áp dụng (≥4):** `TODO` điền bảng HAX/PAIR. Định hướng: *Make clear why the system did what it did* (panel "vì sao bạn nhận lộ trình này") · *Show contextually relevant information* (chỉ 1–3 mục ôn) · *Support efficient dismissal/correction* (học viên bấm "mình nắm rồi") · *Convey degrees of certainty* (hiện mastery + độ chắc chắn thấp khi chỉ 1 câu sai).
+- **§4b. Nguyên tắc đã áp dụng (≥4):**
+
+  | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
+  |---|---|
+  | HAX G11 · *Make clear why the system did what it did* | Panel "Vì sao bạn nhận lộ trình này" + cột "Dấu vết quyết định" ghi từng bước: câu sai nào → gom về node nào → mỗi vòng sai bao nhiêu → leo lên đâu |
+  | HAX G2 · *Make clear how well the system can do what it can do* | Ô "Hệ thống đọc được gì" cuối mỗi vòng nói rõ nó suy ra được gì và **chưa** khoanh được gì; lộ trình khi học viên tự ôn có cảnh báo "chỗ hổng có thể còn sâu hơn một tầng" |
+  | HAX G17 · *Provide global controls* (học viên giữ quyền) | Hệ thống **không tự leo tầng**: hết mỗi vòng dừng lại cho học viên chọn đi tiếp / làm lại vòng này / tự ôn. Giải thích cũng chỉ sinh khi bấm |
+  | PAIR · *Anchor on familiarity / show your work* | Mọi câu hỏi và mục ôn đều gắn một node có `page` (slide + trang); không có nội dung nào không trỏ về được nguồn |
+  | HAX G1 · *Make clear what the system can do* | Màn đầu nói thẳng phạm vi: một bài giảng, cây 15–30 concept; badge "MOCK DATA · chưa nối AI" khi chưa có AI thật |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó (≥8 kịch bản)
 
@@ -73,13 +93,13 @@ Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, kh�
 
 ## §6. Bốn đường đi của trải nghiệm
 
-`TODO` chi tiết. Khung:
-- **Happy path:** làm 5 câu → sai 2 → hệ thống chỉ 1 concept yếu + 1 prerequisite hổng → 2 mục ôn + giải thích + link slide.
-- **Low-confidence (②):** tín hiệu yếu → nói rõ "chưa đủ căn cứ", đề nghị làm thêm 3 câu chẩn đoán thay vì phán lộ trình.
-- **Failure / không căn cứ (①):** không map được câu sai về concept nào → không bịa, hiện "chưa xác định được", trỏ về nội dung chương.
-- **Correction:** học viên bấm "mình nắm phần này rồi" → cập nhật mastery, tính lại lộ trình, ghi vào event log.
-- **Ngoài phạm vi (③):** trả lời rõ phạm vi đang phủ (chương nào, bao nhiêu concept).
-- **Đặc thù domain (④):** gộp alias về cùng concept; nếu nhiều câu sai cùng prerequisite thì ưu tiên prerequisite gốc, không liệt kê tất cả.
+Đã hiện thực trong mock CP2 (trừ hai dòng còn `TODO`):
+- **Happy path:** làm 5 câu → sai 2 câu cùng chương → chọn "Tìm phần nền bị hổng" → vòng chẩn đoán ở mục cha → khoanh được chỗ hổng → 1–2 mục ôn + trang slide + dấu vết quyết định.
+- **Low-confidence (②):** không có câu sai nhưng có câu **đúng mà chậm (>25s)** → hệ thống nói rõ "không có câu sai, lấy câu trả lời chậm làm tín hiệu" rồi mới hỏi thêm, không phán ngay; câu sai **dưới 3s** bị gắn cờ "có thể bấm bừa" thay vì coi là hổng chắc chắn.
+- **Failure / không căn cứ (①):** `TODO` khi nối AI — nếu không map được câu sai về node nào, hiện "chưa xác định được" và trỏ về nội dung chương, không bịa concept ngoài cây.
+- **Correction:** "↻ Làm lại vòng này" và "Mình tự ôn được" — học viên bác bỏ chẩn đoán được; lựa chọn đó ghi vào dấu vết, lần làm lại không xoá lịch sử.
+- **Ngoài phạm vi (③):** `TODO` — hiện mới nêu phạm vi ở màn đầu (một bài giảng); cần câu trả lời rõ khi học viên hỏi nội dung ngoài cây.
+- **Đặc thù domain (④):** nhiều câu sai gom về **node cha chung** và chỉ chẩn đoán nhánh nhiều tín hiệu nhất, thay vì liệt kê hết; chạm gốc hoặc quá 3 vòng thì chuyển sang "học lại cả bài" kèm compact 3 ý.
 
 ## §7. Kiểm thử
 
@@ -105,3 +125,6 @@ Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, kh�
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
 | 17/9 | Dựng khung spec: chốt track C1 / hướng adaptive-first / lát cắt / stack (React + FastAPI + Gemini OpenAI-compatible) | Init repo |
+| 17/9 | Mock CP2 (`mockup/`): quiz mỗi màn một câu, cho bỏ qua, **đếm giờ từng câu** và dùng thời gian làm tín hiệu (`slow` / `rush`) | Đúng/sai thôi thì không phân biệt được "biết chắc" với "đoán trúng" |
+| 17/9 | Hệ thống **không tự leo tầng**: hết mỗi vòng dừng lại cho học viên chọn đi tiếp / làm lại / tự ôn | Tự nhảy vòng là tước quyền quyết định của học viên, và giám khảo không thấy được chỗ nào do người chọn |
+| 17/9 | Tách **AI #1 giải thích đáp án** khỏi **AI #2 chẩn đoán nền**; AI #1 gọi được ở từng câu, từng vòng, hoặc cả bài | Hai câu hỏi khác nhau ("sai cái gì" vs "vì sao sai"); nhiều học viên chỉ cần cái thứ nhất |

@@ -278,39 +278,79 @@ function Runner({ items, name, source, onDone, submitLabel }) {
 }
 
 /* bảng đáp án dùng chung cho màn kết quả quiz và màn xem lại vòng chẩn đoán */
-function Answers({ items, recs, sourceOf }) {
-  return items.map((q, i) => {
-    const r = recs[i];
-    const cls = r.correct ? (r.flag === 'slow' ? 'shaky' : 'ok') : 'bad';
-    return (
-      <div className={'card ' + cls} key={i}>
-        <p className="q">
-          <b>
-            {r.correct ? '✓' : r.flag === 'skip' ? '–' : '✕'} Câu {i + 1}.
-          </b>{' '}
-          {q.q}
-          <span className="time-chip">⏱ {fmt(r.sec)}</span>
+function Answers({ items, recs, sourceOf, explainOf }) {
+  return items.map((q, i) => (
+    <AnswerCard
+      key={i}
+      i={i}
+      q={q}
+      r={recs[i]}
+      source={sourceOf && sourceOf(i)}
+      explain={explainOf && explainOf(i)}
+    />
+  ));
+}
+
+function AnswerCard({ i, q, r, source, explain }) {
+  const [state, setState] = useState(null); // null | 'loading' | 'shown'
+  const cls = r.correct ? (r.flag === 'slow' ? 'shaky' : 'ok') : 'bad';
+
+  const run = () => {
+    setState('loading');
+    setTimeout(() => setState('shown'), 1100);
+  };
+
+  return (
+    <div className={'card ' + cls}>
+      <p className="q">
+        <b>
+          {r.correct ? '✓' : r.flag === 'skip' ? '–' : '✕'} Câu {i + 1}.
+        </b>{' '}
+        {q.q}
+        <span className="time-chip">⏱ {fmt(r.sec)}</span>
+      </p>
+      <p className="muted">
+        {r.sel === null ? (
+          <i>bỏ trống</i>
+        ) : (
+          <>
+            Bạn chọn: <i>{q.options[r.sel]}</i>
+          </>
+        )}
+        {!r.correct && (
+          <>
+            {' '}
+            · Đáp án: <b>{q.options[q.answer]}</b>
+          </>
+        )}
+      </p>
+      {FLAG_TEXT[r.flag] && <p className={'flag ' + r.flag}>⚑ {FLAG_TEXT[r.flag]}</p>}
+
+      {explain && state === null && (
+        <button className="link" onClick={run}>
+          ✨ AI phân tích câu này
+        </button>
+      )}
+      {state === 'loading' && (
+        <p className="inline-load">
+          <span className="spinner sm" /> Đang đọc câu {i + 1}…
         </p>
-        <p className="muted">
-          {r.sel === null ? (
-            <i>bỏ trống</i>
-          ) : (
-            <>
-              Bạn chọn: <i>{q.options[r.sel]}</i>
-            </>
+      )}
+      {state === 'shown' && explain && (
+        <div className="mini">
+          {explain.why && <p>{explain.why}</p>}
+          {explain.trap && <p className="flag wrong">⚑ Bẫy: {explain.trap}</p>}
+          {r.flag === 'slow' && (
+            <p className="flag slow">⚑ Đúng nhưng mất {fmt(r.sec)} — nên đọc lại cho chắc.</p>
           )}
-          {!r.correct && (
-            <>
-              {' '}
-              · Đáp án: <b>{q.options[q.answer]}</b>
-            </>
+          {r.flag === 'rush' && (
+            <p className="flag wrong">⚑ Chỉ {fmt(r.sec)} — nhanh hơn thời gian đọc hết đề.</p>
           )}
-        </p>
-        {FLAG_TEXT[r.flag] && <p className={'flag ' + r.flag}>⚑ {FLAG_TEXT[r.flag]}</p>}
-        {sourceOf && <Source node={sourceOf(i)} />}
-      </div>
-    );
-  });
+        </div>
+      )}
+      {source && <Source node={source} />}
+    </div>
+  );
 }
 
 /* ---------- quiz ---------- */
@@ -398,7 +438,16 @@ function Result({ s, go, think }) {
       <h2>
         Kết quả: {correct}/{s.records.length} · tổng {fmt(s.records.reduce((a, r) => a + r.sec, 0))}
       </h2>
-      <Answers items={QUIZ} recs={s.records} sourceOf={(i) => TREE[s.records[i].node]} />
+      <Answers
+        items={QUIZ}
+        recs={s.records}
+        sourceOf={(i) => TREE[s.records[i].node]}
+        explainOf={(i) => {
+          const r = s.records[i];
+          const e = EXPLAIN[r.node] || {};
+          return { why: e.why, trap: r.sel !== null && !r.correct ? (e.traps || {})[r.sel] : null };
+        }}
+      />
       {candidates.length ? (
         <>
           <h3>Bạn muốn làm gì tiếp?</h3>
@@ -605,7 +654,11 @@ function Review({ s, go, think }) {
   return (
     <section>
       <h2>Kết quả vòng {s.round}</h2>
-      <Answers items={qs} recs={s.roundRecs} />
+      <Answers
+        items={qs}
+        recs={s.roundRecs}
+        explainOf={(i) => ({ why: (PROBE_WHY[s.target] || [])[i] })}
+      />
 
       <div className={'card ' + (s.decision === 'locate' ? 'ok' : 'bad')}>
         <h3>Hệ thống đọc được gì</h3>

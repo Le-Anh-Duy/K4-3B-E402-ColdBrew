@@ -112,7 +112,7 @@ Quyết định chọn nhánh do rule quyết; LLM (giai đoạn sau) chỉ **di
 
 Học viên chọn một trong hai sau khi nộp bài; xem giải thích xong vẫn đi chẩn đoán được.
 
-**AI #1 có mặt ở mọi tầng:** ngoài màn kết quả quiz, mỗi vòng chẩn đoán đều có nút *"✨ Nhận xét & giải thích đáp án vòng này"* — nhận xét gộp (sai mấy câu, bỏ trống, bấm quá nhanh, đúng mà chậm, và nên ôn hẹp hay ôn rộng) rồi giải thích từng câu kèm trang nguồn. Mọi lựa chọn đều được ghi vào dấu vết quyết định.
+**AI #1 có mặt ở ba mức:** nút *"✨ AI phân tích câu này"* ngay trên **từng thẻ đáp án** (cả ở màn kết quả quiz lẫn màn kết quả mỗi vòng chẩn đoán); nút *"✨ Nhận xét & giải thích đáp án vòng này"* *"✨ Nhận xét & giải thích đáp án vòng này"* cho **cả vòng** (nhận xét gộp: sai mấy câu, bỏ trống, bấm quá nhanh, đúng mà chậm, nên ôn hẹp hay ôn rộng); và màn *"Giải thích đáp án"* cho **cả bài quiz**. Mọi lựa chọn đều được ghi vào dấu vết quyết định.
 
 ## Chưa có trong bản mock
 
