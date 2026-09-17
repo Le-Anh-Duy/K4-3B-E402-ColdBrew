@@ -110,6 +110,11 @@
         animation: spin 0.9s linear infinite;
       }
       @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner.sm { width: 16px; height: 16px; border-width: 2px; display: inline-block; vertical-align: -3px; }
+      .inline-load { font-size: 14px; color: var(--mocha); margin: 12px 0; }
+      .wide { width: 100%; margin: 6px 0; }
+      .mini { border-top: 1px dashed var(--latte); padding-top: 10px; margin-top: 10px; }
+      .mini .q { margin-bottom: 4px; }
       .steps { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--mocha); }
       .steps li { margin: 6px 0; animation: fade 0.35s ease-out; }
       @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }

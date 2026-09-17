@@ -110,7 +110,9 @@ Quyết định chọn nhánh do rule quyết; LLM (giai đoạn sau) chỉ **di
 | **AI #1 · Giải thích đáp án** | "Mình sai **cái gì**?" | câu hỏi + phương án học viên chọn | vì sao đáp án đúng là đúng · bẫy của phương án đã chọn | node lá của câu đó (`EXPLAIN` trong `data.js`) |
 | **AI #2 · Chẩn đoán nền** | "Vì sao mình sai?" | toàn bộ tín hiệu yếu của bài quiz | vòng câu hỏi leo cây → chỗ hổng + lộ trình ôn | node cha trên cây (`PROBES`) |
 
-Học viên chọn một trong hai sau khi nộp bài; xem giải thích xong vẫn đi chẩn đoán được. Lựa chọn này được ghi vào dấu vết quyết định.
+Học viên chọn một trong hai sau khi nộp bài; xem giải thích xong vẫn đi chẩn đoán được.
+
+**AI #1 có mặt ở mọi tầng:** ngoài màn kết quả quiz, mỗi vòng chẩn đoán đều có nút *"✨ Nhận xét & giải thích đáp án vòng này"* — nhận xét gộp (sai mấy câu, bỏ trống, bấm quá nhanh, đúng mà chậm, và nên ôn hẹp hay ôn rộng) rồi giải thích từng câu kèm trang nguồn. Mọi lựa chọn đều được ghi vào dấu vết quyết định.
 
 ## Chưa có trong bản mock
 

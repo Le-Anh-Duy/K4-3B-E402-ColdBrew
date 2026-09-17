@@ -169,3 +169,47 @@ const EXPLAIN = {
     },
   },
 };
+
+// Giải thích cho câu hỏi chẩn đoán (mock) — cùng thứ tự với PROBES.
+const PROBE_WHY = {
+  c3s1: [
+    'Embedding là hàm biến văn bản thành một vector số nhiều chiều — mô hình chỉ so sánh được trên số.',
+    'Hai vector nằm gần nhau nghĩa là hai đoạn gần nghĩa; đó chính là cách tìm đoạn liên quan.',
+    'Cùng model và cùng đầu vào thì ra cùng vector — embedding là hàm tất định, không ngẫu nhiên.',
+  ],
+  c3s2: [
+    'Retrieval chỉ đi tìm đoạn liên quan; phần viết câu trả lời là việc của LLM ở bước sau.',
+    'Có đoạn nguồn thì câu trả lời mới trích dẫn được và đỡ bịa.',
+    'Rác vào thì rác ra: lấy sai đoạn thì câu trả lời sai theo, dù mô hình có tốt.',
+  ],
+  c3: [
+    'RAG = Retrieval-Augmented Generation: sinh câu trả lời sau khi đã truy xuất tài liệu.',
+    'LLM không biết tài liệu nội bộ và dễ nói sai rất tự tin — RAG gắn nguồn thật vào để chặn chuyện đó.',
+    'Thứ tự đúng: tìm tài liệu → đưa vào prompt → sinh câu trả lời.',
+  ],
+  c1s1: [
+    'Mô hình làm việc trên dãy số, nên văn bản phải cắt thành các token đã được đánh số.',
+    'Context window là số token tối đa mô hình đọc được trong một lượt.',
+    'Vượt context window thì phải cắt bớt hoặc chia nhỏ — không có cách nhớ hết miễn phí.',
+  ],
+  c1s2: [
+    'Mỗi bước mô hình chọn một token kế tiếp rồi lặp lại, chứ không tra bảng câu trả lời có sẵn.',
+    'Temperature = 0 nghĩa là luôn lấy token khả năng cao nhất nên đầu ra gần như cố định.',
+    'Việc lấy mẫu token có yếu tố ngẫu nhiên nên hai lần chạy có thể ra khác nhau.',
+  ],
+  c1: [
+    'Bản chất LLM là mô hình dự đoán token kế tiếp, không phải công cụ tra cứu.',
+    'Nếu không nối công cụ, nó chỉ sinh từ tham số đã học, không truy cập Internet.',
+    'Vì sinh theo xác suất nên nó có thể nói sai mà câu văn vẫn rất trôi chảy.',
+  ],
+  c2s2: [
+    'Few-shot là có ví dụ mẫu trong prompt; zero-shot thì không có ví dụ nào.',
+    'Ví dụ cho mô hình thấy định dạng đầu ra mong muốn, nhanh hơn là mô tả bằng lời.',
+    'Ví dụ lệch thì đầu ra bắt chước luôn cái lệch đó.',
+  ],
+  c2: [
+    'Prompt tốt nói rõ vai trò, bối cảnh và việc cần làm.',
+    'Prompt là toàn bộ bối cảnh mô hình dựa vào để đoán token tiếp theo.',
+    'Ràng buộc định dạng phải đặt ngay trong prompt, sửa sau thì tốn thêm một lượt.',
+  ],
+};

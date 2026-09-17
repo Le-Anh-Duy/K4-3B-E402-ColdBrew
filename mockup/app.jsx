@@ -548,6 +548,15 @@ function Review({ s, go, think }) {
   const qs = PROBES[s.target] || [];
   const bad = s.roundRecs.filter((r) => !r.correct).length;
   const skipped = s.roundRecs.filter((r) => r.flag === 'skip').length;
+  const [fb, setFb] = useState(null); // null | 'loading' | 'shown'
+
+  const askFeedback = () => {
+    setFb('loading');
+    setTimeout(() => {
+      setFb('shown');
+      go({ trace: [...s.trace, { t: 'Học viên chọn', d: `Xem giải thích đáp án vòng ${s.round}` }] });
+    }, 1400);
+  };
 
   const analysis = {
     locate: `Bạn nắm được phần nền của "${node.label}" (chỉ sai ${bad}/${qs.length}). Chỗ hổng nằm đúng ở mục này, không cần kiểm tra lên tầng trên nữa.`,
@@ -604,6 +613,18 @@ function Review({ s, go, think }) {
         <Source node={node} />
       </div>
 
+      {fb === null && (
+        <button className="ghost wide" onClick={askFeedback}>
+          ✨ Nhận xét &amp; giải thích đáp án vòng này
+        </button>
+      )}
+      {fb === 'loading' && (
+        <p className="inline-load">
+          <span className="spinner sm" /> Đang soạn nhận xét cho vòng {s.round}…
+        </p>
+      )}
+      {fb === 'shown' && <RoundFeedback s={s} node={node} qs={qs} bad={bad} skipped={skipped} />}
+
       <h3>Bạn muốn làm gì tiếp?</h3>
       <div className="row">
         {s.decision === 'escalate' && (
@@ -634,6 +655,60 @@ function Review({ s, go, think }) {
         Làm lại không xoá dấu vết: mọi lần làm đều được ghi vào phần "vì sao bạn nhận lộ trình này".
       </p>
     </section>
+  );
+}
+
+/* nhận xét + giải thích cho một vòng chẩn đoán (AI #1 áp vào tầng đang đứng) */
+function RoundFeedback({ s, node, qs, bad, skipped }) {
+  const slow = s.roundRecs.filter((r) => r.flag === 'slow').length;
+  const rush = s.roundRecs.filter((r) => r.flag === 'rush').length;
+  const why = PROBE_WHY[s.target] || [];
+
+  const notes = [];
+  if (bad === 0) notes.push(`Bạn trả lời đúng cả ${qs.length} câu nền của "${node.label}".`);
+  else notes.push(`Bạn sai ${bad}/${qs.length} câu nền của "${node.label}".`);
+  if (skipped) notes.push(`${skipped} câu bỏ trống — bỏ trống cũng được tính là chưa nắm.`);
+  if (rush) notes.push(`${rush} câu trả lời dưới ${RUSH_SEC}s: nhanh hơn thời gian đọc xong đề.`);
+  if (slow) notes.push(`${slow} câu đúng nhưng trên ${SLOW_SEC}s — biết nhưng chưa chắc.`);
+  notes.push(
+    s.decision === 'locate'
+      ? 'Phần nền ổn, nên chỗ cần ôn là chính mục này chứ không phải cả chương.'
+      : s.decision === 'escalate'
+      ? 'Sai ngay ở mức nền của mục này, nên nhiều khả năng vấn đề nằm ở tầng trên.'
+      : 'Sai ở mức nền nhất của bài — nên xem lại cả bài thay vì vá từng mục.'
+  );
+
+  return (
+    <div className="card shaky">
+      <h3>Nhận xét</h3>
+      <p>{notes.join(' ')}</p>
+      <h3>Giải thích từng câu</h3>
+      {qs.map((q, i) => {
+        const r = s.roundRecs[i];
+        return (
+          <div className="mini" key={i}>
+            <p className="q">
+              <b>
+                {r.correct ? '✓' : r.flag === 'skip' ? '–' : '✕'} {i + 1}.
+              </b>{' '}
+              {q.q}
+            </p>
+            <p className="muted">
+              Đáp án đúng: <b>{q.options[q.answer]}</b>
+              {r.sel !== null && !r.correct && (
+                <>
+                  {' '}
+                  · bạn chọn: <i>{q.options[r.sel]}</i>
+                </>
+              )}
+              {r.sel === null && <> · <i>bỏ trống</i></>}
+            </p>
+            <p>{why[i]}</p>
+          </div>
+        );
+      })}
+      <Source node={node} />
+    </div>
   );
 }
 
