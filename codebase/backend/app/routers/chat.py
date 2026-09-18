@@ -24,7 +24,7 @@ def chat_message(body: ChatIn):
     tree = get_tree()
     node_info = tree.get(body.target_node_id, {})
     node_label = node_info.get("label", body.target_node_id)
-    slide_page = node_info.get("page", "Slide bài giảng")
+    slide_page = node_info.get("page", "(chưa có mã đoạn nguồn)")
     summary = node_info.get("content_summary", "")
 
     signals_desc = [
@@ -56,7 +56,7 @@ Câu hỏi của học viên: "{body.message}"
             slide_page=slide_page,
             suggested_actions=res.get("suggested_actions", [
                 "Kiểm tra 3 câu nền",
-                "Xem lại slide nguồn",
+                "Xem lại đoạn transcript nguồn",
                 "Làm lại bài quiz"
             ])
         )
@@ -78,7 +78,7 @@ Câu hỏi của học viên: "{body.message}"
             slide_page=slide_page,
             suggested_actions=[
                 "Kiểm tra 3 câu nền",
-                "Xem lại slide nguồn",
+                "Xem lại đoạn transcript nguồn",
                 "Làm lại bài quiz"
             ]
         )

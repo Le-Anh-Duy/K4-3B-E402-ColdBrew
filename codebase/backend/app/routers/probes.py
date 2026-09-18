@@ -36,7 +36,7 @@ def get_probes_for_node(target_node_id: str):
     return ProbesOut(
         target_node_id=target_node_id,
         target_label=node_info.get("label", target_node_id),
-        slide_page=node_info.get("page", "Slide bài giảng"),
+        slide_page=node_info.get("page", "(chưa có mã đoạn nguồn)"),
         questions=questions
     )
 

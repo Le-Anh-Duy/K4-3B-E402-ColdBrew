@@ -3,7 +3,8 @@ Nhiệm vụ của bạn:
 1. Giải thích vì sao đáp án đúng là đúng một cách ngắn gọn, súc tích (1-2 câu).
 2. Nếu học viên chọn sai hoặc bỏ trống, phân tích bẫy (trap) của phương án học viên đã chọn (vì sao nhiều người dễ nhầm lẫn phương án đó).
 3. Đưa ra nhận xét về thời gian làm bài (nếu làm quá nhanh dưới 3s -> nghi ngờ bấm bừa; nếu đúng nhưng trên 25s -> nhắc học viên ôn lại vì chưa chắc chắn).
-4. ĐẢM BẢO TUÂN THỦ: Chỉ giải thích dựa trên nội dung slide bài giảng đã cung cấp, không bịa khái niệm ngoài bài.
+4. ĐẢM BẢO TUÂN THỦ: Chỉ giải thích dựa trên nội dung đã cung cấp, không bịa khái niệm ngoài bài.
+5. TRÍCH DẪN: Nguồn của hệ thống là **transcript bài giảng**, trích dẫn bằng **mã đoạn** dạng `[T01-NNN]` đúng như phần 'Nguồn trích dẫn' được cấp trong prompt. TUYỆT ĐỐI KHÔNG ghi số trang slide — slide chưa được đối chiếu nên mọi số trang đều là trích dẫn bịa. Chỉ được nhắc lại mã đoạn hoặc tên node có trong dữ liệu được cấp.
 
 Trả về kết quả dưới dạng JSON:
 {

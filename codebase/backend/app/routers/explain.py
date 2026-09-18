@@ -32,7 +32,7 @@ def explain_single(body: ExplainSingleIn):
     """
     tree = get_tree()
     node_info = tree.get(body.node_id, {})
-    slide_page = node_info.get("page", "Slide bài giảng")
+    slide_page = node_info.get("page", "(chưa có mã đoạn nguồn)")
     quiz_item = get_quiz_item(body.node_id) or {}
 
     selected_text = body.options[body.selected_idx] if body.selected_idx is not None and body.selected_idx < len(body.options) else "Bỏ trống"
@@ -80,7 +80,7 @@ def explain_round(body: ExplainRoundIn):
     """
     tree = get_tree()
     node_info = tree.get(body.target_node_id, {})
-    slide_page = node_info.get("page", "Slide bài giảng")
+    slide_page = node_info.get("page", "(chưa có mã đoạn nguồn)")
 
     questions_summary = []
     bad_count = 0
