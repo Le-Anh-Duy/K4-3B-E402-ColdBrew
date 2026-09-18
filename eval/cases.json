@@ -1,0 +1,159 @@
+{
+  "about": "Golden set cho bộ chẩn đoán ColdBrew. Mỗi case là một hồ sơ trả lời giả (KHÔNG phải dữ liệu học viên thật). Nhãn kỳ vọng do nhóm gán tay theo cây tri thức trong mockup/data.js, gán TRƯỚC khi chạy code.",
+  "format": {
+    "quiz": "5 câu theo thứ tự QUIZ: [phương án đã chọn (null = bỏ trống), số giây]",
+    "probes": "đáp án cho từng vòng chẩn đoán, khoá là node: [[chọn, giây] x3]. Đáp án đúng của mọi câu probe là 0",
+    "expect.target": "node cha mà hệ thống PHẢI chọn để chẩn đoán; null = đáng lẽ phải nói 'chưa đủ căn cứ' thay vì chẩn đoán",
+    "expect.final": "kết luận cuối sau khi leo cây (nếu case có probes)"
+  },
+  "cases": [
+    {
+      "id": "C01",
+      "desc": "Sai 2 câu, cả hai đều thuộc 3.1 Embedding",
+      "quiz": [[1, 9], [0, 8], [1, 11], [2, 14], [3, 12]],
+      "expect": { "target": "c3s1" },
+      "why": "Hai tín hiệu duy nhất đều nằm dưới 3.1 Embedding, không có tín hiệu ở chỗ khác"
+    },
+    {
+      "id": "C02",
+      "desc": "Sai 2 câu, cả hai đều thuộc 1.1 Token",
+      "quiz": [[0, 10], [2, 9], [1, 7], [0, 8], [0, 9]],
+      "expect": { "target": "c1s1" },
+      "why": "Hai câu sai cùng thuộc mục token, phần còn lại đúng và nhanh"
+    },
+    {
+      "id": "C03",
+      "desc": "Sai đúng 1 câu ở 2.2 Few-shot",
+      "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
+      "expect": { "target": "c2s2" },
+      "why": "Chỉ một tín hiệu, nằm ở mục few-shot"
+    },
+    {
+      "id": "C04",
+      "desc": "Bỏ trống 2 câu của 3.1 Embedding",
+      "quiz": [[1, 6], [0, 7], [1, 9], [null, 4], [null, 3]],
+      "expect": { "target": "c3s1" },
+      "why": "Bỏ trống tính như chưa nắm; cả hai đều thuộc embedding"
+    },
+    {
+      "id": "C05",
+      "desc": "Sai 1 câu token + bỏ trống 1 câu token",
+      "quiz": [[0, 11], [null, 5], [1, 8], [0, 10], [0, 9]],
+      "expect": { "target": "c1s1" },
+      "why": "Hai tín hiệu cùng mục, một sai một bỏ trống"
+    },
+    {
+      "id": "C06",
+      "desc": "Hoà 1-1: sai 1 câu token (chương 1) và 1 câu embedding (chương 3)",
+      "quiz": [[0, 12], [0, 9], [1, 8], [2, 11], [0, 10]],
+      "expect": { "target": "c1s1" },
+      "why": "Hoà thì ưu tiên phần nền học trước trong bài — token là nền của embedding"
+    },
+    {
+      "id": "C07",
+      "desc": "Hai tín hiệu ở embedding + một tín hiệu ở token (chương nền)",
+      "quiz": [[0, 13], [0, 8], [1, 9], [2, 12], [3, 10]],
+      "expect": { "target": "c1s1" },
+      "why": "Có tín hiệu ở cả chương nền lẫn chương sau thì phải xử nền trước, dù chương sau nhiều câu sai hơn — sai nền thì ôn embedding cũng vô ích"
+    },
+    {
+      "id": "C08",
+      "desc": "Đúng hết, nhưng 2 câu embedding mất hơn 25s",
+      "quiz": [[1, 9], [0, 8], [1, 10], [0, 31], [0, 28]],
+      "expect": { "target": "c3s1" },
+      "why": "Không sai câu nào nhưng chậm bất thường ở cùng một mục — đủ để hỏi thêm, chưa đủ để kết luận"
+    },
+    {
+      "id": "C09",
+      "desc": "Đúng hết, chậm rải rác ở ba mục khác nhau",
+      "quiz": [[1, 30], [0, 9], [1, 29], [0, 8], [0, 27]],
+      "expect": { "target": null },
+      "why": "Tín hiệu tản mát, không chụm vào mục nào — hệ thống nên nói chưa đủ căn cứ thay vì chọn đại một mục"
+    },
+    {
+      "id": "C10",
+      "desc": "Sai đúng 1 câu và bấm trong 2 giây",
+      "quiz": [[1, 8], [0, 9], [1, 7], [3, 2], [0, 8]],
+      "expect": { "target": null },
+      "why": "Bấm nhanh hơn thời gian đọc hết đề thì nhiều khả năng là bấm bừa, không phải không biết — nên hỏi lại câu đó trước khi chẩn đoán"
+    },
+    {
+      "id": "C11",
+      "desc": "Đúng hết, nhanh, dứt khoát",
+      "quiz": [[1, 7], [0, 6], [1, 8], [0, 7], [0, 9]],
+      "expect": { "target": null },
+      "why": "Không có tín hiệu yếu nào, không cần chẩn đoán"
+    },
+    {
+      "id": "C12",
+      "desc": "Bỏ trống toàn bộ",
+      "quiz": [[null, 3], [null, 2], [null, 3], [null, 2], [null, 3]],
+      "expect": { "target": "c1s1" },
+      "why": "Bỏ trống hết thì tín hiệu trải khắp bài, bắt đầu từ mục nền đầu tiên là hợp lý"
+    },
+    {
+      "id": "C13",
+      "desc": "Embedding: sai 2 câu quiz, vòng nền trả lời đúng cả 3",
+      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
+      "probes": { "c3s1": [[0, 8], [0, 7], [0, 9]] },
+      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3s1" } },
+      "why": "Nắm được nền của embedding thì chỗ hổng đúng là ở mục này, không cần leo lên"
+    },
+    {
+      "id": "C14",
+      "desc": "Embedding: sai 2 câu nền, lên chương RAG thì trả lời đúng",
+      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
+      "probes": { "c3s1": [[1, 9], [2, 8], [0, 10]], "c3": [[0, 9], [0, 8], [0, 11]] },
+      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3" } },
+      "why": "Sai nền của mục con nhưng nắm được chương thì chỗ hổng nằm ở mức chương, dừng tại đó"
+    },
+    {
+      "id": "C15",
+      "desc": "Embedding: sai cả vòng mục lẫn vòng chương",
+      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
+      "probes": { "c3s1": [[1, 9], [2, 8], [1, 10]], "c3": [[1, 9], [2, 8], [3, 11]] },
+      "expect": { "target": "c3s1", "final": { "verdict": "restart", "node": "c3" } },
+      "why": "Sai tới tận mức chương, trên nữa là gốc bài — kết luận chưa nắm bài, học lại từ đầu"
+    },
+    {
+      "id": "C16",
+      "desc": "Token: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1",
+      "quiz": [[0, 10], [2, 9], [1, 8], [0, 9], [0, 8]],
+      "probes": { "c1s1": [[1, 9], [2, 10], [0, 8]], "c1": [[0, 9], [1, 10], [0, 8]] },
+      "expect": { "target": "c1s1", "final": { "verdict": "located", "node": "c1" } },
+      "why": "Sai 1/3 ở chương 1 nghĩa là còn nắm được mức chương, chốt chỗ hổng ở đó"
+    },
+    {
+      "id": "C17",
+      "desc": "Few-shot: sai quiz, sai cả vòng mục lẫn vòng chương 2",
+      "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
+      "probes": { "c2s2": [[1, 9], [2, 8], [3, 10]], "c2": [[1, 9], [2, 10], [3, 8]] },
+      "expect": { "target": "c2s2", "final": { "verdict": "restart", "node": "c2" } },
+      "why": "Hổng tới mức chương prompting, trên nữa là gốc — học lại cả bài"
+    },
+    {
+      "id": "C18",
+      "desc": "Vòng chẩn đoán bỏ trống 2/3 câu",
+      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
+      "probes": { "c3s1": [[null, 4], [null, 3], [0, 9]], "c3": [[0, 9], [0, 10], [0, 8]] },
+      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3" } },
+      "why": "Bỏ trống ở vòng nền cũng là chưa nắm, phải leo lên như khi trả lời sai"
+    },
+    {
+      "id": "C19",
+      "desc": "Vòng chẩn đoán đúng cả 3 nhưng câu nào cũng trên 25s",
+      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
+      "probes": { "c3s1": [[0, 30], [0, 28], [0, 33]] },
+      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3s1" } },
+      "why": "Đúng hết thì không leo lên, nhưng chậm toàn vòng nên vẫn chốt hổng ở mục này để ôn lại"
+    },
+    {
+      "id": "C20",
+      "desc": "Token: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3",
+      "quiz": [[null, 4], [null, 3], [1, 9], [0, 8], [0, 9]],
+      "probes": { "c1s1": [[1, 8], [2, 9], [3, 7]], "c1": [[1, 9], [2, 8], [3, 10]] },
+      "expect": { "target": "c1s1", "final": { "verdict": "restart", "node": "c1" } },
+      "why": "Hổng ngay từ mục nền đầu tiên của bài, leo hết mức cho phép vẫn sai"
+    }
+  ]
+}

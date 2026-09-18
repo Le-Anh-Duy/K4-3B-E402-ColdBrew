@@ -44,9 +44,9 @@ const QUIZ = [
     answer: 1,
   },
   {
-    node: 'l_temp',
-    q: 'Tăng temperature thì đầu ra của mô hình?',
-    options: ['Ngẫu nhiên hơn, đa dạng hơn', 'Luôn chính xác hơn', 'Ngắn lại', 'Không đổi'],
+    node: 'l_ctx',
+    q: 'Context window của mô hình đếm bằng gì?',
+    options: ['Số token', 'Số câu', 'Số ký tự hiển thị trên màn hình', 'Số lần gọi API'],
     answer: 0,
   },
   {
@@ -62,10 +62,10 @@ const QUIZ = [
     answer: 0,
   },
   {
-    node: 'l_topk',
-    q: 'Trong RAG, "top-k" là gì?',
-    options: ['k mô hình chạy song song', 'k đoạn tài liệu liên quan nhất được lấy ra', 'k lần thử lại khi lỗi', 'k token đầu tiên của câu trả lời'],
-    answer: 1,
+    node: 'l_vec',
+    q: 'Để máy so được nghĩa của hai đoạn văn, bước đầu tiên là?',
+    options: ['Vector hoá (embedding) hai đoạn', 'Dịch cả hai sang tiếng Anh', 'Tóm tắt lại cho ngắn', 'Đếm số từ trùng nhau'],
+    answer: 0,
   },
 ];
 
@@ -213,3 +213,25 @@ const PROBE_WHY = {
     'Ràng buộc định dạng phải đặt ngay trong prompt, sửa sau thì tốn thêm một lượt.',
   ],
 };
+
+EXPLAIN.l_ctx = {
+  why: 'Context window là giới hạn tính bằng token cho cả phần bạn nhập lẫn phần mô hình sinh ra — vượt giới hạn thì phải cắt bớt hoặc chia nhỏ.',
+  traps: {
+    1: 'Câu không phải đơn vị mô hình làm việc; một câu có thể là vài chục token.',
+    2: 'Ký tự khác token — tiếng Việt có dấu thường tốn nhiều token hơn cùng số ký tự tiếng Anh.',
+    3: 'Số lần gọi API là hạn mức dịch vụ, không liên quan context window.',
+  },
+};
+
+EXPLAIN.l_vec = {
+  why: 'Máy không so nghĩa trực tiếp trên chữ: phải đưa hai đoạn qua model embedding thành vector rồi mới đo được độ gần.',
+  traps: {
+    1: 'Không cần dịch — model embedding đa ngữ so được trực tiếp.',
+    2: 'Tóm tắt làm mất thông tin và không phải bước của retrieval.',
+    3: 'Đếm từ trùng là tìm kiếm từ khoá, bỏ sót khi hai đoạn dùng tên gọi khác nhau cho cùng khái niệm.',
+  },
+};
+
+// cho phép chạy bằng node (bộ eval); trong browser thì `module` không tồn tại nên bỏ qua
+if (typeof module !== 'undefined')
+  module.exports = { TREE, QUIZ, PROBES, EXPLAIN, PROBE_WHY, REVIEW };

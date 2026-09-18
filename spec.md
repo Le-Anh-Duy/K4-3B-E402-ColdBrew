@@ -103,10 +103,22 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa g�
 
 ## §7. Kiểm thử
 
-- **Chiều chất lượng:** (1) *Chẩn đoán đúng* — concept/prerequisite hệ thống chỉ ra trùng với đáp án chuẩn nhóm gán tay cho từng hồ sơ trả lời. (2) *Có căn cứ* — mọi mục ôn trỏ được về slide/trang có thật. (3) *Giải thích hợp lệ* — lời giải thích chỉ nhắc concept có trong graph.
-- **Golden set:** `TODO` ≥20 case trong `eval/golden_set.json` — mỗi case = một bộ 5 câu trả lời (hồ sơ học viên giả) + concept yếu kỳ vọng + prerequisite kỳ vọng.
-- **Quality bar:** `TODO` — chốt trước 21:00 17/9 (CP4), giữ nguyên sau đó.
-- **Kết quả các lượt chạy:** `TODO` bảng %.
+- **Chiều chất lượng:** (1) *Chẩn đoán đúng* — node hệ thống chọn để chẩn đoán, và kết luận cuối sau khi leo cây, trùng với nhãn nhóm gán tay cho từng hồ sơ trả lời. (2) *Có căn cứ* — mọi mục ôn trỏ được về slide/trang có thật. (3) *Giải thích hợp lệ* — lời giải thích chỉ nhắc concept có trong cây.
+- **Golden set:** **20 case** trong `eval/cases.json` — mỗi case = 5 câu trả lời (phương án + số giây) của một hồ sơ học viên **giả**, kèm nhãn kỳ vọng (node cần chẩn đoán, kết luận cuối) và lý do gán nhãn. 10 case chỉ đo bước định vị, 8 case đo cả chuỗi leo cây, 3 case kỳ vọng hệ thống **từ chối chẩn đoán** vì tín hiệu không đủ.
+  - Nhãn gán tay theo cây tri thức, **không lấy từ output của code**.
+  - Chạy: `node eval/run.js --write` → `eval/results.md`. Bộ eval dùng **chung file luật** `mockup/engine.js` với trang demo nên số đo là số của đúng cái chạy trên sân khấu.
+- **Quality bar** *(đề xuất — chốt tại CP4 21:00 18/9)*: "Đạt khi **≥90% case** của golden set ra đúng node chẩn đoán và đúng kết luận cuối, **và 100%** mục ôn đề xuất trỏ được về slide/trang có thật."
+  - Khai báo trung thực: bar này đặt **sau** lượt chạy baseline R0 dưới đây (85%), và đặt cao hơn R0 để buộc sửa hai lỗ hổng đã lộ ra, chứ không hạ chuẩn cho vừa kết quả.
+- **Kết quả các lượt chạy:**
+
+  | Lượt | Ngày | Kết quả | Ghi chú |
+  |---|---|---|---|
+  | R0 (baseline) | 18/9 | **17/20 = 85%** | Luật chẩn đoán thuần rule, chưa nối AI |
+
+  Ba case chưa đạt — đều là lỗ hổng thật của luật, không phải nhãn sai:
+  - **C07** — có tín hiệu ở cả chương nền (token) lẫn chương sau (embedding); luật đang chọn theo *số tín hiệu nhiều nhất* nên đi vào embedding, trong khi sư phạm phải xử nền trước. Sửa: khi tín hiệu trải nhiều chương, ưu tiên chương học trước.
+  - **C09** — đúng hết, chỉ chậm rải rác ở ba mục khác nhau; luật vẫn chọn đại một mục thay vì nói "chưa đủ căn cứ". Sửa: nếu mọi nhóm chỉ có 1 tín hiệu và đều là `slow` thì từ chối chẩn đoán.
+  - **C10** — câu sai duy nhất bấm trong 2 giây (`rush`); nhiều khả năng bấm bừa chứ không phải không biết. Sửa: nếu toàn bộ tín hiệu là `rush` thì hỏi lại câu đó trước, chưa chẩn đoán.
 
 ## §8. Phân công & kế hoạch
 
@@ -127,4 +139,7 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa g�
 | 17/9 | Dựng khung spec: chốt track C1 / hướng adaptive-first / lát cắt / stack (React + FastAPI + Gemini OpenAI-compatible) | Init repo |
 | 17/9 | Mock CP2 (`mockup/`): quiz mỗi màn một câu, cho bỏ qua, **đếm giờ từng câu** và dùng thời gian làm tín hiệu (`slow` / `rush`) | Đúng/sai thôi thì không phân biệt được "biết chắc" với "đoán trúng" |
 | 17/9 | Hệ thống **không tự leo tầng**: hết mỗi vòng dừng lại cho học viên chọn đi tiếp / làm lại / tự ôn | Tự nhảy vòng là tước quyền quyết định của học viên, và giám khảo không thấy được chỗ nào do người chọn |
+| 18/9 | Quiz đổi 2 câu để có cặp câu cùng node cha (l_ctx, l_vec) | Bộ 5 câu cũ mỗi câu một node cha khác nhau → luật "gom tín hiệu về cha chung" không bao giờ chạy, không đo được |
+| 18/9 | Tách luật chẩn đoán ra `mockup/engine.js`, dùng chung cho demo và `eval/` | Nếu bộ đo chép lại luật thì số đo sẽ trôi khỏi cái đang chạy thật |
+| 18/9 | Chạy golden set R0: 17/20 (85%), lộ 3 lỗ hổng C07/C09/C10 | Xem `eval/results.md` |
 | 17/9 | Tách **AI #1 giải thích đáp án** khỏi **AI #2 chẩn đoán nền**; AI #1 gọi được ở từng câu, từng vòng, hoặc cả bài | Hai câu hỏi khác nhau ("sai cái gì" vs "vì sao sai"); nhiều học viên chỉ cần cái thứ nhất |

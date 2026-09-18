@@ -1,9 +1,8 @@
 const { useState, useEffect, useRef } = React;
 
 const SAVE_KEY = 'coldbrew-mock-session';
-const MAX_ROUNDS = 3; // leo tối đa 3 tầng rồi kết luận "học lại từ đầu"
-const SLOW_SEC = 25; // đúng nhưng lâu hơn mức này -> chưa chắc
-const RUSH_SEC = 3; // sai mà nhanh hơn mức này -> bấm bừa
+// luật chẩn đoán nằm ở engine.js — dùng chung với bộ eval trong eval/
+const { SLOW_SEC, RUSH_SEC, MAX_ROUNDS, grade, weakSignals, pickTarget, roundDecision } = ENGINE;
 
 const parentOf = (id) => TREE[id].parent;
 const childrenOf = (id) => Object.values(TREE).filter((n) => n.parent === id);
@@ -36,18 +35,6 @@ const BLANK = {
   status: {}, // nodeId -> 'ok' | 'shaky' | 'weak' | 'probing'
   verdict: null, // located | restart | self
 };
-
-// flag: ok | slow (đúng nhưng chậm) | wrong | rush (sai rất nhanh) | skip (bỏ trống)
-function grade(items, picked, times) {
-  return items.map((q, i) => {
-    const sel = picked[i];
-    const blank = sel === undefined || sel === null;
-    const correct = !blank && sel === q.answer;
-    const sec = times[i] || 0;
-    const flag = blank ? 'skip' : correct ? (sec > SLOW_SEC ? 'slow' : 'ok') : sec < RUSH_SEC ? 'rush' : 'wrong';
-    return { node: q.node, sel: blank ? null : sel, correct, sec, flag };
-  });
-}
 
 const FLAG_TEXT = {
   ok: null,
@@ -373,21 +360,10 @@ function Quiz({ go }) {
   );
 }
 
-const weakSignals = (records) => {
-  const missed = records.filter((r) => !r.correct); // sai + bỏ trống
-  const shaky = records.filter((r) => r.flag === 'slow');
-  return { missed, shaky, candidates: missed.length ? missed : shaky };
-};
-
 // dùng chung cho nút ở màn kết quả và ở màn giải thích
 function startDiagnosis(s, think) {
   const { missed, shaky, candidates } = weakSignals(s.records);
-  const byParent = {};
-  candidates.forEach((r) => {
-    const p = parentOf(r.node);
-    (byParent[p] = byParent[p] || []).push(r);
-  });
-  const target = Object.keys(byParent).sort((a, b) => byParent[b].length - byParent[a].length)[0];
+  const { target, hits } = pickTarget(s.records, TREE);
 
   const trace = [...s.trace];
   if (missed.length)
@@ -404,7 +380,7 @@ function startDiagnosis(s, think) {
     trace.push({ t: 'Không có câu sai', d: 'Lấy các câu trả lời chậm làm tín hiệu chẩn đoán' });
   trace.push({
     t: 'Định vị',
-    d: `${byParent[target].length} tín hiệu cùng thuộc "${TREE[target].label}" → hỏi 3 câu nền của mục này`,
+    d: `${hits.length} tín hiệu cùng thuộc "${TREE[target].label}" → hỏi 3 câu nền của mục này`,
   });
 
   think(
@@ -418,7 +394,7 @@ function startDiagnosis(s, think) {
       target,
       round: 1,
       retry: 0,
-      hits: byParent[target].map((r) => r.node),
+      hits,
       trace,
       status: { ...s.status, [target]: 'probing' },
     },
@@ -686,17 +662,13 @@ function Probe({ s, think }) {
 
   const done = (picked, times) => {
     const recs = grade(qs, picked, times);
-    const bad = recs.filter((r) => !r.correct).length; // bỏ trống tính như chưa nắm
-    const slow = recs.filter((r) => r.flag === 'slow').length;
-    const up = parentOf(s.target);
-
-    let decision, nextTarget = null;
-    if (bad <= 1) decision = 'locate';
-    else if (!up || up === 'root' || s.round + 1 > MAX_ROUNDS || !PROBES[up]) decision = 'restart';
-    else {
-      decision = 'escalate';
-      nextTarget = up;
-    }
+    const { decision, nextTarget, bad, slow } = roundDecision({
+      targetId: s.target,
+      recs,
+      round: s.round,
+      tree: TREE,
+      probes: PROBES,
+    });
 
     const trace = [
       ...s.trace,
