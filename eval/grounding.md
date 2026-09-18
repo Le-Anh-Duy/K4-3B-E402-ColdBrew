@@ -8,17 +8,17 @@ Chuẩn đạt (chốt trước khi chạy): ① mọi mã đoạn trích ra t�
 
 | Case | Kịch bản | ① có thật | ② không lạc | ③ đủ khung | Đạt | ④ nối vòng | Hợp lý? (người tick) |
 |---|---|---|---|---|---|---|---|
-| P01 | y_le | ✅ | ✅ | ❌ | ❌ | — |  |
+| P01 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
 | P02 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
-| P03 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
+| P03 | y_le | ✅ | ❌ | ❌ | ❌ | — |  |
 | P04 | muc_nong | ✅ | ✅ | ✅ | ✅ | — |  |
 | P05 | muc_nong | ✅ | ✅ | ✅ | ✅ | — |  |
 | P06 | muc_nong | ✅ | ✅ | ✅ | ✅ | — |  |
 | P07 | muc_duoi_tran | ✅ | ✅ | ✅ | ✅ | ✅ |  |
 | P08 | muc_duoi_tran | ✅ | ✅ | ✅ | ✅ | ✅ |  |
 | P09 | muc_duoi_tran | ✅ | ✅ | ✅ | ✅ | ✅ |  |
-| P10 | nen_bai | ✅ | ❌ | ❌ | ❌ | — |  |
-| P11 | nen_bai | ✅ | ❌ | ✅ | ❌ | — |  |
+| P10 | nen_bai | ✅ | ❌ | ✅ | ❌ | — |  |
+| P11 | nen_bai | ✅ | ✅ | ✅ | ✅ | — |  |
 | P12 | nen_bai | ✅ | ❌ | ✅ | ❌ | — |  |
 | P13 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
 | P14 | muc_duoi_tran | ✅ | ✅ | ✅ | ✅ | ✅ |  |
@@ -26,7 +26,7 @@ Chuẩn đạt (chốt trước khi chạy): ① mọi mã đoạn trích ra t�
 | P16 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
 | P17 | muc_duoi_tran | ✅ | ✅ | ✅ | ✅ | ✅ |  |
 | P18 | nen_bai | ✅ | ✅ | ✅ | ✅ | — |  |
-| P19 | y_le | ✅ | ✅ | ✅ | ✅ | — |  |
+| P19 | y_le | ✅ | ✅ | ❌ | ❌ | — |  |
 | P20 | muc_nong | ✅ | ✅ | ✅ | ✅ | — |  |
 
 ## Nội dung AI sinh ra
@@ -34,82 +34,74 @@ Chuẩn đạt (chốt trước khi chạy): ① mọi mã đoạn trích ra t�
 ### P01 · y_le · hổng: (ý trong quiz)
 
 ```
-Phân kỳ trong viên kim cương thứ nhất là mở rộng góc nhìn để thu insight [T01-071]. Phương án chọn "Vẽ ma trận tác động – nỗ lực" là sai vì đây không phải là kỹ thuật mở rộng góc nhìn để thu insight của bước phân kỳ [T01-071].
-Tự kiểm: Bạn phân biệt thế nào giữa phân kỳ và hội tụ, trả lời trôi trong 30 giây thì coi như đã nắm.
+Bước phân kỳ trong Double Diamond là mở rộng góc nhìn để thu insight [T01-071]. Phương án chọn "Vẽ ma trận tác động – nỗ lực" là sai về nội dung vì kỹ thuật này không phải là phân kỳ dùng để mở rộng góc nhìn thu insight theo định nghĩa của bài.
+Tự kiểm: Bước phân kỳ dùng để làm gì và gồm kỹ thuật nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
 
-Pha hội tụ dùng các kỹ thuật là gom nhóm, Five Whys, lọc trùng [T01-074]. Phương án chọn "Mở rộng góc nhìn để có thêm insight" là sai vì đây là mô tả của bước phân kỳ chứ không phải kỹ thuật của pha hội tụ [T01-071] [T01-074].
-Tự kiểm: Kỹ thuật nào được dùng trong pha hội tụ, trả lời trôi trong 30 giây thì coi như đã nắm.
+Pha hội tụ dùng các kỹ thuật như gom nhóm, Five Whys, lọc trùng [T01-074]. Phương án chọn "Mở rộng góc nhìn để có thêm insight" là sai về nội dung vì đây là đặc điểm của phân kỳ, không phải là hội tụ.
+Tự kiểm: Pha hội tụ dùng những kỹ thuật nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P02 · y_le · hổng: (ý trong quiz)
 
 ```
-Quán tính nhảy thẳng vào giải pháp là hiện tượng từ yêu cầu mơ hồ dẫn đến việc chọn ngay giải pháp mà chưa tìm đúng bài toán [T01-004], [T01-016]. Phương án chọn "vì giải pháp thường tốn nhiều tiền" là sai vì tư liệu chỉ ra sự nguy hiểm nằm ở việc làm sai cái sai và chưa tìm đúng bài toán, không đề cập đến chi phí tiền bạc [T01-001], [T01-017].
-Tự kiểm: Quán tính nhảy thẳng vào giải pháp dẫn đến hậu quả gì, trả lời trôi trong 30 giây thì coi như đã nắm?
-
-Cách làm được khuyến nghị khi sếp đưa yêu cầu chung chung là bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. Phương án chọn "chọn giải pháp phổ biến nhất trên thị trường" là sai vì cách làm này rơi vào quán tính nhảy thẳng vào giải pháp khi chưa qua bước bóc tách và verify [T01-004], [T01-006].
-Tự kiểm: Khi nhận yêu cầu chung chung từ sếp, bạn cần làm gì trước khi nghĩ đến giải pháp, trả lời trôi trong 30 giây thì coi như đã nắm?
+Phải bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006] thay vì có quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016]. Phương án chọn giải pháp phổ biến là sai về nội dung vì bài giảng khuyến nghị bóc tách yêu cầu rồi verify với stakeholder chứ không phải chọn giải pháp theo thị trường.
+Tự kiểm: Bóc tách yêu cầu xong cần làm gì với stakeholder? — trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P03 · y_le · hổng: (ý trong quiz)
 
 ```
-Việc làm đúng cái sai (tức là làm một việc không giải quyết đúng gốc rễ vấn đề) thực chất là làm sai ngay từ gốc, khiến công sức bỏ ra trở nên vô nghĩa [T01-060] [T01-061]. Phương án chọn "Làm sai cái đúng" là sai vì bản chất cái đã chọn là đúng rồi nhưng thực hiện chưa chuẩn thì vẫn có cơ hội sửa chữa và định hướng lại, không nguy hiểm bằng việc đi lạc hướng ngay từ đầu [T01-060] [T01-061].
+Việc làm đúng cái sai (tức là làm một việc không cần làm hoặc giải quyết sai vấn đề) là nguy hiểm hơn vì nó lãng phí nguồn lực và thời gian đi sai hướng [T01-060, T01-061]. Phương án chọn "Làm sai cái đúng" là sai vì khi làm đúng cái đúng nghĩa là đang giải quyết đúng vấn đề, chỉ là thao tác chưa chuẩn nên dễ sửa chữa và ít nguy hiểm hơn việc làm hoàn toàn sai việc ngay từ đầu [T01-050, T01-060].
 
-Tự kiểm: Vì sao làm đúng cái sai lại nguy hiểm hơn làm sai cái đúng theo bài học? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Tự kiểm: Vì sao làm đúng cái sai lại nguy hiểm hơn làm sai cái đúng? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P04 · muc_nong · hổng: c3s1
 
 ```
-Bạn đang nhầm lẫn giữa hai pha của Double Diamond: phân kỳ dùng để mở rộng góc nhìn để thu insight, còn hội tụ dùng gom nhóm, Five Whys, lọc trùng [T01-049] [T01-069] [T01-071] [T01-074].
-Cách nhớ là phân kỳ nghĩa là mở rộng ra để tìm thông tin, hội tụ nghĩa là gom lại và chắt lọc.
-Phương án chọn "Vẽ ma trận tác động – nỗ lực" ở câu 4 là sai vì đó không phải là kỹ thuật dùng để mở rộng góc nhìn để thu insight trong pha phân kỳ. Phương án chọn "Mở rộng góc nhìn để có thêm insight" ở câu 5 là sai vì đó là mô tả của pha phân kỳ chứ không phải các kỹ thuật gom nhóm, Five Whys, lọc trùng của pha hội tụ [T01-071] [T01-074].
+Phần này bạn đang thiếu ý phân kỳ là mở rộng góc nhìn để thu insight [T01-071] và hội tụ dùng gom nhóm, Five Whys, lọc trùng [T01-074]. Kỹ thuật "Vẽ ma trận tác động – nỗ lực" là sai vì nó dùng để đánh giá giải pháp chứ không phải để mở rộng góc nhìn thu insight ở pha phân kỳ. Còn "Mở rộng góc nhìn để có thêm insight" là sai vì đó là bản chất của phân kỳ chứ không phải kỹ thuật gom nhóm, lọc trùng hay Five Whys của pha hội tụ.
 
-Tự kiểm: Sự khác nhau giữa mục đích của pha phân kỳ và pha hội tụ trong Double Diamond là gì? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Tự kiểm: Phân kỳ và hội tụ trong Double Diamond khác nhau thế nào? Trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P05 · muc_nong · hổng: c1s1
 
 ```
-Bạn đang bị thiếu ý về quán tính nhảy thẳng vào giải pháp và cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Ở câu 1, đáp án "giải pháp tốn nhiều tiền" là sai về nội dung vì tư liệu tập trung vào việc chưa tìm đúng bài toán đã vội lao vào giải quyết [T01-001] [T01-017]. Ở câu 2, chọn giải pháp phổ biến là sai vì ta cần bóc tách yêu cầu mơ hồ rồi verify với stakeholder thay vì mắc kẹt trong quán tính nhảy thẳng vào giải pháp [T01-004] [T01-006] [T01-016]. Cách nhớ là luôn đi từ yêu cầu mơ hồ sang bài toán cụ thể thay vì đoán mò [T01-004] [T01-006] [T01-016].
-Tự kiểm: Vì sao phải bóc tách yêu cầu mơ hồ rồi verify với stakeholder? (trả lời trôi trong 30 giây thì coi như đã nắm).
+Mình nhắc lại mảnh bạn đang thiếu là quán tính nhảy thẳng vào giải pháp và cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016].
+Bạn chọn giải pháp tốn nhiều tiền là sai về nội dung vì bản chất nguy hiểm nằm ở quán tính nhảy thẳng vào giải pháp, khiến ta làm sai ngay từ gốc mà không tìm đúng bài toán cần giải [T01-001] [T01-004] [T01-017].
+Chọn giải pháp phổ biến là sai về nội dung vì khi gặp yêu cầu chung chung, ta cần bóc tách yêu cầu mơ hồ rồi verify với stakeholder chứ không áp dụng máy móc giải pháp ngoài thị trường [T01-006] [T01-016].
+Tự kiểm: Bạn đã nhớ cách chuyển từ yêu cầu mơ hồ sang bài toán cụ thể chưa? Trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P06 · muc_nong · hổng: c3s2
 
 ```
-Bạn đang nhầm lẫn ở chỗ: làm sai cái đúng không nguy hiểm bằng làm đúng cái sai, vì làm đúng cái sai nghĩa là bạn đang tạo ra một sản phẩm chạy mượt mà nhưng phục vụ sai mục đích hoặc giải quyết sai vấn đề [T01-050, T01-060, T01-061]. Cách nhớ là "làm đúng" cái "sai" thì công sức đổ sông đổ biển nhiều hơn là làm sai một việc đáng lẽ ra phải đúng [T01-060, T01-061].
+Bạn đang nhầm lẫn ở chỗ: làm sai cái đúng không nguy hiểm bằng làm đúng cái sai, vì làm đúng cái sai nghĩa là tối ưu hóa và làm rất nhanh một việc từ đầu đã không mang lại giá trị [T01-060] [T01-061]. Cách nhớ là "sai từ gốc" (làm đúng cái sai) thì công sức bỏ ra càng phá hủy kết quả nhiều hơn so với việc định hướng đúng nhưng thực hiện chưa chuẩn.
 
-Tự kiểm: Vì sao làm đúng cái sai lại nguy hiểm hơn làm sai cái đúng theo tư liệu [T01-060]? (Trả lời trôi trong 30 giây thì coi như đã nắm).
+Tự kiểm: Tại sao làm đúng cái sai lại nguy hiểm hơn làm sai cái đúng? Trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P07 · muc_duoi_tran · hổng: c3s1
 
 ```
-Nền tảng ở Chương 3 · Tìm đúng vấn đề đã được bạn xác nhận ổn [T01-030] [T01-073]. Mục đang hổng là 3.1 Double Diamond: phân kỳ – hội tụ [T01-049] [T01-069] [T01-071] [T01-074], nơi bạn đã nhầm lẫn kỹ thuật giữa phân kỳ và hội tụ. Thứ tự nên ôn lại là xem kỹ lại định nghĩa của phân kỳ là mở rộng góc nhìn để thu insight [T01-071], còn hội tụ là gom nhóm, Five Whys, lọc trùng [T01-074]. (Phương án chọn "Vẽ ma trận tác động – nỗ lực" là sai vì nó không thuộc pha phân kỳ theo tư liệu, còn "Mở rộng góc nhìn để có thêm insight" là sai vì đó là kỹ thuật của phân kỳ chứ không phải hội tụ [T01-071] [T01-074]).
-Tự kiểm: Bạn phân biệt thế nào giữa việc mở rộng góc nhìn để thu insight và việc gom nhóm, Five Whys, lọc trùng? (Trả lời trôi trong 30 giây thì coi như đã nắm).
+Nền tảng của bạn ở Chương 3 · Tìm đúng vấn đề đã xác nhận ổn [T01-030] [T01-073]. Mục đang hổng là 3.1 Double Diamond với cấu trúc phân kỳ – hội tụ [T01-049] [T01-069] [T01-071] [T01-074]. Bạn đã nhầm lẫn kỹ thuật giữa hai pha này do chọn ma trận tác động - nỗ lực cho phân kỳ và chọn mở rộng góc nhìn cho hội tụ, trong khi thực tế phân kỳ là mở rộng góc nhìn để thu insight [T01-071] còn hội tụ là gom nhóm, Five Whys, lọc trùng [T01-074]. Bạn nên ôn lại theo thứ tự từ phân kỳ rồi đến hội tụ [T01-071] [T01-074].
+Tự kiểm: Phân kỳ và hội tụ trong Double Diamond khác nhau thế nào? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P08 · muc_duoi_tran · hổng: c1s1
 
 ```
-Phần nền Chương 1 · Vì sao phải tìm đúng bài toán đã xác nhận ổn [T01-001] [T01-017].
-Bạn đang hổng ở phần 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể, cụ thể là việc quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] và bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006].
-Thứ tự bạn nên ôn lại là xem xét lại quán tính nhảy thẳng vào giải pháp trước, sau đó đến cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder.
-Ở câu 1, việc chọn giải pháp tốn nhiều tiền là sai vì tư liệu chỉ rõ quán tính nhảy thẳng vào giải pháp là do vướng vào quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016], chứ bản chất không phải do tốn tiền. Ở câu 2, việc chọn giải pháp phổ biến nhất là sai vì cách làm đúng được khuyến nghị là bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006].
+Nền tảng của bạn ở Chương 1 · Vì sao phải tìm đúng bài toán đã được xác nhận ổn [T01-001] [T01-017], làm nhẹ gánh cho phần tiếp theo. 
+Mục 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể cho thấy bạn đang hổng về việc quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] và cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. 
+Thứ tự bạn nên ôn lại là bắt đầu từ quán tính nhảy thẳng vào giải pháp, sau đó đến bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Ở câu 1, việc chọn giải pháp tốn nhiều tiền là sai về nội dung vì vấn đề nguy hiểm nằm ở quán tính nhảy thẳng vào giải pháp thay vì tìm đúng bài toán. Ở câu 2, chọn giải pháp phổ biến là sai về nội dung vì bài giảng khuyến nghị bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006].
 
-Tự kiểm: Bạn hãy giải thích lại vì sao không nên nhảy thẳng vào giải pháp? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Tự kiểm: Quán tính nhảy thẳng vào giải pháp và việc bóc tách yêu cầu khác nhau như thế nào? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P09 · muc_duoi_tran · hổng: c3s2
 
 ```
-Nền tảng "Chương 3 · Tìm đúng vấn đề" của bạn đã được xác nhận ổn [T01-030], [T01-073]. 
-
-Tại mục 3.2 Làm đúng cái sai vs làm sai cái đúng, bạn đã chọn phương án "Làm sai cái đúng" là nguy hiểm hơn [T01-050], [T01-059], [T01-060], [T01-061]. Phương án này sai về nội dung vì thực tế làm đúng cái sai mới là điều nguy hiểm hơn, bởi vì khi đó bạn tốn rất nhiều nguồn lực, thời gian và công sức để tối ưu một thứ vốn dĩ không mang lại giá trị hoặc giải quyết nhầm vấn đề cần xử lý [T01-060], [T01-061]. 
-
-Thứ tự nên ôn lại: bạn nên xem lại nội dung 3.2 Làm đúng cái sai vs làm sai cái đúng trước [T01-050], [T01-059], [T01-060], [T01-061].
+Nền về Chương 3 · Tìm đúng vấn đề của bạn đã xác nhận ổn [T01-030], [T01-073]. Tuy nhiên, bạn đang hổng ở phần 3.2 Làm đúng cái sai vs làm sai cái đúng khi chọn "Làm sai cái đúng" là nguy hiểm hơn [T01-050], [T01-059], [T01-060], [T01-061]. Phương án này sai về nội dung vì việc làm đúng cái sai mới là nguy hiểm hơn, bởi vì khi đó bạn tốn toàn bộ nguồn lực và thời gian để giải quyết một vấn đề không có thật hoặc đi lạc hướng hoàn toàn [T01-060], [T01-061]. Thứ tự bạn nên ôn lại là xem kỹ lại phần 3.2 để phân biệt rõ mức độ ảnh hưởng giữa làm đúng cái sai và làm sai cái đúng [T01-050], [T01-059], [T01-060], [T01-061].
 
 Tự kiểm: Vì sao làm đúng cái sai lại nguy hiểm hơn làm sai cái đúng? (Trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
@@ -117,109 +109,99 @@ Tự kiểm: Vì sao làm đúng cái sai lại nguy hiểm hơn làm sai cái �
 ### P10 · nen_bai · hổng: c3
 
 ```
-- Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]
-- Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]
-- Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]
-
-Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], Chương 2 · Đặc thù của sản phẩm AI [T01-018], Chương 3 · Tìm đúng vấn đề [T01-030], Chương 4 · Chọn bài toán để làm [T01-074].
-
-Tự kiểm: Bạn đã hiểu rõ các kỹ thuật trong pha phân kỳ và hội tụ của Double Diamond chưa, kèm cách dùng: trả lời trôi trong 30 giây thì coi như đã nắm.
+Do bạn sai tới tận phần nền, mình đề nghị bạn học lại cả bài theo thứ tự các chương [T01-030].
+Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004].
+Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049].
+Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079].
+Thứ tự các chương nên đi lại gồm Chương 1, Chương 2, Chương 3, và Chương 4 [T01-001], [T01-018], [T01-030], [T01-074].
+Tự kiểm: Bạn đã làm lại quiz sau khi ôn chưa? Trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P11 · nen_bai · hổng: c1
 
 ```
-- Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]
-- Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]
-- Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]
+Bạn sai tới tận phần nền, không khoanh nhỏ hơn được. Mình đề nghị bạn học lại cả bài theo thứ tự. 
 
-Bạn cần học lại cả bài theo thứ tự các chương sau: Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], Chương 2 · Đặc thù của sản phẩm AI [T01-018], Chương 3 · Tìm đúng vấn đề [T01-030], Chương 4 · Chọn bài toán để làm [T01-074].
-
-Tự kiểm: Bạn đã nhớ lại lý do không được nhảy thẳng vào giải pháp chưa? (trả lời trôi trong 30 giây thì coi như đã nắm, sau đó làm lại quiz).
+Ba ý cốt lõi của bài: Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004] | Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049] | Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079].
+Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán, Chương 2 · Đặc thù của sản phẩm AI, Chương 3 · Tìm đúng vấn đề, Chương 4 · Chọn bài toán để làm.
+Tự kiểm: Nhắc làm lại quiz sau khi ôn — bạn có thể giải thích lại quy trình Double Diamond và cách chọn bài toán không, trả lời trôi trong 30 giây thì coi như đã nắm?
 ```
 
 ### P12 · nen_bai · hổng: c3
 
 ```
-Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]
-Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]
-Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]
-Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], Chương 2 · Đặc thù của sản phẩm AI [T01-018], Chương 3 · Tìm đúng vấn đề [T01-030], Chương 4 · Chọn bài toán để làm [T01-074].
-Tự kiểm: Nhắc làm lại quiz sau khi ôn — câu hỏi: Bạn hãy giải thích lại sự khác biệt giữa làm đúng cái sai và làm sai cái đúng theo tư liệu? Trả lời trôi trong 30 giây thì coi như đã nắm.
+* Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]
+* Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]
+* Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]
+
+Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], Chương 2 · Đặc thù của sản phẩm AI [T01-018], Chương 3 · Tìm đúng vấn đề [T01-030], Chương 4 · Chọn bài toán để làm [T01-074]. Bạn chọn làm sai cái đúng là sai vì làm sai cái đúng nghĩa là giải pháp sai cho vấn đề đúng, ta có thể sửa được giải pháp, còn làm đúng cái sai nghĩa là giải pháp rất tối ưu nhưng giải quyết nhầm vấn đề không có thật, lãng phí toàn bộ nguồn lực [T01-050], [T01-059], [T01-060], [T01-061].
+
+Tự kiểm: Nhắc làm lại quiz sau khi ôn? (Cách dùng: trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P13 · y_le · hổng: (ý trong quiz)
 
 ```
-Bước phân kỳ là mở rộng góc nhìn để thu insight [T01-071], còn phương án chọn sai vì bỏ trống thay vì nêu đúng kỹ thuật mở rộng góc nhìn. Phương án sai về nội dung vì bỏ sót hành động mở rộng góc nhìn cốt lõi trong pha phân kỳ của Double Diamond [T01-049].
-Tự kiểm: Bước phân kỳ trong Double Diamond dùng để làm gì và áp dụng kỹ thuật nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
-
-Pha hội tụ dùng các kỹ thuật gom nhóm, Five Whys, lọc trùng [T01-074], còn phương án chọn sai vì bỏ trống không chỉ ra các kỹ thuật này. Phương án sai về nội dung vì thiếu các thao tác gom nhóm, dùng Five Whys và lọc trùng đặc trưng của pha hội tụ [T01-074].
-Tự kiểm: Pha hội tụ gồm những kỹ thuật cụ thể nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Bước phân kỳ dùng để mở rộng góc nhìn để thu insight [T01-071]. Phương án bạn chọn là bỏ trống, sai vì phân kỳ thực chất là mở rộng góc nhìn để thu insight chứ không phải không có kỹ thuật gì [T01-071].
+Tự kiểm: Bước phân kỳ trong Double Diamond dùng để làm gì? — trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P14 · muc_duoi_tran · hổng: c1s1
 
 ```
-Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán đã được xác nhận ổn [T01-001] [T01-017], giúp bạn giảm bớt gánh nặng khi học tiếp. 
+Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán đã được xác nhận ổn [T01-001] [T01-017], giúp bạn giảm bớt gánh nặng khi học phần tiếp theo. Phần này tư liệu chưa nói rõ về thứ tự nên ôn lại. Mục bạn đang hổng là 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể [T01-004] [T01-006] [T01-016], nơi cần tránh quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] và thực hiện bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006].
 
-Phần bạn đang hổng là 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể [T01-004] [T01-006] [T01-016], nơi bạn chưa nắm rõ về quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] cũng như cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. 
-
-Thứ tự bạn nên ôn lại là bắt đầu từ việc nhận diện quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016], sau đó học cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006] để chuyển từ yêu cầu mơ hồ thành bài toán cụ thể [T01-004] [T01-006] [T01-016].
-
-Tự kiểm: Vì sao quán tính nhảy thẳng vào giải pháp lại nguy hiểm và cần phải bóc tách yêu cầu mơ hồ rồi verify với stakeholder thế nào? (trả lời trôi trong 30 giây thì coi như đã nắm).
+Tự kiểm: Vì sao phải bóc tách yêu cầu mơ hồ rồi verify với stakeholder trước khi làm? — trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P15 · y_le · hổng: (ý trong quiz)
 
 ```
-Bước phân kỳ là mở rộng góc nhìn để thu insight [T01-071]. Phương án chọn vẽ ma trận tác động – nỗ lực là sai về nội dung vì đó không phải là kỹ thuật của bước phân kỳ dùng để mở rộng góc nhìn thu insight [T01-071].
-Tự kiểm: Bước phân kỳ trong Double Diamond dùng để làm gì? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Bước phân kỳ là mở rộng góc nhìn để thu insight [T01-071]. Phương án chọn "Vẽ ma trận tác động – nỗ lực" là sai vì đây không phải là kỹ thuật mở rộng góc nhìn để thu insight [T01-071].
+Tự kiểm: Bạn phân biệt thế nào giữa phân kỳ và hội tụ trong Double Diamond? Trả lời trôi trong 30 giây thì coi như đã nắm.
 
-Pha hội tụ dùng các kỹ thuật gom nhóm, Five Whys, lọc trùng [T01-074]. Phương án chọn mở rộng góc nhìn để có thêm insight là sai về nội dung vì việc mở rộng góc nhìn là nhiệm vụ của bước phân kỳ chứ không phải pha hội tụ [T01-071].
-Tự kiểm: Pha hội tụ gồm những kỹ thuật nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Pha hội tụ dùng các kỹ thuật gồm gom nhóm, Five Whys, lọc trùng [T01-074]. Phương án chọn "Mở rộng góc nhìn để có thêm insight" là sai vì đây là đặc điểm và mục đích của bước phân kỳ, không phải là kỹ thuật gom nhóm, Five Whys hay lọc trùng của pha hội tụ [T01-071] [T01-074].
+Tự kiểm: Kỹ thuật nào được dùng trong pha hội tụ? Trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P16 · y_le · hổng: (ý trong quiz)
 
 ```
-Quán tính nhảy thẳng vào giải pháp nguy hiểm vì đó là thói quen vội vàng lao vào làm ngay khi chưa hiểu rõ bản chất vấn đề [T01-004] [T01-016]. Phương án chọn tốn nhiều tiền là sai vì tư liệu chỉ ra sự nguy hiểm nằm ở việc làm sai bài toán chứ không đề cập đến chi phí tiền bạc.
-Tự kiểm: Quán tính nhảy thẳng vào giải pháp biểu hiện như thế nào và vì sao nó nguy hiểm? (trả lời trôi trong 30 giây thì coi như đã nắm).
-
-Phần phân kỳ và hội tụ trong các câu hỏi còn lại là phần này tư liệu chưa nói rõ.
-Tự kiểm: Các bước phân kỳ và hội tụ gồm những gì theo nội dung bài học? (trả lời trôi trong 30 giây thì coi như đã nắm).
+Quán tính nhảy thẳng vào giải pháp là hiện tượng khi nhận yêu cầu mơ hồ, ta lập tức lao đi làm mà không xác định đúng bài toán [T01-004], [T01-016]. Bạn chọn phương án cho rằng việc này nguy hiểm vì tốn nhiều tiền là sai nội dung, vì tư liệu chỉ ra sự nguy hiểm nằm ở việc làm sai ngay từ đầu hoặc làm đúng cái sai, chứ tư liệu không nói nguyên nhân là tốn nhiều tiền [T01-001], [T01-017].
+Tự kiểm: Quán tính nhảy thẳng vào giải pháp dẫn đến hậu quả gì cho công việc? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P17 · muc_duoi_tran · hổng: c1s1
 
 ```
-Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán đã xác nhận ổn [T01-001] [T01-017], giúp bạn nắm chắc tầm quan trọng của việc tìm đúng bài toán. Mục đang hổng là 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể [T01-004] [T01-006] [T01-016], nơi bạn cần biết quán tính nhảy thẳng vào giải pháp nguy hiểm vì sao và cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Phương án chọn "Vì giải pháp thường tốn nhiều tiền" là sai vì nội dung không phản ánh đúng quán tính nhảy thẳng vào việc tìm giải pháp thay vì tìm đúng bài toán. Bạn nên ôn lại theo thứ tự từ việc nhận diện quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] rồi đến cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006].
-Tự kiểm: Bạn đã hiểu vì sao quán tính nhảy thẳng vào giải pháp lại nguy hiểm chưa? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán đã xác nhận ổn [T01-001] [T01-017]. Mục 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể đang nói về việc quán tính nhảy thẳng vào giải pháp và cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Bạn nên ôn lại theo thứ tự từ quán tính nhảy thẳng vào giải pháp đến bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Đối với câu hỏi về lý do thói quen nhảy thẳng vào giải pháp nguy hiểm, phương án chọn "Vì giải pháp thường tốn nhiều tiền" là sai vì nội dung này không phải là lý do được nhắc đến khi nói về quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016].
+
+Tự kiểm: Quán tính nhảy thẳng vào giải pháp là gì và ta cần làm gì với yêu cầu mơ hồ? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```
 
 ### P18 · nen_bai · hổng: c1
 
 ```
-Chào bạn, vì bạn sai tới tận phần nền, mình đề nghị bạn học lại cả bài theo thứ tự. 
+Chào bạn, mình thấy bạn sai tới tận phần nền nên không khoanh nhỏ hơn được. Mình đề nghị bạn học lại cả bài theo thứ tự.
 
 - Ba ý cốt lõi của bài: Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004] | Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049] | Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]
-- Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán, Day 2 (sáng) · Xác định bài toán kinh doanh cho AI, 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể, 1.2 Product manager và project manager, Chương 2 · Đặc thù của sản phẩm AI, Chương 3 · Tìm đúng vấn đề, Chương 4 · Chọn bài toán để làm.
-- Tự kiểm: Bạn đã làm lại quiz sau khi ôn chưa? Trả lời trôi trong 30 giây thì coi như đã nắm.
+- Thứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán, sau đó đến Day 2 (sáng) · Xác định bài toán kinh doanh cho AI, tiếp theo là 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể, rồi 1.2 Product manager và project manager, sau đó tới Chương 2 · Đặc thù của sản phẩm AI, tiếp theo là Chương 3 · Tìm đúng vấn đề, và cuối cùng là Chương 4 · Chọn bài toán để làm.
+
+Tự kiểm: Nhắc làm lại quiz sau khi ôn? — trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P19 · y_le · hổng: (ý trong quiz)
 
 ```
-Khi sếp đưa một yêu cầu chung chung, cách làm đúng là bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. Phương án chọn giải pháp phổ biến nhất trên thị trường là sai về nội dung vì nó rơi vào quán tính nhảy thẳng vào giải pháp khi đối mặt với yêu cầu mơ hồ thay vì bóc tách và xác thực lại [T01-004], [T01-006], [T01-016].
+Khi sếp đưa yêu cầu chung chung, cách làm đúng là bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. Phương án chọn giải pháp phổ biến nhất trên thị trường là sai vì thực tế ta cần bóc tách yêu cầu mơ hồ rồi verify với stakeholder, chứ không phải đi theo quán tính nhảy thẳng vào giải pháp khi đối mặt với yêu cầu chung chung [T01-004] [T01-006].
 
-Tự kiểm: Khi sếp đưa yêu cầu chung chung, bạn cần làm gì trước khi nghĩ tới giải pháp? (Trả lời trôi trong 30 giây thì coi như đã nắm).
+Tự kiểm: Khi nhận yêu cầu mơ hồ từ sếp, bạn cần làm gì trước khi nghĩ đến giải pháp, trả lời trôi trong 30 giây thì coi như đã nắm.
 ```
 
 ### P20 · muc_nong · hổng: c3s1
 
 ```
-Phân kỳ dùng để mở rộng góc nhìn để thu insight [T01-071], còn hội tụ dùng để gom nhóm, Five Whys, lọc trùng [T01-074].
-Cách nhớ là Phân kỳ giống như mở to mắt nhìn rộng ra, còn Hội tụ giống như túm các ý lại một chỗ.
+Bạn đang nhầm lẫn giữa hai pha của Double Diamond: phân kỳ dùng để mở rộng góc nhìn để thu insight [T01-071], còn hội tụ dùng gom nhóm, Five Whys, lọc trùng [T01-074]. Cách nhớ là "Phân" là chia ra rộng để lấy insight, "Hội" là gom lại bằng Five Whys hay lọc trùng.
 
-Tự kiểm: Phân kỳ và hội tụ khác nhau thế nào? — trả lời trôi trong 30 giây thì coi như đã nắm.
+Tự kiểm: Phân kỳ và hội tụ trong Double Diamond khác nhau thế nào? (trả lời trôi trong 30 giây thì coi như đã nắm).
 ```

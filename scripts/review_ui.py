@@ -25,7 +25,9 @@ PORT = 5599
 if not os.path.exists(DATA):
     sys.exit("Chưa có eval/grounding.json — chạy trước: python scripts/grounding.py")
 
-rows = json.load(open(DATA, encoding="utf-8"))["rows"]
+_data = json.load(open(DATA, encoding="utf-8"))
+rows = _data["rows"]
+RUN_ID = _data.get("run_id", "?")
 
 
 def path_for(name):
@@ -64,6 +66,8 @@ border-radius:9px;background:var(--milk);margin-top:8px}
 .bar{position:fixed;left:0;right:0;bottom:0;background:var(--espresso);color:var(--cream);
 padding:10px 16px;font-size:14px;display:flex;justify-content:space-between}
 .done{opacity:.55}
+.stale{background:#fdf4f2;border:1px solid #e6bfb6;color:var(--bad);font-size:13px;
+padding:8px 10px;border-radius:9px;margin-top:8px}
 </style></head><body><div class="wrap">
 <h1>Chấm tay — nhận xét AI</h1>
 <p class="sub" id="who"></p>
@@ -80,7 +84,8 @@ if (!RID) { RID = 'r' + Date.now().toString(36).slice(-5); localStorage.setItem(
 let TEN = localStorage.getItem('coldbrew-ten') || '';
 const NAME = () => (TEN ? TEN + '-' + RID : RID);
 document.getElementById('who').innerHTML =
-  `Bản chấm của bạn lưu ở <code>eval/review/<span id="fn">${NAME()}</span>.json</code> — ` +
+  `Đang chấm lượt chạy <b>${ROWS[0] ? ROWS[0].run_id : '?'}</b>. ` +
+  `Bản chấm lưu ở <code>eval/review/<span id="fn">${NAME()}</span>.json</code> — ` +
   `mỗi máy một file, không đè lên nhau. Tên (tuỳ chọn): ` +
   `<input id="ten" type="text" style="width:160px;display:inline-block;margin:0" value="${TEN}" placeholder="vd: duy">`;
 let SAVED = {};
@@ -88,13 +93,18 @@ try { SAVED = JSON.parse(localStorage.getItem('coldbrew-review-' + RID) || '{}')
 const el = document.getElementById('list');
 try {
 ROWS.forEach(r => {
-  const s = SAVED[r.id] || {};
+  let s = SAVED[r.id] || {};
+  const cu = s.hash && s.hash !== r.hash;   // đã chấm, nhưng cho BẢN TRẢ LỜI CŨ
+  if (cu) s = { _cu: s };
   const d = document.createElement('div');
   d.className = 'card' + (s.nhan_xet && s.nhanh ? ' done' : '');
   d.id = 'c_' + r.id;
   d.innerHTML = `
    <div class="head"><b>${r.id} · ${r.desc}</b>
      <span class="tag">${r.scenario}</span></div>
+   ${cu ? '<div class="stale">⚠ Bạn đã chấm case này ở BẢN TRẢ LỜI TRƯỚC (' +
+          (s._cu.nhan_xet === 'ok' ? 'nhận xét: ổn' : 'nhận xét: chưa ổn') +
+          '). Câu trả lời đã đổi nên nhận xét cũ không còn hiệu lực — chấm lại.</div>' : ''}
    <div class="blk">KHỐI A · BÀI LÀM CỦA HỌC VIÊN</div>
    <div class="ans">${r.bai_lam.join('\\n')}</div>
    <div class="blk">KHỐI B · LUẬT CHẨN ĐOÁN KẾT LUẬN <span class="tag">${r.scenario}</span>
@@ -129,7 +139,9 @@ ROWS.forEach(r => {
   el.innerHTML = '<div class="card"><b>Lỗi dựng trang:</b><pre>' + err.message + '</pre></div>';
 }
 function save(id, k, v) {
-  SAVED[id] = SAVED[id] || {}; SAVED[id][k] = v;
+  const row = ROWS.find(x => x.id === id);
+  if (!SAVED[id] || SAVED[id].hash !== row.hash) SAVED[id] = { hash: row.hash, run_id: row.run_id };
+  SAVED[id][k] = v;
   localStorage.setItem('coldbrew-review-' + RID, JSON.stringify(SAVED));
   fetch('/save', {method:'POST', body: JSON.stringify({rater: NAME(), data: SAVED})})
     .then(() => { document.getElementById('status').textContent = 'đã lưu'; tally(); })
@@ -138,7 +150,8 @@ function save(id, k, v) {
   c.classList.toggle('done', !!(SAVED[id].nhan_xet && SAVED[id].nhanh));
 }
 function tally() {
-  const v = Object.values(SAVED);
+  const hs = new Set(ROWS.map(r => r.hash));
+  const v = Object.values(SAVED).filter(x => hs.has(x.hash));
   const nx = v.filter(x => x.nhan_xet === 'ok').length, nh = v.filter(x => x.nhanh === 'ok').length;
   const nv = v.filter(x => x.noi_vong === 'ok').length;
   const done = v.filter(x => x.nhan_xet && x.nhanh).length;
@@ -171,8 +184,8 @@ class H(BaseHTTPRequestHandler):
         n = int(self.headers.get("Content-Length", 0))
         body = json.loads(self.rfile.read(n) or b"{}")
         rater, data = body.get("rater", "khuyet-danh"), body.get("data", {})
-        json.dump({"rater": rater, "cham": data}, open(path_for(rater), "w", encoding="utf-8"),
-                  ensure_ascii=False, indent=2)
+        json.dump({"rater": rater, "run_id": RUN_ID, "cham": data},
+                  open(path_for(rater), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
         done = sum(1 for v in data.values() if v.get("nhan_xet") and v.get("nhanh"))
         nx = sum(1 for v in data.values() if v.get("nhan_xet") == "ok")
         nh = sum(1 for v in data.values() if v.get("nhanh") == "ok")
@@ -187,4 +200,12 @@ try:
     webbrowser.open(f"http://localhost:{PORT}")
 except Exception:
     pass
-HTTPServer(("127.0.0.1", PORT), H).serve_forever()
+try:
+    srv = HTTPServer(("127.0.0.1", PORT), H)
+except OSError as e:
+    print(f"KHONG MO DUOC CONG {PORT}: {e}")
+    print("Nhieu kha nang con mot tien trinh review_ui cu dang giu cong va phuc vu DU LIEU CU.")
+    print("Tat no truoc:  powershell \"Get-CimInstance Win32_Process -Filter \\\"Name like 'python%'\\\" |")
+    print("                Where-Object { $_.CommandLine -like '*review_ui*' } | Stop-Process -Force\"")
+    sys.exit(1)
+srv.serve_forever()

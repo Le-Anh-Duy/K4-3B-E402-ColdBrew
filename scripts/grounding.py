@@ -11,11 +11,13 @@ Chuẩn "đạt" (chốt TRƯỚC khi chạy, không sửa sau khi thấy kết 
   ③ có đủ thành phần khung của kịch bản (ít nhất 1 trích dẫn + 1 câu hỏi tự kiểm)
 Cột "hợp lý" do người đọc tick, ghi tay vào eval/grounding.md sau khi chạy.
 """
+import hashlib
 import json
 import os
 import re
 import sys
 import time
+from datetime import datetime
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -43,6 +45,8 @@ def throttle():
     if cho > 0:
         time.sleep(cho)
     _last_call[0] = time.time()
+
+RUN_ID = datetime.now().strftime("%Y%m%d-%H%M")
 
 graph = json.load(open(os.path.join(ROOT, "eval", "graph.json"), encoding="utf-8"))
 INPUTS = os.path.join(ROOT, "eval", "cp3_inputs.json")
@@ -152,6 +156,10 @@ def run_case(c):
         "out": out.strip(), "cited": cited,
         "bad_span": [s for s in cited if s not in ALL_SPANS],
         "off_topic": [s for s in cited if s in ALL_SPANS and s not in allowed],
+        # dấu vân tay của CHÍNH câu trả lời này — bản chấm tay gắn vào đây,
+        # đổi câu trả lời là nhận xét cũ tự động hết hiệu lực
+        "hash": hashlib.sha1(out.strip().encode("utf-8")).hexdigest()[:8],
+        "run_id": RUN_ID,
         "c1": c1, "c2": c2, "c3": c3, "c4": c4, "pass": c1 and c2 and c3,
     }
 
@@ -200,8 +208,12 @@ for r in rows:
     md += [f"### {r['id']} · {r['scenario']} · hổng: {r['gap'] or '(ý trong quiz)'}", "",
            "```", r["out"], "```", ""]
 open(os.path.join(ROOT, "eval", "grounding.md"), "w", encoding="utf-8").write("\n".join(md))
-json.dump({"model": MODEL, "rows": rows},
-          open(os.path.join(ROOT, "eval", "grounding.json"), "w", encoding="utf-8"),
+payload = {"run_id": RUN_ID, "model": MODEL, "qua_backend": USE_API, "rows": rows}
+json.dump(payload, open(os.path.join(ROOT, "eval", "grounding.json"), "w", encoding="utf-8"),
+          ensure_ascii=False, indent=2)
+runs_dir = os.path.join(ROOT, "eval", "runs")
+os.makedirs(runs_dir, exist_ok=True)
+json.dump(payload, open(os.path.join(runs_dir, RUN_ID + ".json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=2)
 print("\nĐã ghi eval/grounding.md và eval/grounding.json")
 print('Chấm tay hai câu hỏi người: python scripts/review_ui.py')

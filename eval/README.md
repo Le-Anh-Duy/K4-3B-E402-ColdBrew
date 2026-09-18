@@ -11,8 +11,15 @@ Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
 | `human/` | Case do thành viên tự chạy trên trang mock rồi tự gán nhãn |
 | `results.md` | Bảng kết quả lượt chạy gần nhất (sinh tự động) |
 | `cp3_inputs.json` | 20 hồ sơ trả lời giả, đầu vào cho **AI-response check** |
-| `grounding.json` · `grounding.md` | Câu trả lời AI **đã đóng băng** + kết quả chấm máy. Người chấm sau trên đúng bản này |
+| `grounding.json` · `grounding.md` | Câu trả lời AI **đã đóng băng** của lượt chạy MỚI NHẤT + kết quả chấm máy |
+| `runs/<run_id>.json` | Bản lưu trữ từng lượt chạy — đổi prompt rồi chạy lại vẫn giữ được bản cũ để so |
 | `review/<id>.json` | Bản chấm tay của từng người (sinh từ `scripts/review_ui.py`) |
+
+**Nhận xét của người gắn theo PHIÊN BẢN câu trả lời, không theo mã case.** Mỗi câu trả lời có
+`hash` riêng; bản chấm lưu kèm `hash` + `run_id`. Chạy lại AI ra chữ khác thì hash đổi → nhận xét
+cũ **tự động hết hiệu lực**: trang chấm hiện cảnh báo và bắt chấm lại, `review_summary.py` loại
+khỏi thống kê và báo rõ bao nhiêu bản chấm đã lạc hậu. Nếu không làm vậy thì nhận xét "chưa ổn"
+của bản cũ sẽ lặng lẽ dính vào bản mới — số đo thành sai.
 | `human_review.md` | Gộp các bản chấm + mức đồng thuận (sinh từ `scripts/review_summary.py`) |
 
 ## Nhãn kỳ vọng gồm gì
