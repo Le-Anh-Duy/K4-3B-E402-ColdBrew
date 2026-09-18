@@ -130,11 +130,11 @@ Ba ứng viên cân nhắc trên **cùng một bộ data** (K4, đã lọc như 
 
     Vì vậy câu trả lời *"khảo sát hết cây mà không gán được chỗ hổng nào"* là một **đầu ra được thiết kế sẵn và có case kiểm**, không phải trường hợp hệ thống hỏng.
 - **Non-goals (KHÔNG build):**
-  1. Extraction tự động từ transcript/PDF (graph dựng tay từ slide, khai báo rõ).
+  1. Pipeline extraction tự động — cây 30 node dựng một lần rồi chốt (§0).
   2. Tài khoản, đăng nhập, lớp học, dashboard giảng viên.
-  3. Sinh nội dung bài học mới — chỉ trỏ về nội dung/slide đã có.
-  4. Bank câu hỏi lớn — quiz cố định ~10–15 câu map sẵn vào concept.
-  5. Bayesian knowledge tracing đầy đủ — dùng mastery theo rule, nêu rõ ngưỡng.
+  3. Sinh nội dung bài học mới — chỉ trỏ về đoạn transcript đã có.
+  4. Ngân hàng câu hỏi lớn — quiz cố định 5 câu map sẵn vào 5 node lá.
+  5. Bayesian knowledge tracing — dùng mastery theo rule, nêu rõ ngưỡng.
 - **Hai tính năng AI, tách rời nhau:**
 
   | | Trả lời câu hỏi gì | Đầu vào | Đầu ra | Nguồn |
@@ -147,7 +147,7 @@ Ba ứng viên cân nhắc trên **cùng một bộ data** (K4, đã lọc như 
 - **Mức prototype nhắm tới:** [ ] Sketch [x] Mock → [ ] Working *(đang trên đường)*
   - **Thật:** chấm quiz · tín hiệu theo thời gian trả lời · suy luận prerequisite trên graph (rule, 3 bản đồng bộ) · provenance bằng mã đoạn transcript · resume phiên · **1 lời gọi AI thật vào quyết định trung tâm** (`/ai/plan/generate`, đường kịch bản).
   - **Mock:** nội dung của AI #1 trên trang (nút *"✨ AI phân tích câu này"*, *"Nhận xét vòng này"*) đang dùng text soạn sẵn trong `mockup/data.js`; learner state lưu file JSON.
-  - **Trạng thái thật tại CP4:** backend có **11 endpoint** với **4 route AI**, nhưng trang mock mới **nối 1/4**. Theo bảng guide §3.2 thì cái đang chạy là **Mock** (flow bấm được, data giả, AI thật ở lõi), không phải Working. Khai đúng mức thay vì khai vống — guide nói *"một bản Sketch làm kỹ được đánh giá cao hơn một bản Working làm vội"*. Ba route còn lại sẽ được nối thêm sau CP4 (không phải feature mới, chỉ là đấu dây).
+  - **Trạng thái tại CP4:** backend có 11 endpoint / 4 route AI, trang mock mới nối **1/4** — đúng mức **Mock** theo bảng guide §3.2. Ba route còn lại là việc đấu dây, không phải feature mới.
 - **Automation:** [x] augment  [ ] conditional  [ ] automate
   - Cost-of-error: chỉ dẫn sai khiến học viên ôn nhầm phần → mất thời gian, mất niềm tin. Nên hệ thống **đề xuất + giải thích**, học viên (và giảng viên) thấy được căn cứ và bỏ qua được. Quyết định chọn nhánh do **rule trên graph**, LLM chỉ diễn giải — không để LLM tự bịa prerequisite.
 - **§4b. Nguyên tắc đã áp dụng (≥4):**
@@ -157,24 +157,14 @@ Ba ứng viên cân nhắc trên **cùng một bộ data** (K4, đã lọc như 
   | HAX G11 · *Make clear why the system did what it did* | Panel "Vì sao bạn nhận lộ trình này" + cột "Dấu vết quyết định" ghi từng bước: câu sai nào → gom về node nào → mỗi vòng sai bao nhiêu → leo lên đâu |
   | HAX G2 · *Make clear how well the system can do what it can do* | Ô "Hệ thống đọc được gì" cuối mỗi vòng nói rõ nó suy ra được gì và **chưa** khoanh được gì; lộ trình khi học viên tự ôn có cảnh báo "chỗ hổng có thể còn sâu hơn một tầng" |
   | HAX G17 · *Provide global controls* (học viên giữ quyền) | Hệ thống **không tự leo tầng**: hết mỗi vòng dừng lại cho học viên chọn đi tiếp / làm lại vòng này / tự ôn. Giải thích cũng chỉ sinh khi bấm |
-  | PAIR · *Anchor on familiarity / show your work* | Mọi câu hỏi và mục ôn đều gắn một node có `page` (slide + trang); không có nội dung nào không trỏ về được nguồn |
-  | HAX G1 · *Make clear what the system can do* | Màn đầu nói thẳng phạm vi: một bài giảng, cây 15–30 concept; badge "MOCK DATA · chưa nối AI" khi chưa có AI thật |
+  | PAIR · *Explainability + Trust* | Mọi câu hỏi và mục ôn đều gắn một node có `page` = **mã đoạn transcript** `[T01-NNN]`; không có nội dung nào không trỏ về được nguồn |
+  | HAX G1 · *Make clear what the system can do* | Màn đầu nói thẳng phạm vi: một bài giảng, cây 30 concept. Badge trên đầu trang tự dò backend và hiện **"AI THẬT · &lt;model&gt;"** hoặc **"MOCK DATA · backend chưa chạy"** |
 
-### Skill AI cần có · **Sinh câu hỏi nền có điều kiện** (chưa làm — ghi để không quên)
+### Skill AI còn thiếu · **sinh câu hỏi nền có điều kiện**
 
-**Vấn đề.** `PROBES` hiện là bộ câu hỏi **tĩnh, chung cho cả node cha**. Học viên sai ý *A* nhưng 3 câu nền lại hỏi về khía cạnh *B, C, D* của cùng mục đó → trả lời đúng hết **không** chứng minh được là nền của *A* vững. Kết luận "hổng đúng ở ý A" vì thế đang dựa trên một phép đo không bám đúng chỗ.
+`PROBES` hiện là bộ câu **tĩnh, chung cho cả node cha**. Học viên sai ý *A* nhưng 3 câu nền lại hỏi khía cạnh *B, C, D* của cùng mục đó → trả lời đúng hết **không** chứng minh nền của *A* vững. Cần sinh 3 câu ở tầng cha **nằm trên đường phụ thuộc dẫn tới lá bị sai**, chỉ dùng nội dung trong `span` của node đó, mỗi câu kèm mã đoạn; rule vẫn giữ quyền leo tầng, AI chỉ soạn đề, và phải có bộ tĩnh dự phòng khi API chết.
 
-**Cần.** Câu hỏi nền phải **sinh theo điều kiện**: cho (node cha N · lá bị sai L · phương án học viên đã chọn) → sinh 3 câu ở tầng N **nằm trên đường phụ thuộc dẫn tới L**, không phải 3 câu bất kỳ của N.
-
-**Ràng buộc khi nối AI:**
-- Chỉ được dùng nội dung trong `span` của N; mỗi câu sinh ra phải kèm mã đoạn nguồn.
-- Rule vẫn giữ quyền quyết định leo tầng; AI **chỉ soạn đề**, không chấm, không chọn nhánh.
-- Phải có **bộ câu tĩnh làm dự phòng** khi API chết giữa demo.
-- Giảng viên duyệt/loại được câu sinh ra (educator control).
-
-**Kéo theo trong eval — chiều đo mới:** *câu nền sinh ra có thật sự liên quan tới lá bị sai không.* Đo được bằng máy một phần (câu sinh ra có trích `span` nằm trong phạm vi của N không · có nhắc concept nằm trên đường L→N không), phần còn lại phải người chấm. Chưa có chiều này thì mọi kết luận "nền ổn" đều có dấu hỏi.
-
-**Rủi ro phải nói rõ:** nếu AI vừa soạn đề vừa là căn cứ để kết luận thì vòng lặp tự tham chiếu. Giữ rule làm trọng tài và cho người duyệt đề là cách chặn.
+Đây là **giới hạn của phép đo, không phải của giao diện**: chừng nào câu nền chưa bám đúng lá bị sai thì mọi kết luận `y_le` ("nền ổn") đều có dấu hỏi — kể cả khi ngưỡng #2 đạt 100%. Kéo theo một chiều đo chưa có: *câu nền sinh ra có thật sự liên quan tới lá bị sai không.*
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó · 10 kịch bản
 
@@ -194,8 +184,6 @@ Cột cuối trỏ về case đang phủ kịch bản đó. Ô ghi **"chưa ph�
 | 10 | Hai câu sai **rơi vào hai chương khác nhau**, số tín hiệu bằng nhau | ④ | Không liệt kê cả hai. Gom về node cha chung → nếu hoà thì **ưu tiên tiền đề** (`prereq`), rồi mới tới thứ tự xuất hiện. Dấu vết quyết định phải ghi đúng bước này | G11 | C06 · C07 |
 | 11 | Học viên trả lời **đúng hết vòng nền** sau khi sai ở quiz | ④ | **Không** được kết luận hổng ở node vừa trả lời đúng. Node đó là **trần**, chỗ hổng nằm ở chính ý trong quiz (`y_le`) | G11 · G2 | C13 · C14 · C21 · C22 |
 | 12 | Chạm tới gốc cây hoặc quá 3 vòng mà vẫn sai | ④ | Chuyển sang *"học lại cả bài"* kèm compact 3 ý — không leo vô hạn | G2 | C15 · C17 · C20 |
-
-**Đã sửa tại CP4 — mâu thuẫn trong chính prompt.** Bốn file prompt (`plan` · `chat` · `diagnosis` · `explain`) đang ra lệnh cho AI *"đính kèm số trang slide cụ thể"* kèm ví dụ mẫu `'Xem lại slide d1 trang 21–22'`, trong khi `scenario_prompts.py` và §0 quy định số trang slide **là trích dẫn bịa**. Dữ liệu bơm vào vốn đã đúng (`page` = `transcript-01-clean.md · [T01-032] …`), nhưng lời hướng dẫn và ví dụ mẫu thì **mời mô hình bịa ra số trang không có trong input**. Đã đổi cả bốn sang mã đoạn `[T01-NNN]`, và thay chuỗi mặc định `"Slide bài giảng"` trong 6 router thành `"(chưa có mã đoạn nguồn)"`.
 
 **Kịch bản nhóm sợ nhất khi demo:** #2 — AI trích một mã đoạn **có thật** nhưng thuộc phần khác. Nó **trông đúng**: có ngoặc vuông, có mã đúng định dạng, giám khảo không đối chiếu cây thì không thấy. Lỗi bịa hẳn còn dễ bắt hơn. Đây cũng chính là 3/4 lượt trượt của ngưỡng #1.
 
@@ -263,16 +251,16 @@ Nguyên tắc đặt ngưỡng: **hỏi "sai thì ai chịu gì"**, rồi neo co
 
 ### 7.3 Trạng thái từng ngưỡng tính đến CP4
 
-| # | Ngưỡng | Số đang có | Đối chiếu |
-|---|---|---|---|
-| 1 | ≥90% | **16/20 = 80%** | ✗ **chưa đạt** — thiếu 2 lượt |
-| 2 | ≥90% | **22/22 = 100%** | ✓ đạt — nhưng trên bộ case **nhóm tự soạn** |
-| 3 | 100% / ≤10% | 3/3 case thiếu tín hiệu đều từ chối · 0 case từ chối thừa | ✓ đạt trên 3 case — **quá ít để kết luận** |
-| 4 | ≥70% | **11/20 = 55%** | ✗ **chưa đạt** — cách xa nhất |
-| 5 | ≥80% số phiên | **4/5 = 80%** (1 người chấm) | ~ **chạm đúng mức nhưng chưa tính** — cần người thứ hai (xem #6) |
-| 6 | ≥80% | **chưa có** | ✗ **chưa đo** — xem 7.5 |
-| 7 | trung vị ≤5s | **chưa có** | ✗ **chưa đo** |
-| — | 0 bịa mã đoạn | **0/20** | ✓ đạt |
+| # | Chiều | Ngưỡng | Số đang có | Đối chiếu |
+|---|---|---|---|---|
+| 1 | Dẫn nguồn đúng | ≥90% | **16/20 = 80%** | ✗ **chưa đạt** — thiếu 2 lượt |
+| 2 | Định vị đúng chỗ hổng | ≥90% | **22/22 = 100%** | ✓ đạt — nhưng trên bộ case **nhóm tự soạn** |
+| 3 | Từ chối đúng lúc | 100% / ≤10% | 3/3 case thiếu tín hiệu đều từ chối · 0 từ chối thừa | ✓ đạt, nhưng **3 case là quá ít để kết luận** |
+| 4 | Hữu ích | ≥70% | **11/20 = 55%** | ✗ **chưa đạt** — cách xa nhất |
+| 5 | Nối được giữa các vòng | ≥80% số phiên | **4/5 = 80%**, 1 người chấm | ~ chạm mức nhưng **chưa tính** — cần người thứ hai |
+| 6 | Hai người chấm khớp nhau | ≥80% | **chưa có** | ✗ **chưa đo** — xem 7.5 |
+| 7 | Thời gian chờ | trung vị ≤5s | **chưa có** | ✗ **chưa đo** — chưa có dụng cụ bấm giờ lời gọi AI |
+| — | *Điều kiện cứng:* không bịa mã đoạn | 0 lượt | **0/20** | ✓ đạt |
 
 Hai ngưỡng trượt (#1, #4) và ba ngưỡng chưa đo (#5 chưa tính được, #6, #7). Theo guide §4.1: *không đạt quality bar nhưng phân tích được nguyên nhân vẫn tính đủ điểm* — phân tích ở 7.4.
 
@@ -294,7 +282,7 @@ R0 để lộ 3 lỗ hổng (**C07** thiếu cạnh `prereq` · **C09** và **C1
 
 4 lượt trượt: **3 lượt trích mã đoạn ngoài phạm vi tư liệu được cấp** — cả ba rơi vào kịch bản *"học lại cả bài"*, nơi tư liệu cấp rộng nhất nên mô hình dễ với sang đoạn bên cạnh; **1 lượt câu tự kiểm sai định dạng**. **Không lượt nào bịa mã đoạn không tồn tại** → điều kiện cứng vẫn giữ.
 
-*Nguyên nhân:* lỗi tập trung ở một kịch bản duy nhất, không rải đều → đây là lỗi **phạm vi tư liệu cấp cho prompt**, không phải lỗi mô hình bịa. Hướng sửa (sau CP4, không kịp trong mốc này): thu hẹp tư liệu cấp cho kịch bản `nen_bai`.
+*Nguyên nhân:* lỗi dồn vào một kịch bản chứ không rải đều → đây là lỗi **phạm vi tư liệu cấp cho prompt**, không phải mô hình bịa. Hướng sửa sau CP4: thu hẹp tư liệu cấp cho kịch bản `nen_bai`.
 
 **Hữu ích — 11/20 = 55%**, cách ngưỡng #4 xa nhất. Chấm bằng LLM mạnh hơn, chưa có người chấm.
 
@@ -306,7 +294,7 @@ Chín lượt trượt cho thấy **ràng buộc chống bịa đang siết quá
 | Mức "học lại cả bài" rỗng ruột | 4 | chỉ liệt kê tên chương + 3 gạch đầu dòng, câu tự kiểm thành thủ tục |
 | Né trả lời thứ luật tự suy được | 1 | *"tư liệu chưa nói rõ về thứ tự nên ôn lại"* |
 
-*Đây là đánh đổi giữa hai ngưỡng, không phải hai lỗi rời nhau:* #1 và điều kiện cứng đẩy prompt về phía trích dẫn, #4 kéo về phía giảng giải. Nới ràng buộc để đạt #4 gần như chắc chắn kéo #1 xuống. Cùng nhau chúng định nghĩa bài toán thật của sản phẩm.
+*Hai ngưỡng này đánh đổi nhau:* #1 và điều kiện cứng đẩy prompt về phía **trích**, #4 kéo về phía **giảng**. Nới ràng buộc để đạt #4 gần như chắc chắn kéo #1 xuống — đó mới là bài toán thật của sản phẩm.
 
 **Các phép đo phụ trợ** (không phải ngưỡng, dùng để trả lời hỏi đáp):
 
