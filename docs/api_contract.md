@@ -2,6 +2,7 @@
 
 > **Dự án:** ColdBrew — Track C · Lesson Studio (Knowledge-to-Lesson)  
 > **Phiên bản API:** `v0`  
+> **Cập nhật lần cuối:** 2026-09-18  
 > **Môi trường:** FastAPI Backend (`http://localhost:8000`) & React Vite Frontend (`http://localhost:5173`)  
 > **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs) | **OpenAPI JSON:** [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
 
@@ -10,38 +11,30 @@
 ## 1. Quy Chuẩn Giao Tiếp Chung (Conventions)
 
 1. **Base URL:** `http://localhost:8000/api/v0`
-2. **Vite Proxy:** Mọi request từ Frontend cổng `5173` gọi tiền tố `/api/v0/...` được tự động proxy sang `http://localhost:8000/api/v0/...`.
+2. **Vite Proxy Config:** Frontend gọi trực tiếp `/api/v0/...` (hoặc thông qua `src/api.js`). Vite proxy cấu hình tại `vite.config.js` tự động chuyển tiếp tới Backend port 8000.
 3. **Mã hóa:** UTF-8 (`charset=utf-8`).
 4. **Header Request:**
    ```http
    Content-Type: application/json
    Accept: application/json
    ```
-5. **Định Dạng Response Thành Công (200 OK):** Trả về trực tiếp JSON Object hoặc JSON Array theo schema mô tả bên dưới.
-6. **Định Dạng Response Lỗi Chuẩn (4xx, 5xx):**
+5. **Cấu trúc Response Thành Công (200 OK):** Trả về trực tiếp JSON Object hoặc JSON Array như định nghĩa bên dưới.
+6. **Cấu trúc Response Lỗi Chuẩn (4xx, 5xx):**
    ```json
    {
      "detail": "Mô tả nguyên nhân lỗi cụ thể"
    }
    ```
-7. **Mã Trạng Thái HTTP (Status Codes):**
-   - `200 OK`: Yêu cầu thực thi thành công.
-   - `400 Bad Request`: Dữ liệu gửi lên không hợp lệ hoặc thiếu logic nghiệp vụ.
-   - `404 Not Found`: Không tìm thấy tài nguyên (Node ID, Session ID, v.v.).
-   - `422 Unprocessable Entity`: Sai định dạng schema theo Pydantic.
-   - `500 Internal Server Error`: Lỗi xử lý nội bộ server.
-8. **Cơ Chế Dự Phòng AI (Safe Fallback):** Khi chưa cấu hình `GEMINI_API_KEY` hoặc gặp lỗi rate-limit/mạng, các endpoint AI tự động trả về nội dung giải thích dự phòng (fallback heuristic) được sinh từ dữ liệu cây tri thức và ngân hàng câu hỏi, đảm bảo hệ thống không bị gián đoạn.
+7. **Cơ chế Fallback AI an toàn:** Khi `GEMINI_API_KEY` chưa khai báo hoặc gặp lỗi rate-limit/network, Backend **không crash 500** mà tự động trả về nội dung giải thích dự phòng (fallback heuristic) bám sát dữ liệu slide có trong `tree.json` / `quiz.json` / `probes.json`.
 
 ---
 
-## 2. Chi Tiết Các Endpoints (API Specification)
+## 2. Chi Tiết Endpoints: Backend 1 (Quiz, AI Explain & Chatbot)
 
-### 2.1. Quiz & Chấm Điểm Bài Thi
-
-#### `GET /api/v0/quiz`
-- **Mục đích:** Lấy danh sách câu hỏi trắc nghiệm ôn tập đầu vào cho màn hình Quiz.
-- **Bảo mật:** Đáp án đúng (`answer`), giải thích (`why`), và bẫy (`traps`) bị loại bỏ khỏi response để chống lộ đề.
-- **Request:** Không có Body hay Query Parameter.
+### 2.1. `GET /api/v0/quiz`
+- **Mục đích:** Lấy danh sách 5 câu hỏi trắc nghiệm ôn tập đầu vào cho màn hình Quiz.
+- **Bảo mật & Quy tắc:** Trường `answer`, `why`, `traps` bị loại bỏ ở endpoint này để tránh rò rỉ đáp án ra DevTools.
+- **Request:** Không body, không query parameter.
 - **Response `200 OK`:**
   ```json
   [
@@ -58,6 +51,8 @@
     }
   ]
   ```
+- **Mã lỗi:**
+  - `500 Internal Server Error`: Không nạp được file `quiz.json`.
 - **Ví dụ cURL:**
   ```bash
   curl -X GET "http://localhost:8000/api/v0/quiz" -H "Accept: application/json"
@@ -65,9 +60,9 @@
 
 ---
 
-#### `POST /api/v0/quiz/grade`
-- **Mục đích:** Chấm điểm bài quiz kết hợp phân tích thời gian làm từng câu để phát hiện tín hiệu sư phạm: `rush` (< 3s), `slow` (> 25s), `wrong`, `skip`.
-- **Request Body:**
+### 2.2. `POST /api/v0/quiz/grade`
+- **Mục đích:** Chấm điểm bài quiz kết hợp phân tích thời gian làm từng câu để phát hiện các tín hiệu sư phạm: `rush` (< 3s), `slow` (> 25s), `wrong`, `skip` (bỏ trống).
+- **Request Body (`QuizGradeIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
   | `picked` | `List[int \| null]` | Có | Mảng chỉ số đáp án chọn (0-based). `null` nếu bỏ trống. |
@@ -79,7 +74,7 @@
     "times": [12, 28, 2, 15, 8]
   }
   ```
-- **Response `200 OK`:**
+- **Response `200 OK` (`QuizGradeOut`):**
   ```json
   {
     "records": [
@@ -128,38 +123,19 @@
 
 ---
 
-### 2.2. AI Giải Thích & Nhận Xét (AI Explanation)
-
-#### `POST /api/v0/ai/explain/single`
-- **Mục đích:** AI giải thích chi tiết một câu hỏi (Nút *"✨ AI phân tích câu này"* trên mỗi thẻ câu hỏi).
-- **Request Body:**
+### 2.3. `POST /api/v0/ai/explain/single`
+- **Mục đích:** Kích hoạt AI Gemini khi học viên bấm *"✨ AI phân tích câu này"* trên từng thẻ kết quả tại màn Result hoặc Explain.
+- **Request Body (`ExplainSingleIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
   | `node_id` | `string` | Có | ID của node câu hỏi (vd: `l_token`, `l_vec`). |
   | `question` | `string` | Có | Nội dung câu hỏi. |
   | `options` | `List[string]` | Có | Danh sách 4 phương án lựa chọn. |
   | `correct_idx` | `int` | Có | Chỉ số đáp án đúng (0-based). |
-  | `selected_idx` | `int \| null` | Không | Chỉ số phương án người học chọn (`null` nếu bỏ trống). |
-  | `time_sec` | `int` | Có | Số giây làm câu hỏi này. |
+  | `selected_idx` | `int \| null` | Không | Chỉ số phương án học viên chọn (`null` nếu bỏ trống). |
+  | `time_sec` | `int` | Có | Số giây học viên làm câu hỏi này. |
   | `flag` | `string` | Có | Nhãn hành vi: `ok`, `slow`, `wrong`, `rush`, `skip`. |
-- **Ví dụ Request Body:**
-  ```json
-  {
-    "node_id": "l_token",
-    "question": "Câu nào sau đây mô tả ĐÚNG NHẤT về token trong LLM?",
-    "options": [
-      "Mỗi token luôn tương ứng chính xác với một từ hoàn chỉnh",
-      "Một từ dài hoặc phức tạp có thể bị tách thành nhiều token khác nhau",
-      "Mỗi token luôn đại diện cho một câu hoàn chỉnh",
-      "Token là đơn vị chỉ được sử dụng cho văn bản tiếng Anh"
-    ],
-    "correct_idx": 1,
-    "selected_idx": 0,
-    "time_sec": 2,
-    "flag": "rush"
-  }
-  ```
-- **Response `200 OK`:**
+- **Response `200 OK` (`ExplainSingleOut`):**
   ```json
   {
     "why": "Tokenizer cắt theo mẫu ký tự hay gặp, nên một từ dài có thể thành nhiều token, còn từ ngắn chỉ một token.",
@@ -174,8 +150,8 @@
     -H "Content-Type: application/json" \
     -d '{
       "node_id": "l_token",
-      "question": "Câu nào sau đây mô tả ĐÚNG NHẤT về token?",
-      "options": ["Mỗi token là một từ", "Một từ dài có thể tách nhiều token", "Token là một câu", "Chỉ dùng cho tiếng Anh"],
+      "question": "Câu nào đúng về token?",
+      "options": ["Mỗi token là một từ", "Một từ dài có thể thành nhiều token", "Token là một câu", "Chỉ dùng cho tiếng Anh"],
       "correct_idx": 1,
       "selected_idx": 0,
       "time_sec": 2,
@@ -185,34 +161,16 @@
 
 ---
 
-#### `POST /api/v0/ai/explain/round`
-- **Mục đích:** AI nhận xét tổng hợp cả vòng chẩn đoán nền (Nút *"✨ Nhận xét & giải thích đáp án vòng này"* tại màn Review).
-- **Request Body:**
+### 2.4. `POST /api/v0/ai/explain/round`
+- **Mục đích:** Kích hoạt AI phân tích tổng quan kết quả sau khi hoàn thành 3 câu chẩn đoán nền ở màn Review (Nút *"✨ Nhận xét & giải thích đáp án vòng này"*).
+- **Request Body (`ExplainRoundIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
   | `target_node_id` | `string` | Có | ID của node cha đang chẩn đoán (vd: `c3s1`). |
   | `round_num` | `int` | Có | Thứ tự vòng chẩn đoán hiện tại (1, 2, 3). |
   | `decision` | `string` | Có | Quyết định của engine: `locate`, `escalate`, `restart`. |
-  | `records` | `List[RoundRecordIn]` | Có | Chi tiết các câu hỏi làm trong vòng vừa rồi. |
-- **Ví dụ Request Body:**
-  ```json
-  {
-    "target_node_id": "c3s1",
-    "round_num": 1,
-    "decision": "locate",
-    "records": [
-      {
-        "question": "Embedding biến một đoạn văn bản thành định dạng nào?",
-        "options": ["Một dãy số thực nhiều chiều (vector)", "Một bức ảnh", "Một câu tóm tắt", "Chuỗi MD5"],
-        "correct_idx": 0,
-        "selected_idx": 0,
-        "sec": 5,
-        "flag": "ok"
-      }
-    ]
-  }
-  ```
-- **Response `200 OK`:**
+  | `records` | `List[RoundRecordIn]` | Có | Chi tiết 3 câu làm trong vòng vừa rồi. |
+- **Response `200 OK` (`ExplainRoundOut`):**
   ```json
   {
     "summary": "Bạn trả lời đúng 2/3 câu nền tảng của mục 3.1 Embedding.",
@@ -221,41 +179,23 @@
       "Câu 2: Nhầm lẫn nhẹ giữa hàm khoảng cách và mã hoá mật khẩu.",
       "Câu 3: Phân biệt tốt tính chất tất định của embedding."
     ],
-    "advice": "Lỗ hổng không nằm ở gốc rễ khái niệm mà chỉ khu trú ở ứng dụng so sánh vector. Bạn có thể yên tâm chuyển sang bước nhận lộ trình ôn tập."
+    "advice": "Lỗ hổng không nằm ở gốc rễ khái niệm mà chỉ khu trú ở ứng dụng so sánh vector. Bạn có thể yên tâm chuyển sang bước tạo lộ trình ôn tập."
   }
   ```
 
 ---
 
-### 2.3. AI Chatbot Phản Biện Chẩn Đoán
-
-#### `POST /api/v0/ai/chat/message`
-- **Mục đích:** Đối thoại giải đáp thắc mắc với AI tại màn Analysis (Nút *"💬 Chưa thuyết phục — hỏi thêm"*). Giúp học viên hiểu lý do hệ thống khoanh vùng lỗ hổng.
-- **Ràng buộc an toàn:** Nội dung trả lời 100% neo chặt vào Slide bài học và Cây tri thức, không hallucinate thông tin bên ngoài.
-- **Request Body:**
+### 2.5. `POST /api/v0/ai/chat/message`
+- **Mục đích:** Đối thoại với AI phản biện tại màn Analysis (Nút *"💬 Chưa thuyết phục — hỏi thêm"*). Giúp học viên thắc mắc vì sao hệ thống nghi ngờ mình hổng mục này.
+- **Ràng buộc an toàn:** Hệ thống kiểm tra nghiêm ngặt, chỉ cho phép đối thoại xoay quanh cây tri thức và slide bài học. Nghiêm cấm bịa đặt concept ngoài bài học.
+- **Request Body (`ChatIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
   | `target_node_id` | `string` | Có | Node đang bị khoanh vùng nghi vấn. |
   | `weak_signals` | `List[WeakSignalIn]` | Có | Danh sách tín hiệu yếu rút ra từ bài quiz (`node`, `label`, `flag`, `sec`). |
-  | `message` | `string` | Có | Câu hỏi / lời phản biện của người học. |
-  | `history` | `List[ChatMessage]` | Không | Lịch sử trao đổi trước đó (`role`: "user" \| "assistant", `content`). |
-- **Ví dụ Request Body:**
-  ```json
-  {
-    "target_node_id": "c3s1",
-    "weak_signals": [
-      {
-        "node": "l_vec",
-        "label": "Văn bản được vector hoá",
-        "flag": "wrong",
-        "sec": 12
-      }
-    ],
-    "message": "Vì sao hệ thống lại cho rằng mình cần ôn lại phần Embedding?",
-    "history": []
-  }
-  ```
-- **Response `200 OK`:**
+  | `message` | `string` | Có | Câu hỏi / lời phản bác của học viên. |
+  | `history` | `List[ChatMessage]` | Không | Lịch sử chat trước đó (`role`: "user" \| "assistant", `content`). Mặc định `[]`. |
+- **Response `200 OK` (`ChatOut`):**
   ```json
   {
     "reply": "Hệ thống khoanh vùng vào '3.1 Embedding' vì bạn làm sai câu hỏi 'Văn bản được vector hoá' (mất 12s). Trong bài giảng Day 1 (Slide d1 · trang 21), đây là bước tiên quyết để LLM tìm kiếm ngữ nghĩa.",
@@ -271,12 +211,11 @@
 
 ---
 
-### 2.4. Cây Tri Thức (Knowledge Graph)
+## 3. Chi Tiết Endpoints: Backend 2 (Cây Tri Thức, Probes, Lộ Trình & Session)
 
-#### `GET /api/v0/graph/tree`
-- **Mục đích:** Lấy toàn bộ cây tri thức 19 concepts phân cấp (Root $\to$ Chương $\to$ Mục $\to$ Lá) kèm liên kết số trang slide provenance chính xác.
-- **Request:** Không có Body hay Query Parameter.
-- **Response `200 OK`:**
+### 3.1. `GET /api/v0/graph/tree`
+- **Mục đích:** Nạp toàn bộ cây tri thức 19 concepts phân cấp (Root $\to$ Chương $\to$ Mục $\to$ Lá) kèm liên kết số trang slide provenance chính xác.
+- **Response `200 OK` (`TreeResponse`):**
   ```json
   {
     "nodes": {
@@ -316,13 +255,11 @@
 
 ---
 
-### 2.5. Chẩn Đoán Nền & Quyết Định Thích Ứng (Probes)
-
-#### `GET /api/v0/probes/{target_node_id}`
-- **Mục đích:** Lấy bộ 3 câu hỏi chẩn đoán nền của node cha (vd: `c3s1`, `c1`, `c2`) cho màn Probe.
+### 3.2. `GET /api/v0/probes/{target_node_id}`
+- **Mục đích:** Lấy 3 câu hỏi chẩn đoán nền của node cha (vd: `c3s1`, `c1`, `c2`) để tiến hành chẩn đoán sâu ở màn Probe.
 - **Path Parameter:**
   - `target_node_id` (`string`, bắt buộc): ID của node cha cần chẩn đoán.
-- **Response `200 OK`:**
+- **Response `200 OK` (`ProbesOut`):**
   ```json
   {
     "target_node_id": "c3s1",
@@ -363,24 +300,24 @@
   }
   ```
 - **Mã lỗi:**
-  - `404 Not Found`: Khi node ID không tồn tại hoặc chưa có bộ câu hỏi chẩn đoán.
+  - `404 Not Found`: Khi node ID không tồn tại hoặc không có bộ câu hỏi chẩn đoán được định nghĩa.
 
 ---
 
-#### `POST /api/v0/probes/evaluate-round`
-- **Mục đích:** Chấm điểm vòng probe và áp dụng luật sư phạm thích ứng để đưa ra quyết định leo cây (`locate`, `escalate`, `restart`).
-- **Quy tắc quyết định:**
-  - `locate`: Sai $\le 1/3 \to$ Nền tảng vững, lỗ hổng chỉ ở chi tiết $\to$ Khoanh vùng tại node hiện tại.
-  - `escalate`: Sai $\ge 2/3 \to$ Hổng ngay cả khái niệm nền $\to$ Leo lên node cha.
-  - `restart`: Sai $\ge 2/3$ ở mức root hoặc đã vượt quá 3 vòng chẩn đoán.
-- **Request Body:**
+### 3.3. `POST /api/v0/probes/evaluate-round`
+- **Mục đích:** Chấm điểm vòng probe và áp dụng thuật toán thích ứng (Adaptive Diagnostic Engine) để đưa ra quyết định leo cây.
+- **Thuật toán sư phạm (Rule-based Decision):**
+  - **`locate` (Khoanh vùng tại chỗ):** Số câu sai $\le 1/3 \to$ Nền tảng node cha vững vàng, chỗ hổng chỉ nằm cục bộ ở lá $\to$ Dừng và sinh lộ trình ôn node hiện tại.
+  - **`escalate` (Leo lên tầng trên):** Số câu sai $\ge 2/3 \to$ Hổng ngay cả khái niệm nền của node cha $\to$ Leo lên node cha cấp cao hơn (`c3s1` $\to$ `c3`).
+  - **`restart` (Học lại toàn diện):** Nếu đã leo lên tận node gốc (`root`) mà vẫn sai $\ge 2/3$, hoặc vượt quá số vòng tối đa (`MAX_ROUNDS = 3`).
+- **Request Body (`EvaluateRoundIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
   | `target_node_id` | `string` | Có | Node đang được chẩn đoán. |
   | `round_num` | `int` | Có | Thứ tự vòng hiện tại (1, 2, 3). |
-  | `picked` | `List[int \| null]` | Có | Chỉ số đáp án chọn cho 3 câu. |
-  | `times` | `List[int]` | Có | Thời gian làm từng câu (giây). |
-- **Response `200 OK`:**
+  | `picked` | `List[int \| null]` | Có | Chỉ số các đáp án được chọn cho 3 câu. |
+  | `times` | `List[int]` | Có | Thời gian làm bài từng câu tính theo giây. |
+- **Response `200 OK` (`EvaluateRoundOut`):**
   ```json
   {
     "decision": "locate",
@@ -398,6 +335,26 @@
         "answer": 0,
         "why": "Embedding là hàm biến văn bản thành vector số...",
         "trap": null
+      },
+      {
+        "node": "c3s1",
+        "sel": 0,
+        "correct": true,
+        "sec": 26,
+        "flag": "slow",
+        "answer": 0,
+        "why": "Khoảng cách vector phản ánh mức độ gần gũi ngữ nghĩa...",
+        "trap": null
+      },
+      {
+        "node": "c3s1",
+        "sel": 0,
+        "correct": true,
+        "sec": 8,
+        "flag": "ok",
+        "answer": 0,
+        "why": "Mô hình embedding mang tính tất định...",
+        "trap": null
       }
     ],
     "trace_entry": {
@@ -409,25 +366,24 @@
 
 ---
 
-### 2.6. AI Giả Thuyết Chẩn Đoán (AI Diagnosis Hypothesis)
-
-#### `POST /api/v0/ai/diagnosis/hypothesis`
-- **Mục đích:** AI diễn giải giả thuyết chẩn đoán ban đầu tại màn Analysis dựa trên các tín hiệu yếu từ bài quiz, tuân thủ nguyên tắc HAX G11 và HAX G2.
-- **Request Body:**
+### 3.4. `POST /api/v0/ai/diagnosis/hypothesis`
+- **Mục đích:** AI diễn giải giả thuyết chẩn đoán ban đầu tại màn Analysis dựa trên các tín hiệu yếu thu thập từ bài quiz.
+- **Tiêu chuẩn thiết kế:** Tuân thủ nguyên tắc **HAX G11** (*Make clear why the system did what it did*) và **HAX G2** (*Make clear how well the system can do what it can do*).
+- **Request Body (`DiagnosisHypothesisIn`):**
   | Trường | Kiểu | Mặc định | Mô tả |
   |---|---|---|---|
-  | `target_node_id` | `string` | Bắt buộc | Node cha được chọn để kiểm tra nền. |
-  | `hits` | `List[SignalHit]` | Bắt buộc | Danh sách tín hiệu yếu (`node`, `label`, `flag`, `sec`). |
-  | `only_slow` | `boolean` | `false` | `true` nếu bài làm chỉ có câu trả lời chậm (>25s), không có câu sai. |
-  | `rushed_any` | `boolean` | `false` | `true` nếu có câu sai dưới 3s (bấm vội). |
-- **Response `200 OK`:**
+  | `target_node_id` | `string` | Bắt buộc | Node cha được hệ thống chọn để chẩn đoán. |
+  | `hits` | `List[SignalHit]` | Bắt buộc | Danh sách các tín hiệu yếu từ bài quiz (`node`, `label`, `flag`, `sec`). |
+  | `only_slow` | `boolean` | `false` | `true` nếu bài làm không có câu sai nào, chỉ có câu đúng mà làm chậm (>25s). |
+  | `rushed_any` | `boolean` | `false` | `true` nếu có câu sai dưới 3s (nghi ngờ bấm vội/đoán mò). |
+- **Response `200 OK` (`DiagnosisHypothesisOut`):**
   ```json
   {
     "target_node_id": "c3s1",
     "target_label": "3.1 Embedding",
     "slide_page": "Slide d1 · trang 21–22",
     "confidence": "trung bình",
-    "confidence_explanation": "Mức chắc chắn trung bình: Có 1 câu sai thực sự nhưng cần kiểm tra thêm câu nền để khẳng định.",
+    "confidence_explanation": "Mức chắc chắn trung bình: Có 1 câu sai thực sự nhưng chưa đủ khẳng định nếu không kiểm tra các khái niệm nền.",
     "hypothesis_text": "Tín hiệu yếu của bạn tập trung ở mục '3.1 Embedding'. Có khả năng bạn chưa nắm chắc nguyên lý biểu diễn văn bản trong không gian vector đa chiều.",
     "suggested_action": "Kiểm tra 3 câu nền của mục này để xác định chính xác bạn hổng ở tầng chi tiết hay ở tầng nguyên lý."
   }
@@ -435,17 +391,16 @@
 
 ---
 
-### 2.7. AI Lộ Trình Ôn Tập (Remediation Plan)
-
-#### `POST /api/v0/ai/plan/generate`
-- **Mục đích:** AI tổng hợp lộ trình ôn tập thích ứng (1–3 mục) trích dẫn đúng số trang slide thật kèm panel giải trình lý do nhận lộ trình tại màn Plan.
-- **Request Body:**
+### 3.5. `POST /api/v0/ai/plan/generate`
+- **Mục đích:** AI tổng hợp lộ trình ôn tập thích ứng (Remediation Plan) tại màn Plan, kèm giải trình minh bạch lý do nhận lộ trình.
+- **Nguyên tắc Provenance (PAIR):** 100% các mục ôn tập phải trích dẫn đúng số trang slide thật (`Slide d1 · trang X`), tuyệt đối không đưa vào tài liệu ngoài hoặc khái niệm không có trong bài giảng.
+- **Request Body (`PlanGenerateIn`):**
   | Trường | Kiểu | Bắt buộc | Mô tả |
   |---|---|---|---|
-  | `verdict` | `string` | Có | Kết luận: `located`, `restart`, `self`, `accepted`. |
+  | `verdict` | `string` | Có | Kết luận: `located`, `restart`, `self` (tự ôn), `accepted` (đồng thuận sau chat). |
   | `target_node_id` | `string \| null` | Không | Node chốt lỗ hổng. |
-  | `trace` | `List[TraceStep]` | Có | Toàn bộ các bước ghi trong "Dấu vết quyết định". |
-- **Response `200 OK`:**
+  | `trace` | `List[TraceStep]` | Có | Toàn bộ các bước trong cột "Dấu vết quyết định" (`t`: tiêu đề, `d`: diễn giải). |
+- **Response `200 OK` (`PlanGenerateOut`):**
   ```json
   {
     "title": "Lộ trình ôn tập: 3.1 Embedding",
@@ -469,11 +424,13 @@
 
 ---
 
-### 2.8. Quản Lý Phiên Làm Việc Người Học (Session Management)
+### 3.6. Quản Lý Phiên Làm Việc Học Viên (Learner State Session)
 
-#### `POST /api/v0/session`
-- **Mục đích:** Khởi tạo phiên làm việc mới, cấp mã UUID và ghi file JSON trạng thái ban đầu tại `app/data/sessions/{id}.json`.
-- **Request:** Không có Body.
+Cụm endpoint này hiện thực hóa yêu cầu của **Spec §0** (Lưu trữ trạng thái người học vào file JSON tại `codebase/backend/app/data/sessions/{session_id}.json`) giúp học viên có thể tạm dừng và khôi phục bài học bất kỳ lúc nào.
+
+#### A. Tạo phiên mới: `POST /api/v0/session`
+- **Mục đích:** Khởi tạo một phiên chẩn đoán mới, sinh mã UUID và tạo file JSON trạng thái ban đầu.
+- **Request:** Không body.
 - **Response `200 OK`:**
   ```json
   {
@@ -495,73 +452,41 @@
   }
   ```
 
----
-
-#### `GET /api/v0/session/{session_id}`
-- **Mục đích:** Khôi phục trạng thái làm bài từ file JSON khi người học tải lại trang hoặc đổi thiết bị.
-- **Path Parameter:** `session_id` (`string`, bắt buộc).
-- **Response `200 OK`:**
-  ```json
-  {
-    "session_id": "8f3b2c14-52d6-47a3-b42e-cf619a8421d0",
-    "state": {
-      "stage": "analysis",
-      "records": [
-        {
-          "node": "l_token",
-          "sel": 1,
-          "correct": true,
-          "sec": 12,
-          "flag": "ok",
-          "answer": 1
-        }
-      ],
-      "target": "c3s1",
-      "round": 0,
-      "retry": 0,
-      "hits": ["l_vec"],
-      "round_recs": [],
-      "decision": null,
-      "next_target": null,
-      "trace": [
-        { "t": "Sai / bỏ trống", "d": "Văn bản được vector hoá (sai, 12s)" },
-        { "t": "Định vị", "d": "1 tín hiệu thuộc '3.1 Embedding' → kiểm tra 3 câu nền" }
-      ],
-      "status": { "l_token": "ok", "l_vec": "wrong" },
-      "verdict": null
-    }
-  }
-  ```
+#### B. Khôi phục phiên: `GET /api/v0/session/{session_id}`
+- **Mục đích:** Nạp lại toàn bộ tiến trình học tập từ file JSON khi học viên tải lại trang hoặc đổi thiết bị.
+- **Path Parameter:** `session_id` (UUID).
+- **Response `200 OK`:** Cấu trúc tương tự `POST /session` với đầy đủ lịch sử bài làm.
 - **Mã lỗi:** `404 Not Found` nếu mã phiên không tồn tại.
 
----
-
-#### `PUT /api/v0/session/{session_id}`
-- **Mục đích:** Ghi đè trạng thái học tập mới nhất từ client vào file JSON lưu trữ.
-- **Path Parameter:** `session_id` (`string`, bắt buộc).
-- **Request Body:**
-  | Trường | Kiểu | Bắt buộc | Mô tả |
-  |---|---|---|---|
-  | `stage` | `string` | Có | Giai đoạn hiện tại (`home`, `quiz`, `result`, `explain`, `analysis`, `probe`, `review`, `plan`). |
-  | `records` | `List[dict]` | Không | Kết quả bài quiz ban đầu. |
-  | `target` | `string \| null` | Không | Node đang chẩn đoán. |
-  | `round` | `int` | Không | Thứ tự vòng chẩn đoán hiện tại. |
-  | `retry` | `int` | Không | Số lần làm lại vòng. |
-  | `hits` | `List[str]` | Không | Danh sách node có tín hiệu yếu. |
-  | `round_recs` | `List[dict]` | Không | Kết quả các câu hỏi trong vòng probe. |
-  | `decision` | `string \| null` | Không | Quyết định engine (`locate`, `escalate`, `restart`). |
-  | `next_target` | `string \| null` | Không | Node tiếp theo nếu leo tầng. |
-  | `trace` | `List[TraceStep]` | Không | Lịch sử dấu vết quyết định. |
-  | `status` | `Dict[str, str]` | Không | Bản đồ trạng thái của từng node (`ok`, `wrong`, `slow`, v.v.). |
-  | `verdict` | `string \| null` | Không | Kết luận lộ trình ôn tập. |
+#### C. Cập nhật tiến trình phiên: `PUT /api/v0/session/{session_id}`
+- **Mục đích:** Đồng bộ trạng thái hiện tại từ React state vào file lưu trữ.
+- **Path Parameter:** `session_id` (UUID).
+- **Request Body (`SessionStateIn`):**
+  ```json
+  {
+    "stage": "probe",
+    "records": [{"node": "l_token", "sel": 1, "correct": true, "sec": 12, "flag": "ok"}],
+    "target": "c3s1",
+    "round": 1,
+    "retry": 0,
+    "hits": ["l_vec"],
+    "round_recs": [],
+    "decision": null,
+    "next_target": null,
+    "trace": [
+      { "t": "Sai / bỏ trống", "d": "Văn bản được vector hoá (sai, 12s)" },
+      { "t": "Định vị", "d": "1 tín hiệu thuộc '3.1 Embedding' → kiểm tra 3 câu nền" }
+    ],
+    "status": { "l_token": "ok", "l_vec": "wrong" },
+    "verdict": null
+  }
+  ```
 - **Response `200 OK`:** Trả về phiên với `state` đã cập nhật.
 
 ---
 
-### 2.9. Health Check
-
-#### `GET /api/v0/health`
-- **Mục đích:** Kiểm tra trạng thái hoạt động của server và cấu hình AI.
+### 3.7. `GET /api/v0/health`
+- **Mục đích:** Endpoint kiểm tra sức khỏe dịch vụ (Liveness check) cho thanh điều hướng Frontend.
 - **Response `200 OK`:**
   ```json
   {
@@ -573,9 +498,9 @@
 
 ---
 
-## 3. Bảng Tra Cứu Trạng Thái & Hằng Số Sư Phạm (Data Dictionary & Enums)
+## 4. Bảng Tra Cứu Trạng Thái & Hằng Số Sư Phạm (Data Dictionary & Enums)
 
-| Tên Thuộc Tính | Giá Trị Hợp Lệ | Ý Nghĩa Sư Phạm & Ngưỡng Kích Hoạt |
+| Tên Trường / Tham số | Giá Trị Hợp Lệ | Ý Nghĩa Sư Phạm & Quy Tắc Kích Hoạt |
 |---|---|---|
 | `flag` (cờ làm bài) | `ok` | Trả lời đúng, thời gian làm bài bình thường ($\le 25s$). |
 | | `slow` | Trả lời đúng nhưng thời gian kéo dài ($> 25s$). Tín hiệu lưỡng lự, nắm chưa vững. |
@@ -598,9 +523,9 @@
 
 ---
 
-## 4. Khai Báo TypeScript Interfaces Chuẩn (API Types)
+## 5. Khai Báo TypeScript Interfaces Chuẩn (Cho Frontend Devs)
 
-Frontend Developers có thể sao chép trực tiếp các khai báo kiểu dữ liệu sau vào file `frontend/src/types/api.ts`:
+Frontend Developers có thể sao chép trực tiếp định nghĩa dưới đây vào file `frontend/src/types/api.ts`:
 
 ```typescript
 export type QuestionFlag = 'ok' | 'slow' | 'wrong' | 'rush' | 'skip';
@@ -650,43 +575,9 @@ export interface ExplainSingleResponse {
   slide_page?: string | null;
 }
 
-export interface ExplainRoundRequest {
-  target_node_id: string;
-  round_num: number;
-  decision: DecisionType;
-  records: Array<{
-    question: string;
-    options: string[];
-    correct_idx: number;
-    selected_idx?: number | null;
-    sec: number;
-    flag: QuestionFlag;
-  }>;
-}
-
-export interface ExplainRoundResponse {
-  summary: string;
-  per_question_notes: string[];
-  advice: string;
-}
-
 export interface TraceStep {
   t: string;
   d: string;
-}
-
-export interface SignalHit {
-  node: string;
-  label: string;
-  flag: QuestionFlag;
-  sec: number;
-}
-
-export interface DiagnosisHypothesisRequest {
-  target_node_id: string;
-  hits: SignalHit[];
-  only_slow?: boolean;
-  rushed_any?: boolean;
 }
 
 export interface DiagnosisHypothesisResponse {
@@ -704,12 +595,6 @@ export interface RemediationItem {
   slide_page: string;
 }
 
-export interface PlanGenerateRequest {
-  verdict: VerdictType;
-  target_node_id?: string | null;
-  trace: TraceStep[];
-}
-
 export interface PlanGenerateResponse {
   title: string;
   verdict: VerdictType;
@@ -725,63 +610,19 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface ChatRequest {
-  target_node_id: string;
-  weak_signals: Array<{
-    node: string;
-    label?: string;
-    flag: QuestionFlag;
-    sec: number;
-  }>;
-  message: string;
-  history?: ChatMessage[];
-}
-
 export interface ChatResponse {
   reply: string;
   grounded_node: string;
   slide_page: string;
   suggested_actions: string[];
 }
-
-export interface TreeNode {
-  id: string;
-  label: string;
-  page: string;
-  parent: string | null;
-  compact?: string[];
-  content_summary?: string;
-}
-
-export interface TreeResponse {
-  nodes: Record<string, TreeNode>;
-}
-
-export interface SessionState {
-  stage: string;
-  records?: Record<string, any>[];
-  target?: string | null;
-  round?: number;
-  retry?: number;
-  hits?: string[];
-  round_recs?: Record<string, any>[];
-  decision?: string | null;
-  next_target?: string | null;
-  trace?: TraceStep[];
-  status?: Record<string, string>;
-  verdict?: string | null;
-}
-
-export interface SessionResponse {
-  session_id: string;
-  state: SessionState;
-}
 ```
 
 ---
 
-## 5. Lệnh Kiểm Thử cURL (Smoke Test)
+## 6. Hướng Dẫn Kiểm Thử & Chạy Nghiệm Thu (Verification)
 
+### Kiểm tra tự động bằng cURL (Smoke Test toàn bộ 12 API):
 ```powershell
 # 1. Kiểm tra Health
 curl http://localhost:8000/api/v0/health
@@ -793,15 +634,11 @@ curl http://localhost:8000/api/v0/graph/tree
 curl http://localhost:8000/api/v0/quiz
 
 # 4. Chấm điểm Quiz
-curl -X POST http://localhost:8000/api/v0/quiz/grade `
-  -H "Content-Type: application/json" `
-  -d '{"picked":[1,0,1,0,0],"times":[10,12,14,8,9]}'
+curl -X POST http://localhost:8000/api/v0/quiz/grade -H "Content-Type: application/json" -d '{\"picked\":[1,0,1,0,0],\"times\":[10,12,14,8,9]}'
 
-# 5. Lấy câu hỏi chẩn đoán Probe cho node c3s1
+# 5. Lấy câu hỏi Probe cho node c3s1
 curl http://localhost:8000/api/v0/probes/c3s1
 
 # 6. Đánh giá vòng Probe
-curl -X POST http://localhost:8000/api/v0/probes/evaluate-round `
-  -H "Content-Type: application/json" `
-  -d '{"target_node_id":"c3s1","round_num":1,"picked":[0,0,0],"times":[5,6,7]}'
+curl -X POST http://localhost:8000/api/v0/probes/evaluate-round -H "Content-Type: application/json" -d '{\"target_node_id\":\"c3s1\",\"round_num\":1,\"picked\":[0,0,0],\"times\":[5,6,7]}'
 ```
