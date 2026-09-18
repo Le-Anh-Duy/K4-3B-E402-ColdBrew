@@ -91,7 +91,7 @@ Ba trong bốn phát hiện xác nhận thiết kế đang có: **trần** và *
   | từ chối chẩn đoán | tín hiệu không đủ (toàn `rush`, hoặc `slow` tản mát) nên trả lời "chưa đủ căn cứ" | C09, C10, C12 |
 
 - **Non-goals (KHÔNG build):**
-  1. Pipeline extraction tự động. Cây 30 node dựng một lần rồi chốt.
+  1. Pipeline extraction tự động. Cây dựng một lần rồi chốt.
   2. Tài khoản, đăng nhập, lớp học, dashboard giảng viên.
   3. Sinh nội dung bài học mới. Chỉ trỏ về đoạn transcript đã có.
   4. Ngân hàng câu hỏi lớn. Quiz cố định 5 câu map sẵn vào 5 node lá.
@@ -104,9 +104,9 @@ Ba trong bốn phát hiện xác nhận thiết kế đang có: **trần** và *
   | Frontend | React + Vite | `codebase/frontend` |
   | Backend | Python FastAPI | `codebase/backend` |
   | AI provider | Gemini qua endpoint tương thích OpenAI | SDK `openai`, model `gemini-3.5-flash-lite`. Free tier 15 req/phút nên mọi script gọi AI đều tiết lưu. Đổi provider chỉ sửa `base_url` và `MODEL` |
-  | Lưu trữ graph và learner state | JSON file | đủ cho 30 concept, không dựng graph DB |
+  | Lưu trữ graph và learner state | JSON file | đủ cho vài chục concept, không dựng graph DB |
 
-  **Cây tri thức** (nhóm tự dựng, đề không cấp graph mẫu): 30 node **sinh bằng mô hình mạnh đọc `transcript-01-clean.md`** (*Day 2 sáng, Xác định bài toán kinh doanh cho AI*, 89 đoạn `[T01-001…089]`), nhóm rà lại và chốt, **chưa có người thứ hai đối chiếu độc lập**. Mỗi node mang `file`, `span` (mã đoạn) và `conf` (0,9 nếu nói thẳng trong đoạn, 0,7 nếu gom từ nhiều đoạn), cùng cạnh `prereq` tách riêng khỏi quan hệ mục lục. Slide chưa đối chiếu nên **không ghi số trang**, và ràng buộc này đã đưa vào cả 5 file prompt của backend. Repo không chứa data pack, chỉ trích mã đoạn. Mô hình dữ liệu đầy đủ: `docs/data-model.md`; luồng và quy tắc chẩn đoán: `mockup/flow.md`.
+  **Cây tri thức** (nhóm tự dựng, đề không cấp graph mẫu): **38 node** sinh bằng mô hình mạnh đọc `transcript-01-clean.md` (*Day 2 sáng, Xác định bài toán kinh doanh cho AI*, 89 đoạn `[T01-001…089]`), nhóm rà lại và chốt, **chưa có người thứ hai đối chiếu độc lập**. Mỗi node mang `file`, `span` (mã đoạn) và `conf` (0,9 nếu nói thẳng trong đoạn, 0,7 nếu gom từ nhiều đoạn), cùng cạnh `prereq` tách riêng khỏi quan hệ mục lục. Slide chưa đối chiếu nên **không ghi số trang**, và ràng buộc này đã đưa vào cả 5 file prompt của backend. Repo không chứa data pack, chỉ trích mã đoạn. Mô hình dữ liệu đầy đủ: `docs/data-model.md`; luồng và quy tắc chẩn đoán: `mockup/flow.md`.
 
 - **Hai tính năng AI, tách rời nhau:**
 
@@ -129,7 +129,7 @@ Ba trong bốn phát hiện xác nhận thiết kế đang có: **trần** và *
 
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
-  | HAX G1, *Make clear what the system can do* | Màn đầu nêu phạm vi: một bài giảng, cây 30 concept. Badge đầu trang tự dò backend, hiện "AI THẬT, &lt;model&gt;" hoặc "MOCK DATA, backend chưa chạy" |
+  | HAX G1, *Make clear what the system can do* | Màn đầu nêu phạm vi: một bài giảng và cây concept của bài đó. Badge đầu trang tự dò backend, hiện "AI THẬT, &lt;model&gt;" hoặc "MOCK DATA, backend chưa chạy" |
   | HAX G2, *Make clear how well the system can do it* | Ô "Hệ thống đọc được gì" cuối mỗi vòng nêu rõ suy ra được gì và **chưa** khoanh được gì; nhánh học viên tự ôn có cảnh báo "chỗ hổng có thể còn sâu hơn một tầng" |
   | HAX G11, *Make clear why the system did what it did* | Panel "Vì sao bạn nhận lộ trình này" và cột "Dấu vết quyết định" ghi từng bước: câu sai nào, gom về node nào, mỗi vòng sai bao nhiêu, leo lên đâu |
   | HAX G17, *Provide global controls* | Hệ thống không tự leo tầng. Hết mỗi vòng dừng lại cho học viên chọn đi tiếp, làm lại vòng này, hoặc tự ôn. Giải thích chỉ sinh khi bấm |
@@ -189,7 +189,7 @@ Bảy ngưỡng dưới đây **chốt tại CP4 và không sửa sau mốc này
 | # | Chiều | Định nghĩa kiểm chứng được | Đo bằng | Ngưỡng | Neo vào |
 |---|---|---|---|---|---|
 | 1 | **Dẫn nguồn đúng** | mọi mã đoạn AI trích ra có thật trong cây **và** nằm trong phần tư liệu đã cấp cho lượt đó | `grounding.py` | **≥90%** | Tutor hiện tại có 33% câu trả lời không trích nguồn. Sản phẩm lấy provenance làm lõi (rubric C1 25%) nên phải hơn hẳn chứ không chỉ ngang, tức giảm 33% xuống còn ≤10% |
-| 2 | **Định vị đúng chỗ hổng** | node chọn để chẩn đoán **và** kết luận cuối (`scenario`, `gap`, `ceiling`) trùng nhãn nhóm gán tay | `run.py` | **≥90%** | ALEKS cần 20–30 câu trên cây hàng nghìn kỹ năng, còn ta có 14 câu trên cây 30 node, tức số câu hỏi trên mỗi node cao hơn nhiều. Bài toán nhỏ hơn nên không có cơ sở đặt ngưỡng thấp |
+| 2 | **Định vị đúng chỗ hổng** | node chọn để chẩn đoán **và** kết luận cuối (`scenario`, `gap`, `ceiling`) trùng nhãn nhóm gán tay | `run.py` | **≥90%** | ALEKS cần 20–30 câu trên cây hàng nghìn kỹ năng, còn ta có 14 câu trên cây 38 node, tức số câu hỏi trên mỗi node cao hơn nhiều. Bài toán nhỏ hơn nên không có cơ sở đặt ngưỡng thấp |
 | 3 | **Từ chối đúng lúc** | tín hiệu không đủ thì phải trả "chưa đủ căn cứ", tín hiệu đủ thì không được từ chối | `run.py` | **100%** khi thiếu, **≤10%** từ chối thừa | Tutor hiện tại không bao giờ tuyên bố đã định vị được chỗ hổng (0,2%). Chẩn đoán sai là thêm một kiểu hỏng mà hiện trạng không có, tệ hơn im lặng; từ chối thừa chỉ gây phiền nên đặt lỏng hơn |
 | 4 | **Hữu ích** | người chưa đọc tài liệu vẫn hiểu, giải thích phương án sai bằng nội dung, và có hành động rõ | LLM mạnh hơn và người chấm | **≥70%** | Neo vào 29% quay lại. Lời khuyên dùng được ở ≥70% số lượt thì tỉ lệ phải quay lại không tệ hơn hiện trạng |
 | 5 | **Nối được giữa các vòng** | người chấm xác nhận vòng sau bám node vòng trước, không hỏi lại thứ đã hỏi, không kết luận hổng ở node vừa trả lời đúng | `review_rounds_ui.py` | **≥80% số phiên** | Đơn vị là cả phiên, vì `MAX_ROUNDS = 3` nên một phiên có 2 mối nối, và 80% mỗi mối chỉ cho 0,8² = 64% phiên liền mạch. Tính theo vòng thì số đẹp mà phiên vẫn gãy |
@@ -277,8 +277,9 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 |---|---|---|
 | **Hai người chấm độc lập** | `eval/review/` có 2 file nhưng cùng một người, và cả hai gắn hash câu trả lời cũ nên bị loại khỏi tổng hợp. Thực chất **0/20 đã chấm hợp lệ** | Ngưỡng 6 chưa đo được, kéo theo 4 và 5 chưa có xác nhận của người |
 | **Trang mock chỉ nối 1 trong 4 route AI** | `/ai/explain/*`, `/ai/diagnosis/*`, `/ai/chat/*` có ở backend nhưng trang không gọi | Ngưỡng 7 chưa đo được trên đường AI 1, và §4 vì vậy khai mức Mock |
-| **Quiz chỉ chạm 5 trong 30 node** | 5 câu map vào 5 lá dưới 3 node cha, 25 node còn lại không có đường nào chạm tới | Trần trên của ngưỡng 2 và 3: 100% là 100% *trong phạm vi 5 lá đó*. Đang mở rộng ngân hàng câu hỏi ở backend |
-| **Cây do mô hình sinh, một người chốt** | 30 node, 5 cạnh `prereq`, `conf` (26 node 0,9 và 6 node 0,7) chưa qua người thứ hai đối chiếu với transcript | Provenance chiếm 25% rubric nhưng dựa trên phép ánh xạ node sang mã đoạn chưa kiểm chéo |
+| **Ngân hàng câu hỏi đã mở rộng nhưng bộ đo thì chưa** | Backend nay có 20 câu phủ 16 node và `GET /quiz` nhận `count` từ 5 đến 20. Nhưng trang mock, golden set và cả ba bản luật vẫn chạy trên đúng 5 câu cũ | Ngưỡng 2 và 3 vẫn chỉ được kiểm trong phạm vi 5 lá đó. Muốn tính rộng hơn thì phải gán nhãn lại golden set cho bộ đề mới |
+| **Bộ đề backend đã tách khỏi nguồn duy nhất** | `scripts/export_graph.js` sinh `quiz.json` từ `mockup/data.js`, nhưng 15 câu mới được thêm thẳng vào `quiz.json`. Chạy generator bây giờ sẽ **xoá mất 15 câu đó** (đã thử và hoàn nguyên) | Cơ chế chống trôi của §7 chỉ còn bảo vệ cây, không còn bảo vệ bộ đề |
+| **Cây do mô hình sinh, một người chốt** | 38 node, 9 cạnh `prereq`, `conf` (33 node 0,9 và 5 node 0,7) chưa qua người thứ hai đối chiếu với transcript | Provenance chiếm 25% rubric nhưng dựa trên phép ánh xạ node sang mã đoạn chưa kiểm chéo |
 | **`SLOW_SEC=25` và `RUSH_SEC=3`** | Data pack có thời gian tutor trả lời nhưng không có thời gian học viên làm quiz, nên không có gì để đối chiếu | Hai số này sai thì con số 100% của ngưỡng 2 mất ý nghĩa |
 | **Log khảo sát** | Đã khảo sát n=31, đạt ngưỡng ít nhất 20 người, nhưng repo mới có bản tổng hợp biểu đồ | Chuẩn A chưa trọn vẹn, cần xuất CSV của Google Form vào `validation/` |
 | **Đường chat ngoài phạm vi (lớp 3)** | Ràng buộc có trong `chat_prompts.py`, nhưng không case nào kiểm và trang mock chưa nối `/ai/chat/message` | Lớp 3 của §5 chưa có phép đo, chưa demo được đường này |
@@ -288,12 +289,12 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 
 ## §8. Phân công & kế hoạch
 
-| Thành viên | MSHV | Mảng (spec, evidence, prompt, code, demo) |
-|---|---|---|
-| Lê Anh Duy | 2A202602723 | `TODO` |
-| Lê Quang Thành | 2A202602647 | `TODO` |
-| Nguyễn Thị Phương Duyên | 2A202603001 | `TODO` |
-| Đào Trọng Khang | 2A202602974 | `TODO` |
+| Thành viên | MSHV | Mảng | Phần việc |
+|---|---|---|---|
+| Lê Anh Duy | 2A202602723 | spec, evidence, mock | Dựng repo, cây tri thức và trang mock; `scripts/mining.py`, bộ đo trong `eval/` và `scripts/`; viết spec |
+| Lê Quang Thành | 2A202602647 | code backend, prompt | FastAPI, 4 route AI, prompt theo kịch bản, mở rộng ngân hàng câu hỏi lên 20 câu |
+| Nguyễn Thị Phương Duyên | 2A202603001 | code frontend | React UI trong `codebase/frontend`, theme, màn quiz và luồng học |
+| Đào Trọng Khang | 2A202602974 | demo, multi-prototype | Slide và kịch bản demo; dựng phương án UI thứ hai để so sánh |
 
 - **Willing users: 3 người**, đều là học viên trong khoá và ngoài nhóm, đã nhận lời thử prototype. Danh tính giữ kín theo luật bảo mật của khoá; nhóm lưu tên và MSHV ngoài repo, đối chiếu được khi ban tổ chức yêu cầu.
 
@@ -304,7 +305,7 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
   | **C** | Thấy ứng dụng thú vị vì dùng Knowledge Graph, có tiềm năng |
 
 - **Kế hoạch vòng validation** (bonus theo guide §4.2, làm trước CP5): mỗi người một phiên 10 phút theo 5 nhịp comfort, context, task theo outcome, quan sát im lặng, hỏi sau khi dùng. Giao task bằng kết quả cần đạt chứ không chỉ nút bấm. Log từng người một dòng trong `validation/`, kèm quote nguyên văn và mức nghiêm trọng. Nếu kịp thì mời thêm một người từ nhóm khác trong phòng.
-- Multi-prototype: không làm.
+- **Multi-prototype: đang làm.** Khang dựng một phương án UI thứ hai để đặt cạnh bản của Duyên. Theo guide §3.3, hai bản chỉ tính là multi-prototype khi khác nhau ở **một quyết định thiết kế có tên** (mức tự động, kiểu tương tác, hoặc dạng output), không phải khác giao diện. **Trục khác biệt chưa chốt** — phải chốt trước khi dựng, nếu không sẽ không so sánh được và không ghi điểm.
 
 ## §9. Changelog
 
@@ -330,4 +331,6 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 | 18/9 | Bốn file prompt đang yêu cầu AI trích số trang slide, đổi sang mã đoạn `[T01-NNN]` | §4 định nghĩa số trang slide là trích dẫn bịa, mà ví dụ mẫu trong prompt lại dẫn mô hình làm đúng điều đó |
 | 18/9 | Hạ mức prototype từ Working xuống Mock | Trang mock mới nối 1 trong 4 route AI |
 | 18/9 | Chốt 7 ngưỡng tại CP4, mỗi ngưỡng neo vào một số liệu có thật | Yêu cầu của CP4 là chốt "thế nào là đạt" trước khi biết kết quả |
+| 18/9 | Merge nhánh UI và `feat/ai-backend` vào main. Cây lên 38 node, ngân hàng câu hỏi lên 20 câu phủ 16 node, `GET /quiz` nhận `count` 5 đến 20 | Gộp việc của ba người trước CP4. Xung đột duy nhất ở `api_contract.md` mục `/quiz`, giữ bản mô tả có `count` vì khớp code thật |
+| 18/9 | Phát hiện `quiz.json` đã tách khỏi `mockup/data.js`, chạy `export_graph.js` sẽ xoá 15 câu mới thêm | Ghi vào phần tự khai của §7 để không ai chạy generator rồi mất đề |
 | 18/9 | Cập nhật số khảo sát trong canvas CP1 từ n=21 lên n=31 | Canvas chốt lúc form mới có 21 người trả lời; giữ số cũ thì canvas và spec vênh nhau 10 điểm phần trăm ở câu "vẫn chưa hiểu rõ" |
