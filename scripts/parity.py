@@ -1,4 +1,5 @@
-"""Chống lệch hai bản luật: scripts/engine.py (đo, backend) vs mockup/engine.js (trang demo).
+"""Chống lệch BA bản luật: scripts/engine.py (bộ đo) · mockup/engine.js (trang mock offline)
+· codebase/backend/app/core/engine.py (service thật).
 
 Chạy cả hai trên toàn bộ golden set, khác nhau một case là fail.
 Không có bước này thì số đo và cái chạy trên sân khấu có thể trôi khỏi nhau.
@@ -18,6 +19,13 @@ except Exception:
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import engine  # noqa: E402
+
+sys.path.insert(0, os.path.join(ROOT, "codebase", "backend"))
+try:
+    from app.core import engine as be_engine  # noqa: E402
+except Exception as _e:  # backend chưa cài fastapi/pydantic thì bỏ qua phần này
+    be_engine = None
+    print(f"(bỏ qua bản backend: {_e})")
 
 graph = json.load(open(os.path.join(ROOT, "eval", "graph.json"), encoding="utf-8"))
 cases = json.load(open(os.path.join(ROOT, "eval", "cases.json"), encoding="utf-8"))["cases"]
@@ -65,9 +73,38 @@ if raw.returncode != 0:
     sys.exit(1)
 js = json.loads(raw.stdout)
 
-bad = []
+def diagnose_backend(case):
+    """Chạy đúng vòng lặp chẩn đoán nhưng bằng luật của backend."""
+    tree, quiz, probes = graph["TREE"], graph["QUIZ"], graph["PROBES"]
+    recs = be_engine.grade(quiz, [q[0] for q in case["quiz"]], [q[1] for q in case["quiz"]])
+    target = be_engine.pick_target(recs, tree)["target"]
+    final = None
+    if case.get("probes") and target and target in probes:
+        node, last_failed = target, None
+        for rnd in range(1, be_engine.MAX_ROUNDS + 1):
+            ans = case["probes"].get(node)
+            if not ans:
+                final = {"scenario": "thiếu đáp án probe cho " + node, "gap": None, "ceiling": node}
+                break
+            r = be_engine.grade(probes[node], [a[0] for a in ans], [a[1] for a in ans])
+            d = be_engine.round_decision(node, r, rnd, tree, probes, last_failed)
+            if d["decision"] in ("locate", "restart"):
+                final = {"scenario": d["scenario"], "gap": d["gap"], "ceiling": d["ceiling"],
+                         "prompt": d.get("prompt_key")}
+                break
+            last_failed = d.get("failed")
+            node = d["next_target"]
+    return {"target": target, "final": final}
+
+
+bad, bad_be = [], []
 for c in cases:
     py = engine.diagnose(c["quiz"], c.get("probes"), graph)
+    if be_engine:
+        a_be = diagnose_backend(c)
+        if json.dumps(a_be, sort_keys=True, ensure_ascii=False) != json.dumps(
+                {"target": py["target"], "final": py["final"]}, sort_keys=True, ensure_ascii=False):
+            bad_be.append((c["id"], py, a_be))
     a = {"target": py["target"], "final": py["final"]}
     b = js[c["id"]]
     if json.dumps(a, sort_keys=True, ensure_ascii=False) != json.dumps(b, sort_keys=True, ensure_ascii=False):
@@ -80,4 +117,8 @@ if bad:
     print("\n-> Sửa cho khớp trước khi tin bất kỳ con số nào.\n")
     sys.exit(1)
 
-print(f"\n✅ engine.py và engine.js cho kết quả giống nhau trên {len(cases)}/{len(cases)} case.\n")
+n = len(cases)
+print("")
+print(f"OK — ba bản luật khớp nhau trên {n}/{n} case:")
+print("   scripts/engine.py (bộ đo) · mockup/engine.js (trang mock) · backend/app/core/engine.py")
+

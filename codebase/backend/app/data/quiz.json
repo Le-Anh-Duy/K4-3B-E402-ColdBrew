@@ -1,92 +1,92 @@
 [
   {
     "id": "q1",
-    "node": "l_token",
-    "q": "Câu nào đúng về token?",
+    "node": "l_quantinh",
+    "q": "Theo bài giảng, vì sao thói quen \"nghe yêu cầu là nhảy thẳng vào giải pháp\" lại nguy hiểm?",
     "options": [
-      "Mỗi token luôn là một từ",
-      "Một từ dài có thể bị tách thành nhiều token",
-      "Token là một câu hoàn chỉnh",
-      "Token chỉ dùng cho tiếng Anh"
+      "Vì giải pháp thường tốn nhiều tiền",
+      "Vì não chạy theo tư duy nhanh và bỏ qua bước xác định vấn đề",
+      "Vì công nghệ thay đổi quá nhanh",
+      "Vì stakeholder không thích bị hỏi lại"
     ],
     "answer": 1,
-    "why": "Tokenizer cắt theo mẫu ký tự hay gặp, nên một từ dài có thể thành nhiều token, còn từ ngắn thông dụng chỉ một token. Tiếng Việt có dấu thường tốn nhiều token hơn tiếng Anh.",
+    "why": "Bài giảng dẫn \"Thinking, Fast and Slow\": não chạy tư duy nhanh theo thói quen, nghe vấn đề là phản ứng ngay bằng giải pháp, nên bước xác định vấn đề bị bỏ qua [T01-016].",
     "traps": {
-      "0": "Nhầm 'token = từ' là nhầm lẫn phổ biến nhất, dẫn đến tính sai context window.",
-      "2": "Câu là đơn vị ngữ pháp lớn hơn token rất nhiều.",
-      "3": "Tokenizer làm việc với mọi ngôn ngữ, chỉ khác nhau ở số token sinh ra cho mỗi từ."
+      "0": "Tiền bạc không phải lý do được nêu — vấn đề nằm ở thói quen tư duy.",
+      "2": "Công nghệ đổi nhanh là chuyện khác; ở đây nói về quán tính của người ra quyết định.",
+      "3": "Bài giảng khuyến khích hỏi lại stakeholder, không nói họ khó chịu."
     }
   },
   {
     "id": "q2",
-    "node": "l_ctx",
-    "q": "Context window của mô hình đếm bằng gì?",
+    "node": "l_boctach",
+    "q": "Sếp đưa một yêu cầu rất chung chung. Cách làm được bài giảng khuyến nghị là gì?",
     "options": [
-      "Số token",
-      "Số câu",
-      "Số ký tự hiển thị trên màn hình",
-      "Số lần gọi API"
+      "Bóc tách thành vài phương án cụ thể rồi hỏi lại để xác nhận",
+      "Chờ đến khi sếp mô tả rõ ràng hơn",
+      "Chọn giải pháp phổ biến nhất trên thị trường",
+      "Cứ làm thử một bản rồi sửa sau"
     ],
     "answer": 0,
-    "why": "Context window là giới hạn tính bằng token cho cả phần người dùng nhập lẫn phần mô hình sinh ra — vượt giới hạn thì phải cắt bớt hoặc chia nhỏ.",
+    "why": "Cách được nêu là tự biến cái mơ hồ thành cụ thể: đưa ra A, B, C rồi hỏi lại \"em hiểu đúng không, là cái nào\" để verify với stakeholder [T01-006].",
     "traps": {
-      "1": "Câu không phải đơn vị mô hình làm việc; một câu có thể là vài chục token.",
-      "2": "Ký tự khác token — tiếng Việt có dấu thường tốn nhiều token hơn cùng số ký tự tiếng Anh.",
-      "3": "Số lần gọi API là hạn mức dịch vụ, không liên quan context window."
+      "1": "Chờ người giao việc nói rõ là kỳ vọng sai — nhiều khi chính họ cũng chưa biết mình muốn gì [T01-005].",
+      "2": "Chọn theo số đông chính là nhảy vào giải pháp, đúng cái bẫy bài giảng cảnh báo.",
+      "3": "Làm thử rồi sửa không thay được bước làm rõ đề bài."
     }
   },
   {
     "id": "q3",
-    "node": "l_shot",
-    "q": "Few-shot prompting nghĩa là gì?",
+    "node": "l_dungcaisai",
+    "q": "Theo quan điểm của giảng viên, cái nào nguy hiểm hơn?",
     "options": [
-      "Hỏi thật ngắn",
-      "Đưa vài ví dụ mẫu vào prompt",
-      "Chạy mô hình vài lần rồi lấy trung bình",
-      "Giảm số token đầu ra"
+      "Làm sai cái đúng",
+      "Làm đúng cái sai",
+      "Hai cái nguy hiểm như nhau",
+      "Tuỳ vào ngân sách dự án"
     ],
     "answer": 1,
-    "why": "Few-shot là đặt sẵn vài cặp ví dụ vào trong prompt để mô hình bắt chước định dạng và cách trả lời mà không cần huấn luyện lại.",
+    "why": "Quan điểm của giảng viên: làm đúng cái sai nguy hiểm hơn, vì ta tự giới hạn không gian giải pháp cho một vấn đề vốn đã sai, lại còn có cảm giác đang tiến triển [T01-060] [T01-061].",
     "traps": {
-      "0": "Độ dài prompt không phải điểm mấu chốt của few-shot.",
-      "2": "Chạy nhiều lần lấy kết quả phổ biến nhất là kỹ thuật self-consistency, khác few-shot.",
-      "3": "Thêm ví dụ làm prompt dài ra, không làm giảm token đầu vào."
+      "0": "Làm sai cái đúng thì vấn đề vẫn đúng — chỉ cần đi tìm giải pháp khác [T01-059].",
+      "2": "Bài giảng nhận đây là vấn đề gây tranh cãi nhưng vẫn nêu quan điểm rõ, không coi hai cái ngang nhau.",
+      "3": "Ngân sách không phải tiêu chí được nhắc tới."
     }
   },
   {
     "id": "q4",
-    "node": "l_cos",
-    "q": "Hai đoạn văn có nghĩa gần nhau thì vector của chúng?",
+    "node": "l_phanky",
+    "q": "Bước phân kỳ ở viên kim cương thứ nhất gồm những kỹ thuật nào?",
     "options": [
-      "Có cosine similarity cao",
-      "Có độ dài bằng nhau",
-      "Có cùng số chiều nhưng ngược dấu",
-      "Không liên quan gì"
+      "Quan sát, phỏng vấn, khảo sát, đọc log hành vi người dùng",
+      "Gom nhóm các vấn đề rồi lọc trùng",
+      "Vẽ ma trận tác động – nỗ lực",
+      "Viết user story cho đội phát triển"
     ],
     "answer": 0,
-    "why": "Embedding đặt các đoạn gần nghĩa vào vùng gần nhau trong không gian vector; mức độ gần đó đo bằng góc cosine similarity.",
+    "why": "Phân kỳ là bước mở rộng góc nhìn: quan sát, phỏng vấn, khảo sát, đọc log hành vi — thu càng nhiều insight càng tốt [T01-071].",
     "traps": {
-      "1": "Mọi vector từ cùng một model đều cùng số chiều cố định, không liên quan đến độ dài văn bản.",
-      "2": "Ngược dấu là ngữ nghĩa đối nghịch, không phải gần nhau.",
-      "3": "Cosine similarity chính là cơ chế để tìm kiếm các đoạn văn bản liên quan trong RAG."
+      "1": "Gom nhóm và lọc trùng là kỹ thuật của pha HỘI TỤ [T01-074] — đây là chỗ hay lẫn nhất.",
+      "2": "Ma trận tác động – nỗ lực dùng ở cuối pha hội tụ [T01-078].",
+      "3": "User story thuộc giai đoạn triển khai, không nằm trong viên kim cương thứ nhất."
     }
   },
   {
     "id": "q5",
-    "node": "l_vec",
-    "q": "Để máy so được nghĩa của hai đoạn văn, bước đầu tiên là?",
+    "node": "l_hoitu",
+    "q": "Pha hội tụ dùng những kỹ thuật nào?",
     "options": [
-      "Vector hoá (embedding) hai đoạn",
-      "Dịch cả hai sang tiếng Anh",
-      "Tóm tắt lại cho ngắn",
-      "Đếm số từ trùng nhau"
+      "Gom nhóm, hỏi Five Whys, lọc trùng",
+      "Phỏng vấn thêm thật nhiều người dùng mới",
+      "Mở rộng góc nhìn để có thêm insight",
+      "Tăng số lượng ý tưởng càng nhiều càng tốt"
     ],
     "answer": 0,
-    "why": "Máy tính không so sánh ngữ nghĩa trực tiếp trên ký tự chữ: phải đưa văn bản qua model embedding thành các vector số rồi mới đo được khoảng cách.",
+    "why": "Hội tụ là gom lại: nhóm các vấn đề, hỏi Five Whys để đào sâu nguyên nhân, lọc trùng [T01-074].",
     "traps": {
-      "1": "Không cần dịch — model embedding đa ngôn ngữ có thể so sánh trực tiếp văn bản tiếng Việt.",
-      "2": "Tóm tắt làm mất thông tin chi tiết và không phải bước chuẩn của retrieval.",
-      "3": "Đếm từ trùng chỉ là tìm kiếm từ khóa (keyword search), bỏ sót các từ đồng nghĩa khác chữ."
+      "1": "Phỏng vấn thêm là mở rộng, tức pha phân kỳ.",
+      "2": "Mở rộng góc nhìn chính là định nghĩa của phân kỳ — ngược với hội tụ.",
+      "3": "Tăng số ý tưởng cũng là phân kỳ."
     }
   }
 ]

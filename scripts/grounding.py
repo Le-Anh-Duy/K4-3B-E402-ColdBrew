@@ -1,8 +1,9 @@
 """S2 · Số đo CP3 — cho sản phẩm chạy N hồ sơ, đếm bao nhiêu lượt ĐẠT.
 
-    python scripts/grounding.py            # chạy toàn bộ case trong eval/cases.json
-    python scripts/grounding.py --n 20     # chỉ chạy 20 case đầu
-    python scripts/grounding.py --dry      # không gọi API, chỉ in prompt của case đầu
+    python scripts/grounding.py            # gọi thẳng Gemini (không cần backend)
+    python scripts/grounding.py --api      # gọi QUA BACKEND thật (POST /ai/plan/generate)
+    python scripts/grounding.py --n 20     # chỉ chạy N hồ sơ đầu
+    python scripts/grounding.py --dry      # không gọi gì, in prompt của hồ sơ đầu
 
 Chuẩn "đạt" (chốt TRƯỚC khi chạy, không sửa sau khi thấy kết quả) — một lượt phải qua cả ba:
   ① mọi mã đoạn AI trích ra đều TỒN TẠI trong cây
@@ -31,7 +32,17 @@ from openai import OpenAI  # noqa: E402
 
 load_dotenv(os.path.join(ROOT, ".env"))
 MODEL = os.environ.get("MODEL", "gemini-2.5-flash")
-BATCH, PAUSE = 10, 6  # gọi 10 lần thì nghỉ 6 giây, tránh đụng rate limit
+# Chặn rate limit ở hai tầng: giãn tối thiểu giữa hai lời gọi, và nghỉ dài sau mỗi lô.
+BATCH, PAUSE = 10, 6      # 10 lời gọi -> nghỉ 6s
+MIN_GAP = 1.5             # và không bao giờ gọi hai lần cách nhau dưới 1.5s
+_last_call = [0.0]
+
+
+def throttle():
+    cho = MIN_GAP - (time.time() - _last_call[0])
+    if cho > 0:
+        time.sleep(cho)
+    _last_call[0] = time.time()
 
 graph = json.load(open(os.path.join(ROOT, "eval", "graph.json"), encoding="utf-8"))
 INPUTS = os.path.join(ROOT, "eval", "cp3_inputs.json")
@@ -44,13 +55,43 @@ SPAN_RE = re.compile(r"\[(T\d{2}-\d{3})\]")
 if "--n" in sys.argv:
     cases = cases[: int(sys.argv[sys.argv.index("--n") + 1])]
 
+USE_API = "--api" in sys.argv
+API = os.environ.get("COLDBREW_API", "http://localhost:8000")
+
 client = OpenAI(api_key=os.environ.get("GEMINI_API_KEY"),
                 base_url=os.environ.get("OPENAI_BASE_URL"))
+
+
+def ask_backend(final, records, trace):
+    """Gọi đúng endpoint sản phẩm đang dùng, để số đo là số của service thật."""
+    import urllib.request
+    body = json.dumps({
+        "verdict": "restart" if final["scenario"] == "nen_bai" else "located",
+        "scenario": final["scenario"],
+        "gap_node_id": final.get("gap"),
+        "ceiling_node_id": final.get("ceiling"),
+        "target_node_id": final.get("gap") or final.get("ceiling"),
+        "records": records,
+        "trace": trace,
+    }).encode("utf-8")
+    req = urllib.request.Request(API + "/api/v0/ai/plan/generate", data=body,
+                                 headers={"Content-Type": "application/json"})
+    for i in range(3):
+        try:
+            throttle()
+            with urllib.request.urlopen(req, timeout=180) as r:
+                res = json.loads(r.read())
+            return res.get("advice_text") or "", set(res.get("allowed_spans") or [])
+        except Exception as e:
+            if i == 2:
+                return f"__LỖI__ {e}", set()
+            time.sleep(5 * (i + 1))   # nhiều khả năng dính rate limit -> lùi dần
 
 
 def ask(system, user, retries=3):
     for i in range(retries):
         try:
+            throttle()
             r = client.chat.completions.create(
                 model=MODEL,
                 messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
@@ -79,10 +120,16 @@ def run_case(c):
         print("=" * 70, "\nSYSTEM:\n", system, "\nUSER:\n", user)
         sys.exit(0)
 
-    out = ask(system, user)
+    api_allowed = None
+    if USE_API:
+        out, api_allowed = ask_backend(
+            final, records, [{"t": "Chẩn đoán", "d": f"kịch bản {final['scenario']}"}])
+    else:
+        out = ask(system, user)
     cited = SPAN_RE.findall(out)
-    # mọi mã đoạn XUẤT HIỆN trong tư liệu đã cấp đều hợp lệ — kể cả dòng "ba ý cốt lõi"
-    allowed = set(SPAN_RE.findall(user))
+    # Danh sách mã đoạn hợp lệ phải là thứ ĐÃ THỰC SỰ được cấp cho model.
+    # Chế độ --api: lấy từ chính service (nó tự khai), không tự dựng lại ở phía bộ đo.
+    allowed = api_allowed if api_allowed else set(SPAN_RE.findall(user))
 
     c1 = all(s in ALL_SPANS for s in cited)                  # mã đoạn có thật
     c2 = bool(cited) and all(s in allowed for s in cited)    # không đi lạc khỏi tư liệu được cấp
@@ -137,7 +184,8 @@ if co_tran:
 
 md = [
     "# S2 · Số đo nội dung AI (CP3)",
-    "", f"Model `{MODEL}` · sinh bằng `python scripts/grounding.py`", "",
+    "", f"Model `{MODEL}` · sinh bằng `python scripts/grounding.py"
+    + (" --api` (qua backend thật)" if USE_API else "`"), "",
     f"**Thử {len(rows)} lượt, {ok} lượt đạt ({ok / max(len(rows),1) * 100:.0f}%).**", "",
     "Chuẩn đạt (chốt trước khi chạy): ① mọi mã đoạn trích ra tồn tại trong cây · "
     "② không trích lạc ngoài tư liệu được cấp · ③ có trích dẫn và có câu tự kiểm.", "",

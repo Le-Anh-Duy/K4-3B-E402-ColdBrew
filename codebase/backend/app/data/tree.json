@@ -1,130 +1,379 @@
 {
   "root": {
     "id": "root",
-    "label": "Day 1 · AI & LLM Foundation",
-    "page": "Slide d1 · trang 1–29",
+    "label": "Day 2 (sáng) · Xác định bài toán kinh doanh cho AI",
     "parent": null,
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-001",
+      "T01-089"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-001] [T01-089]",
     "compact": [
-      "LLM sinh văn bản bằng cách đoán token kế tiếp, không tra cứu dữ liệu (trang 4–9)",
-      "Prompt là cách ta đặt ràng buộc cho phần sinh đó (trang 12–18)",
-      "RAG gắn thêm nguồn ngoài để câu trả lời có căn cứ (trang 20–27)"
+      "Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]",
+      "Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]",
+      "Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]"
     ]
   },
   "c1": {
     "id": "c1",
-    "label": "Chương 1 · LLM hoạt động thế nào",
-    "page": "Slide d1 · trang 4–11",
-    "parent": "root"
+    "label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-001",
+      "T01-017"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-001] [T01-017]"
   },
   "c1s1": {
     "id": "c1s1",
-    "label": "1.1 Token & tokenization",
-    "page": "Slide d1 · trang 5–6",
-    "parent": "c1"
+    "label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+    "parent": "c1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-004",
+      "T01-006",
+      "T01-016"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-004] [T01-006] [T01-016]"
   },
   "c1s2": {
     "id": "c1s2",
-    "label": "1.2 Sinh văn bản tự hồi quy",
-    "page": "Slide d1 · trang 8–9",
-    "parent": "c1"
+    "label": "1.2 Product manager và project manager",
+    "parent": "c1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-008",
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-008] [T01-011]"
   },
   "c2": {
     "id": "c2",
-    "label": "Chương 2 · Prompting",
-    "page": "Slide d1 · trang 12–18",
-    "parent": "root"
+    "label": "Chương 2 · Đặc thù của sản phẩm AI",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-018",
+      "T01-029"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-018] [T01-029]"
   },
   "c2s1": {
     "id": "c2s1",
-    "label": "2.1 Cấu trúc một prompt",
-    "page": "Slide d1 · trang 13",
-    "parent": "c2"
-  },
-  "c2s2": {
-    "id": "c2s2",
-    "label": "2.2 Few-shot",
-    "page": "Slide d1 · trang 16–17",
-    "parent": "c2"
+    "label": "2.1 Vì sao làm sản phẩm AI khó hơn",
+    "parent": "c2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-019",
+      "T01-021",
+      "T01-025"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-019] [T01-021] [T01-025]"
   },
   "c3": {
     "id": "c3",
-    "label": "Chương 3 · RAG",
-    "page": "Slide d1 · trang 20–27",
-    "parent": "root"
+    "label": "Chương 3 · Tìm đúng vấn đề",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-030",
+      "T01-073"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-030] [T01-073]"
   },
   "c3s1": {
     "id": "c3s1",
-    "label": "3.1 Embedding",
-    "page": "Slide d1 · trang 21–22",
-    "parent": "c3"
+    "label": "3.1 Double Diamond: phân kỳ – hội tụ",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-049",
+      "T01-069",
+      "T01-071",
+      "T01-074"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-049] [T01-069] [T01-071] [T01-074]",
+    "prereq": [
+      "c1s1"
+    ]
   },
   "c3s2": {
     "id": "c3s2",
-    "label": "3.2 Retrieval top-k",
-    "page": "Slide d1 · trang 25",
-    "parent": "c3"
+    "label": "3.2 Làm đúng cái sai vs làm sai cái đúng",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-050",
+      "T01-059",
+      "T01-060",
+      "T01-061"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-050] [T01-059] [T01-060] [T01-061]",
+    "prereq": [
+      "c1s1"
+    ]
   },
-  "l_token": {
-    "id": "l_token",
-    "label": "Token không phải là từ",
-    "page": "Slide d1 · trang 5",
+  "c3s3": {
+    "id": "c3s3",
+    "label": "3.3 First principle thinking",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-062",
+      "T01-064",
+      "T01-068"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-062] [T01-064] [T01-068]"
+  },
+  "c3s4": {
+    "id": "c3s4",
+    "label": "3.4 Kỹ thuật khám phá vấn đề",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-042",
+      "T01-045",
+      "T01-048",
+      "T01-072"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-042] [T01-045] [T01-048] [T01-072]"
+  },
+  "c4": {
+    "id": "c4",
+    "label": "Chương 4 · Chọn bài toán để làm",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074",
+      "T01-086"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-074] [T01-086]"
+  },
+  "c4s1": {
+    "id": "c4s1",
+    "label": "4.1 Ma trận tác động – nỗ lực",
+    "parent": "c4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074",
+      "T01-078",
+      "T01-079"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-074] [T01-078] [T01-079]",
+    "prereq": [
+      "c3s1"
+    ]
+  },
+  "c4s2": {
+    "id": "c4s2",
+    "label": "4.2 Vòng lặp HCD",
+    "parent": "c4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-081",
+      "T01-084"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-081] [T01-084]",
+    "prereq": [
+      "c3s4"
+    ]
+  },
+  "l_quantinh": {
+    "id": "l_quantinh",
+    "label": "Quán tính nhảy thẳng vào giải pháp",
     "parent": "c1s1",
-    "content_summary": "Tokenizer chia nhỏ văn bản thành các đơn vị rời rạc (subwords). Một từ dài có thể là nhiều token, từ ngắn là một token."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-004",
+      "T01-016"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-004] [T01-016]"
   },
-  "l_ctx": {
-    "id": "l_ctx",
-    "label": "Context window đếm bằng token",
-    "page": "Slide d1 · trang 6",
+  "l_boctach": {
+    "id": "l_boctach",
+    "label": "Bóc tách yêu cầu mơ hồ rồi verify với stakeholder",
     "parent": "c1s1",
-    "content_summary": "Context window giới hạn dung lượng token tối đa mô hình có thể đọc và sinh trong một lượt."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-006"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-006]"
   },
-  "l_next": {
-    "id": "l_next",
-    "label": "Mô hình đoán token kế tiếp",
-    "page": "Slide d1 · trang 8",
+  "l_pm": {
+    "id": "l_pm",
+    "label": "PM tự đi tìm bài toán; project manager lo tiến độ",
     "parent": "c1s2",
-    "content_summary": "Quá trình sinh văn bản là vòng lặp tự hồi quy đoán xác suất của token tiếp theo."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-010",
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-010] [T01-011]"
   },
-  "l_temp": {
-    "id": "l_temp",
-    "label": "Temperature đổi độ ngẫu nhiên",
-    "page": "Slide d1 · trang 9",
+  "l_po": {
+    "id": "l_po",
+    "label": "Product owner đào sâu user khi bài toán đã rõ",
     "parent": "c1s2",
-    "content_summary": "Temperature cao làm phẳng phân phối xác suất tăng độ sáng tạo, thấp thì đầu ra gần như cố định."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-011]"
   },
-  "l_role": {
-    "id": "l_role",
-    "label": "Role · Context · Task",
-    "page": "Slide d1 · trang 13",
+  "l_kyvong": {
+    "id": "l_kyvong",
+    "label": "Kỳ vọng người dùng thay đổi rất nhanh",
     "parent": "c2s1",
-    "content_summary": "Ba thành phần cốt lõi của một prompt tốt: Vai trò (Role), Ngữ cảnh (Context), Yêu cầu thực thi (Task)."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-020"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-020]"
   },
-  "l_shot": {
-    "id": "l_shot",
-    "label": "Ví dụ mẫu định hình đầu ra",
-    "page": "Slide d1 · trang 16",
-    "parent": "c2s2",
-    "content_summary": "Few-shot là đưa các cặp ví dụ mẫu vào prompt để mô hình học theo phong cách và định dạng mong muốn."
+  "l_chuyendoi": {
+    "id": "l_chuyendoi",
+    "label": "Chi phí chuyển đổi sản phẩm rẻ đi",
+    "parent": "c2s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-021"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-021]"
   },
-  "l_vec": {
-    "id": "l_vec",
-    "label": "Văn bản được vector hoá",
-    "page": "Slide d1 · trang 21",
+  "l_phanky": {
+    "id": "l_phanky",
+    "label": "Phân kỳ: mở rộng góc nhìn để thu insight",
     "parent": "c3s1",
-    "content_summary": "Embedding chuyển hóa văn bản thành vector số nhiều chiều để máy tính tính toán được mức độ tương đồng ngữ nghĩa."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-071"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-071]"
   },
-  "l_cos": {
-    "id": "l_cos",
-    "label": "Gần nhau về ngữ nghĩa = cosine cao",
-    "page": "Slide d1 · trang 22",
+  "l_hoitu": {
+    "id": "l_hoitu",
+    "label": "Hội tụ: gom nhóm, Five Whys, lọc trùng",
     "parent": "c3s1",
-    "content_summary": "Cosine similarity giữa 2 vector càng cao thì hai đoạn văn bản càng gần nhau về mặt ý nghĩa."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-074]",
+    "prereq": [
+      "l_phanky"
+    ]
   },
-  "l_topk": {
-    "id": "l_topk",
-    "label": "Lấy top-k đoạn liên quan nhất",
-    "page": "Slide d1 · trang 25",
+  "l_dungcaisai": {
+    "id": "l_dungcaisai",
+    "label": "Làm đúng cái sai nguy hiểm hơn",
     "parent": "c3s2",
-    "content_summary": "Top-k retrieval tìm và chọn k đoạn tài liệu có điểm tương đồng cao nhất gắn vào bối cảnh trả lời của LLM."
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-060",
+      "T01-061"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-060] [T01-061]"
+  },
+  "l_firstprinciple": {
+    "id": "l_firstprinciple",
+    "label": "Bóc vấn đề về nguyên lý gốc",
+    "parent": "c3s3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-064"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-064]"
+  },
+  "l_quansat": {
+    "id": "l_quansat",
+    "label": "Quan sát người dùng tại nơi họ làm việc",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-072"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-072]"
+  },
+  "l_dogfood": {
+    "id": "l_dogfood",
+    "label": "Dogfooding: tự làm user của sản phẩm mình",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-042"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-042]"
+  },
+  "l_trithucan": {
+    "id": "l_trithucan",
+    "label": "Tri thức ẩn của chuyên gia",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-048"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-048]"
+  },
+  "l_matran": {
+    "id": "l_matran",
+    "label": "Đặt vấn đề lên hai trục tác động và nỗ lực",
+    "parent": "c4s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-078"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-078]"
+  },
+  "l_quickwin": {
+    "id": "l_quickwin",
+    "label": "High impact – low effort là quick win",
+    "parent": "c4s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-079"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-079]"
+  },
+  "l_dongcam": {
+    "id": "l_dongcam",
+    "label": "Đồng cảm là bước đầu, khác bước test",
+    "parent": "c4s2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-084"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-084]"
   }
 }
