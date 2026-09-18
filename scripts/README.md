@@ -7,7 +7,7 @@ Dữ liệu nằm ở `eval/`. Sửa `mockup/data.js` xong thì chạy lại `no
 | Suite | Lệnh | Đo gì | Trạng thái |
 |---|---|---|---|
 | **S1 · Chẩn đoán** | `python scripts/run.py --write` | gap · trần · kịch bản · prompt được giao, trên 22 case | ✅ 22/22 |
-| **S2 · AI-response check** | `python scripts/grounding.py` | 20 hồ sơ qua Gemini thật: mã đoạn có thật · không trích lạc · đủ khung (+ ④ nối vòng, báo riêng) | ✅ 20/20 |
+| **S2 · AI-response check** | `python scripts/grounding.py [--api]` | 20 hồ sơ qua Gemini thật: mã đoạn có thật · không trích lạc · đủ khung (+ ④ nối vòng, báo riêng) | ✅ 20/20 |
 | **S3 · Người chấm AI-response** | `python scripts/review_ui.py` → `python scripts/review_summary.py` | 3 câu người phải trả lời + mức đồng thuận giữa các người chấm | ⏳ chờ nhóm chấm |
 | **S4 · Không gãy & độ phủ** | `node scripts/smoke.js` · `python scripts/coverage.py` | trang có dựng được · % câu hỏi thật map được vào cây | ✅ smoke · ❌ coverage |
 
@@ -20,6 +20,25 @@ python scripts/parity.py         # engine.py vs engine.js phải khớp
 node   scripts/smoke.js          # trang không trắng
 python scripts/calibrate.py      # ngưỡng thời gian, khi eval/human/ có dữ liệu
 ```
+
+## Kiểm tự động một câu trả lời lẻ
+
+```
+python scripts/validate.py "<câu trả lời của AI>" [kịch bản]
+```
+
+`scripts/validate.py` là **bộ kiểm độc lập, nằm ngoài backend** — service lo sinh nội dung,
+soi nội dung là việc của bộ đo. Không gọi LLM, chạy tức thì. Nó đếm và soi:
+
+| Kiểm | Nội dung |
+|---|---|
+| Trích dẫn | tổng số lần trích · số mã đoạn khác nhau · tách **hợp lệ / bịa (không có trong cây) / lạc (có trong cây nhưng ngoài tư liệu đã cấp)** |
+| Đủ số trích | theo kịch bản: `y_le` ≥1 · `muc_nong` ≥1 · `muc_duoi_tran` ≥2 · `nen_bai` ≥3 |
+| Đúng khung | có **đúng một** dòng mở đầu bằng `Tự kiểm:` |
+| Độ dài | 25–320 từ (ngắn hơn là rỗng ruột, dài hơn là lan man) |
+
+`grounding.py` gọi chính hàm này cho từng lượt (tiêu chí ⑤), nên số đo một câu lẻ và số đo cả
+lượt luôn khớp định nghĩa.
 
 ## Chấm tay — mỗi người một bản
 

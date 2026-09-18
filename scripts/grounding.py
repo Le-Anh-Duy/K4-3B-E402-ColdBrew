@@ -28,6 +28,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import engine  # noqa: E402
 import prompts  # noqa: E402
+import validate  # noqa: E402  (scripts/validate.py — bộ kiểm độc lập, ngoài service)
 
 from dotenv import load_dotenv  # noqa: E402
 from openai import OpenAI  # noqa: E402
@@ -141,6 +142,9 @@ def run_case(c):
 
     # ④ NỐI VÒNG: khi đã có trần (vòng trên trả lời đạt), lời tư vấn phải nhắc tới nó
     #    -> KHÔNG tính vào chuẩn CP3 (bar đã chốt trước khi chạy), chỉ báo cáo riêng
+    # ⑤ biên bản kiểm tự động (cùng hàm backend chạy ngay sau khi AI nhả chữ)
+    bb = validate.check_response(out, allowed, ALL_SPANS, final["scenario"])
+
     c4 = None
     if ceiling and gap and ceiling != gap:
         c4 = (any(s in out for s in TREE[ceiling]["span"])
@@ -160,6 +164,7 @@ def run_case(c):
         # đổi câu trả lời là nhận xét cũ tự động hết hiệu lực
         "hash": hashlib.sha1(out.strip().encode("utf-8")).hexdigest()[:8],
         "run_id": RUN_ID,
+        "validation": bb,
         "c1": c1, "c2": c2, "c3": c3, "c4": c4, "pass": c1 and c2 and c3,
     }
 
@@ -184,6 +189,19 @@ print(f"\nThử {len(rows)} lượt, {ok} lượt đạt cả ba tiêu chí ({ok
 print(f"  ① mã đoạn có thật: {sum(r['c1'] for r in rows)}/{len(rows)}")
 print(f"  ② không trích lạc ngoài tư liệu được cấp: {sum(r['c2'] for r in rows)}/{len(rows)}")
 print(f"  ③ đủ khung (có trích dẫn + câu tự kiểm): {sum(r['c3'] for r in rows)}/{len(rows)}")
+print(f"  ⑤ biên bản kiểm tự động (đếm trích dẫn + đúng khung): "
+      f"{sum(r['validation']['dat'] for r in rows)}/{len(rows)} đạt sạch"
+      "   (chưa tính vào chuẩn CP3)")
+loi = {}
+for r in rows:
+    for t in r["validation"]["thieu"]:
+        loi[t.split(":")[0]] = loi.get(t.split(":")[0], 0) + 1
+for k, v in sorted(loi.items(), key=lambda x: -x[1]):
+    print(f"       · {k}: {v} lượt")
+tong_trich = sum(r["validation"]["so_trich_dan"] for r in rows)
+print(f"       · tổng số lần trích nguồn: {tong_trich} "
+      f"(trung bình {tong_trich/max(len(rows),1):.1f}/lượt)")
+
 co_tran = [r for r in rows if r["c4"] is not None]
 if co_tran:
     print(f"  ④ nối vòng — có nhắc phần nền đã xác nhận ổn: "

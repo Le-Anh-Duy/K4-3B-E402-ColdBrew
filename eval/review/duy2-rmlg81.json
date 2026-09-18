@@ -1,0 +1,18 @@
+{
+  "rater": "Duy2-rmlg81",
+  "run_id": "20260918-1449",
+  "cham": {
+    "P01": {
+      "hash": "5beeda40",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok",
+      "noi_vong": "ok"
+    },
+    "P02": {
+      "nhan_xet": "khong",
+      "noi_vong": "ok",
+      "nhanh": "ok"
+    }
+  }
+}

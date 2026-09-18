@@ -32,7 +32,25 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": false,
+        "thieu": [
+          "có 2 dòng \"Tự kiểm:\" — khung yêu cầu đúng một"
+        ],
+        "so_trich_dan": 2,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-071",
+          "T01-074"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": false,
+        "so_dong_tu_kiem": 2,
+        "so_tu": 145,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P02",
@@ -64,7 +82,24 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 3,
+        "so_ma_doan_khac_nhau": 3,
+        "ma_doan_hop_le": [
+          "T01-004",
+          "T01-006",
+          "T01-016"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 82,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P03",
@@ -92,7 +127,22 @@
       "c2": false,
       "c3": false,
       "c4": null,
-      "pass": false
+      "pass": false,
+      "validation": {
+        "dat": false,
+        "thieu": [
+          "không có trích dẫn nào"
+        ],
+        "so_trich_dan": 0,
+        "so_ma_doan_khac_nhau": 0,
+        "ma_doan_hop_le": [],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 113,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P04",
@@ -123,7 +173,23 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 2,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-071",
+          "T01-074"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 122,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P05",
@@ -160,7 +226,26 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 8,
+        "so_ma_doan_khac_nhau": 5,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-006",
+          "T01-016",
+          "T01-017"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 145,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P06",
@@ -191,7 +276,23 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 2,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-060",
+          "T01-061"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 104,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P07",
@@ -230,7 +331,27 @@
       "c2": true,
       "c3": true,
       "c4": true,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 10,
+        "so_ma_doan_khac_nhau": 6,
+        "ma_doan_hop_le": [
+          "T01-030",
+          "T01-049",
+          "T01-069",
+          "T01-071",
+          "T01-073",
+          "T01-074"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 135,
+        "can_it_nhat": 2
+      }
     },
     {
       "id": "P08",
@@ -268,7 +389,26 @@
       "c2": true,
       "c3": true,
       "c4": true,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 9,
+        "so_ma_doan_khac_nhau": 5,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-006",
+          "T01-016",
+          "T01-017"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 198,
+        "can_it_nhat": 2
+      }
     },
     {
       "id": "P09",
@@ -309,7 +449,27 @@
       "c2": true,
       "c3": true,
       "c4": true,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 12,
+        "so_ma_doan_khac_nhau": 6,
+        "ma_doan_hop_le": [
+          "T01-030",
+          "T01-050",
+          "T01-059",
+          "T01-060",
+          "T01-061",
+          "T01-073"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 157,
+        "can_it_nhat": 2
+      }
     },
     {
       "id": "P10",
@@ -348,7 +508,28 @@
       "c2": false,
       "c3": true,
       "c4": null,
-      "pass": false
+      "pass": false,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 8,
+        "so_ma_doan_khac_nhau": 7,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-018",
+          "T01-030",
+          "T01-049",
+          "T01-074",
+          "T01-079"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 116,
+        "can_it_nhat": 3
+      }
     },
     {
       "id": "P11",
@@ -380,7 +561,24 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 3,
+        "so_ma_doan_khac_nhau": 3,
+        "ma_doan_hop_le": [
+          "T01-004",
+          "T01-049",
+          "T01-079"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 160,
+        "can_it_nhat": 3
+      }
     },
     {
       "id": "P12",
@@ -422,7 +620,32 @@
       "c2": false,
       "c3": true,
       "c4": null,
-      "pass": false
+      "pass": false,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 11,
+        "so_ma_doan_khac_nhau": 11,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-018",
+          "T01-030",
+          "T01-049",
+          "T01-050",
+          "T01-059",
+          "T01-060",
+          "T01-061",
+          "T01-074",
+          "T01-079"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 182,
+        "can_it_nhat": 3
+      }
     },
     {
       "id": "P13",
@@ -453,7 +676,22 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 2,
+        "so_ma_doan_khac_nhau": 1,
+        "ma_doan_hop_le": [
+          "T01-071"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 67,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P14",
@@ -490,7 +728,26 @@
       "c2": true,
       "c3": true,
       "c4": true,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 8,
+        "so_ma_doan_khac_nhau": 5,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-006",
+          "T01-016",
+          "T01-017"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 119,
+        "can_it_nhat": 2
+      }
     },
     {
       "id": "P15",
@@ -524,7 +781,25 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": false,
+        "thieu": [
+          "có 2 dòng \"Tự kiểm:\" — khung yêu cầu đúng một"
+        ],
+        "so_trich_dan": 5,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-071",
+          "T01-074"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": false,
+        "so_dong_tu_kiem": 2,
+        "so_tu": 147,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P16",
@@ -557,7 +832,25 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 4,
+        "so_ma_doan_khac_nhau": 4,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-016",
+          "T01-017"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 111,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P17",
@@ -596,7 +889,26 @@
       "c2": true,
       "c3": true,
       "c4": true,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 10,
+        "so_ma_doan_khac_nhau": 5,
+        "ma_doan_hop_le": [
+          "T01-001",
+          "T01-004",
+          "T01-006",
+          "T01-016",
+          "T01-017"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 170,
+        "can_it_nhat": 2
+      }
     },
     {
       "id": "P18",
@@ -628,7 +940,24 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 3,
+        "so_ma_doan_khac_nhau": 3,
+        "ma_doan_hop_le": [
+          "T01-004",
+          "T01-049",
+          "T01-079"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 197,
+        "can_it_nhat": 3
+      }
     },
     {
       "id": "P19",
@@ -660,7 +989,23 @@
       "c2": true,
       "c3": false,
       "c4": null,
-      "pass": false
+      "pass": false,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 3,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-004",
+          "T01-006"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 103,
+        "can_it_nhat": 1
+      }
     },
     {
       "id": "P20",
@@ -691,7 +1036,23 @@
       "c2": true,
       "c3": true,
       "c4": null,
-      "pass": true
+      "pass": true,
+      "validation": {
+        "dat": true,
+        "thieu": [],
+        "so_trich_dan": 2,
+        "so_ma_doan_khac_nhau": 2,
+        "ma_doan_hop_le": [
+          "T01-071",
+          "T01-074"
+        ],
+        "ma_doan_bia": [],
+        "ma_doan_lac": [],
+        "co_tu_kiem": true,
+        "so_dong_tu_kiem": 1,
+        "so_tu": 79,
+        "can_it_nhat": 1
+      }
     }
   ]
 }
