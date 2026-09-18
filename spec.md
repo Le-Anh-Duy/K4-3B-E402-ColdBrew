@@ -309,11 +309,8 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
   | **B** | Hay phải mở lại slide, mà slide load rất lâu và tìm thì mất thời gian |
   | **C** | Thấy ứng dụng thú vị vì dùng Knowledge Graph, có tiềm năng |
 
-  Đọc ba lý do này theo thang bằng chứng của guide §4.2 thì cả ba đều là **dự đoán tương lai**, tức tầng yếu nhất, nên chưa tính là xác nhận cho lát cắt. Ngoài ra chỉ lý do của A chạm tới job; B nói về pain **tìm lại chỗ trong tài liệu** (sản phẩm trả mã đoạn thay vì bắt mở slide nên có liên quan, nhưng không phải nhu cầu chẩn đoán prerequisite), còn C nói về **công nghệ** chứ không phải nhu cầu. Giá trị thật của cả ba nằm ở vòng validation phía dưới, không nằm ở câu nhận lời.
-
 - **Kế hoạch vòng validation** (bonus theo guide §4.2, làm trước CP5): mỗi người một phiên 10 phút theo 5 nhịp comfort, context, task theo outcome, quan sát im lặng, hỏi sau khi dùng. Giao task bằng kết quả cần đạt chứ không chỉ nút bấm. Log từng người một dòng trong `validation/`, kèm quote nguyên văn và mức nghiêm trọng. Nếu kịp thì mời thêm một người từ nhóm khác trong phòng.
 - Multi-prototype: không làm.
-- Backlog, trỏ về §3, §5 và §7: gán misconception cho distractor, sinh câu hỏi nền có điều kiện, thêm case cho lớp 3, mở rộng ngân hàng câu hỏi ra ngoài 5 node lá.
 
 ## §9. Changelog
 
@@ -339,3 +336,4 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 | 18/9 | Bốn file prompt đang yêu cầu AI trích số trang slide, đổi sang mã đoạn `[T01-NNN]` | §4 định nghĩa số trang slide là trích dẫn bịa, mà ví dụ mẫu trong prompt lại dẫn mô hình làm đúng điều đó |
 | 18/9 | Hạ mức prototype từ Working xuống Mock | Trang mock mới nối 1 trong 4 route AI |
 | 18/9 | Chốt 7 ngưỡng tại CP4, mỗi ngưỡng neo vào một số liệu có thật | Yêu cầu của CP4 là chốt "thế nào là đạt" trước khi biết kết quả |
+| 18/9 | Cập nhật số khảo sát trong canvas CP1 từ n=21 lên n=31 | Canvas chốt lúc form mới có 21 người trả lời; giữ số cũ thì canvas và spec vênh nhau 10 điểm phần trăm ở câu "vẫn chưa hiểu rõ" |
