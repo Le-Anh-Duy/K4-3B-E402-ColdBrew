@@ -51,7 +51,7 @@ Phiên đang làm và flow state được lưu ở localStorage để resume sau
 | Nghiệp vụ | Endpoint |
 |---|---|
 | Cây tri thức | `GET /api/v0/graph/tree` |
-| Câu hỏi quiz | `GET /api/v0/quiz` |
+| Câu hỏi quiz | `GET /api/v0/quiz?count=5..20` |
 | Chấm quiz và tín hiệu thời gian | `POST /api/v0/quiz/grade` |
 | Giả thuyết chẩn đoán | `POST /api/v0/ai/diagnosis/hypothesis` |
 | Chat phản biện | `POST /api/v0/ai/chat/message` |

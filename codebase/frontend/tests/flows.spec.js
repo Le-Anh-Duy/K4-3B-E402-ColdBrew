@@ -151,3 +151,21 @@ test('desktop visual shell remains the current ColdBrew UI', async ({ page }) =>
   await page.getByRole('button', { name: 'Đăng nhập' }).click()
   await expect(page.getByRole('heading', { name: 'Bạn muốn ôn tập nội dung nào?' })).toBeVisible()
 })
+
+test('quiz wheel exposes 5–20 and updates the selected question count', async ({ page }) => {
+  await page.goto('/')
+  await page.getByLabel('Email', { exact: true }).fill('wheel@example.com')
+  await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
+  await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click()
+
+  await expect(page.locator('.quiz-wheel-number')).toHaveCount(16)
+  const spin = page.getByRole('button', { name: 'Quay số câu' })
+  await spin.click()
+  await expect(spin).toBeDisabled()
+  await expect(spin).toBeEnabled({ timeout: 4000 })
+
+  const result = Number(await page.locator('.quiz-wheel-hub strong').textContent())
+  expect(result).toBeGreaterThanOrEqual(5)
+  expect(result).toBeLessThanOrEqual(20)
+  await expect(page.getByRole('button', { name: new RegExp(`Bắt đầu Quiz · ${result} câu`) })).toBeVisible()
+})

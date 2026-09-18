@@ -32,8 +32,9 @@ export async function apiGetTree() {
 }
 
 // 3. Quiz & Chấm điểm
-export async function apiGetQuiz() {
-  return await fetchJson(`${API_BASE}/quiz`);
+export async function apiGetQuiz(count) {
+  const query = Number.isFinite(Number(count)) ? `?count=${Number(count)}` : '';
+  return await fetchJson(`${API_BASE}/quiz${query}`);
 }
 
 export async function apiGradeQuiz(picked, times) {

@@ -41,7 +41,7 @@
 #### `GET /api/v0/quiz`
 - **Mục đích:** Lấy danh sách câu hỏi trắc nghiệm ôn tập đầu vào cho màn hình Quiz.
 - **Bảo mật:** Đáp án đúng (`answer`), giải thích (`why`), và bẫy (`traps`) bị loại bỏ khỏi response để chống lộ đề.
-- **Request:** Không có Body hay Query Parameter.
+- **Query Parameter:** `count` — số câu cần lấy, là số nguyên từ `5` đến `20`, mặc định `5`.
 - **Response `200 OK`:**
   ```json
   [
@@ -60,7 +60,7 @@
   ```
 - **Ví dụ cURL:**
   ```bash
-  curl -X GET "http://localhost:8000/api/v0/quiz" -H "Accept: application/json"
+  curl -X GET "http://localhost:8000/api/v0/quiz?count=12" -H "Accept: application/json"
   ```
 
 ---

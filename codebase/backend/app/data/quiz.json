@@ -88,5 +88,275 @@
       "2": "Mở rộng góc nhìn chính là định nghĩa của phân kỳ — ngược với hội tụ.",
       "3": "Tăng số ý tưởng cũng là phân kỳ."
     }
+  },
+  {
+    "id": "q6",
+    "node": "l_pm",
+    "q": "Điểm khác biệt trọng tâm giữa product manager và project manager trong bài giảng là gì?",
+    "options": [
+      "Product manager tìm đúng bài toán; project manager tập trung đưa dự án về đích đúng tiến độ",
+      "Product manager chỉ viết tài liệu; project manager chỉ phỏng vấn người dùng",
+      "Hai vai trò hoàn toàn giống nhau",
+      "Project manager luôn quyết định sản phẩm phải giải vấn đề nào"
+    ],
+    "answer": 0,
+    "why": "Product manager chịu trách nhiệm khám phá và xác định bài toán sản phẩm, trong khi project manager tập trung điều phối phạm vi, nguồn lực và tiến độ.",
+    "traps": {
+      "1": "Cả hai vai trò đều không được định nghĩa bằng một công việc đơn lẻ như vậy.",
+      "2": "Hai vai trò có điểm giao nhưng khác trọng tâm trách nhiệm.",
+      "3": "Việc xác định bài toán sản phẩm là trọng tâm của product manager."
+    }
+  },
+  {
+    "id": "q7",
+    "node": "l_po",
+    "q": "Khi bài toán đã tương đối rõ, product owner nên làm gì tiếp theo?",
+    "options": [
+      "Đào sâu nhu cầu người dùng và làm rõ giá trị cần giao",
+      "Bỏ qua người dùng và chốt công nghệ ngay",
+      "Chỉ theo dõi lịch họp của dự án",
+      "Chuyển toàn bộ quyết định cho đội kỹ thuật"
+    ],
+    "answer": 0,
+    "why": "Product owner tiếp tục đào sâu người dùng và cụ thể hóa giá trị của giải pháp khi hướng bài toán đã rõ.",
+    "traps": {
+      "1": "Chốt công nghệ trước khi hiểu nhu cầu sẽ lặp lại bẫy nhảy vào giải pháp.",
+      "2": "Theo dõi lịch không phải trách nhiệm giá trị cốt lõi của product owner.",
+      "3": "Đội kỹ thuật tham gia quyết định nhưng không thay thế việc hiểu người dùng."
+    }
+  },
+  {
+    "id": "q8",
+    "node": "l_kyvong",
+    "q": "Vì sao kỳ vọng người dùng khiến sản phẩm AI khó làm hơn?",
+    "options": [
+      "Kỳ vọng thay đổi nhanh theo trải nghiệm với các sản phẩm AI mới",
+      "Người dùng không bao giờ thay đổi nhu cầu",
+      "AI luôn cho cùng một kết quả",
+      "Không thể thu thập phản hồi về sản phẩm AI"
+    ],
+    "answer": 0,
+    "why": "Trải nghiệm thị trường thay đổi nhanh làm chuẩn kỳ vọng của người dùng liên tục dịch chuyển.",
+    "traps": {
+      "1": "Thực tế được nhấn mạnh là kỳ vọng thay đổi nhanh.",
+      "2": "Đầu ra AI có thể biến thiên; đây không phải lý do trong câu hỏi.",
+      "3": "Vẫn có thể thu thập phản hồi bằng quan sát, phỏng vấn và dữ liệu hành vi."
+    }
+  },
+  {
+    "id": "q9",
+    "node": "l_chuyendoi",
+    "q": "Chi phí chuyển đổi sản phẩm thấp tạo áp lực gì cho đội sản phẩm?",
+    "options": [
+      "Người dùng có thể rời đi nhanh nếu một lựa chọn khác tốt hơn",
+      "Người dùng bắt buộc gắn bó lâu dài",
+      "Không cần quan tâm trải nghiệm người dùng",
+      "Có thể ngừng cải tiến sau khi ra mắt"
+    ],
+    "answer": 0,
+    "why": "Khi việc đổi sang sản phẩm khác dễ và rẻ, đội sản phẩm phải liên tục bảo đảm giá trị và trải nghiệm.",
+    "traps": {
+      "1": "Chi phí chuyển đổi thấp làm mức độ gắn bó giảm, không tăng.",
+      "2": "Trải nghiệm càng quan trọng khi người dùng dễ rời đi.",
+      "3": "Sản phẩm cần học và cải tiến liên tục."
+    }
+  },
+  {
+    "id": "q10",
+    "node": "l_firstprinciple",
+    "q": "First principle thinking yêu cầu ta làm gì với một vấn đề?",
+    "options": [
+      "Bóc tách về các sự thật và nguyên lý gốc trước khi xây lại cách giải",
+      "Sao chép nguyên giải pháp phổ biến nhất",
+      "Giữ mọi giả định ban đầu",
+      "Chọn công nghệ mới nhất trước"
+    ],
+    "answer": 0,
+    "why": "Tư duy nguyên lý đầu tiên tách vấn đề khỏi các giả định quen thuộc, đưa nó về nền tảng rồi suy luận lại.",
+    "traps": {
+      "1": "Sao chép theo tương tự không phải tư duy từ nguyên lý gốc.",
+      "2": "Các giả định cần được kiểm tra thay vì mặc nhiên giữ lại.",
+      "3": "Công nghệ là phương tiện, không phải điểm xuất phát."
+    }
+  },
+  {
+    "id": "q11",
+    "node": "l_quansat",
+    "q": "Quan sát người dùng hiệu quả nhất trong bối cảnh nào?",
+    "options": [
+      "Tại nơi họ thực sự làm công việc cần nghiên cứu",
+      "Chỉ qua một bảng mô tả giả định của đội sản phẩm",
+      "Chỉ trong phòng họp nội bộ",
+      "Sau khi giải pháp đã bị khóa hoàn toàn"
+    ],
+    "answer": 0,
+    "why": "Quan sát tại bối cảnh thật giúp thấy hành vi, trở ngại và cách ứng biến mà người dùng có thể không kể ra.",
+    "traps": {
+      "1": "Giả định nội bộ không thay thế được bằng chứng hành vi.",
+      "2": "Phòng họp không phản ánh đầy đủ môi trường làm việc thật.",
+      "3": "Khám phá vấn đề nên diễn ra trước khi khóa giải pháp."
+    }
+  },
+  {
+    "id": "q12",
+    "node": "l_dogfood",
+    "q": "Dogfooding trong phát triển sản phẩm có nghĩa là gì?",
+    "options": [
+      "Đội ngũ tự dùng sản phẩm của mình như một người dùng thực",
+      "Chỉ trình diễn sản phẩm cho nhà đầu tư",
+      "Thuê ngoài toàn bộ việc kiểm thử",
+      "Chỉ đọc báo cáo phân tích thị trường"
+    ],
+    "answer": 0,
+    "why": "Dogfooding là tự trải nghiệm sản phẩm thường xuyên để phát hiện ma sát và hiểu vấn đề từ bên trong.",
+    "traps": {
+      "1": "Trình diễn không tạo ra trải nghiệm sử dụng thường xuyên.",
+      "2": "Kiểm thử thuê ngoài không đồng nghĩa đội ngũ tự làm người dùng.",
+      "3": "Báo cáo không thay thế trải nghiệm trực tiếp."
+    }
+  },
+  {
+    "id": "q13",
+    "node": "l_trithucan",
+    "q": "Tri thức ẩn của chuyên gia thường được phát hiện tốt bằng cách nào?",
+    "options": [
+      "Quan sát họ làm việc và hỏi sâu về các quyết định tại chỗ",
+      "Chỉ yêu cầu họ viết một định nghĩa ngắn",
+      "Bỏ qua các ngoại lệ trong quy trình",
+      "Chỉ xem chức danh công việc"
+    ],
+    "answer": 0,
+    "why": "Nhiều kinh nghiệm đã thành thói quen nên chuyên gia khó kể hết; quan sát và hỏi theo hành động giúp làm lộ tri thức ẩn.",
+    "traps": {
+      "1": "Một định nghĩa ngắn thường không ghi lại được kinh nghiệm ngầm.",
+      "2": "Ngoại lệ thường là nơi tri thức chuyên môn thể hiện rõ nhất.",
+      "3": "Chức danh không mô tả cách chuyên gia ra quyết định."
+    }
+  },
+  {
+    "id": "q14",
+    "node": "l_matran",
+    "q": "Ma trận tác động – nỗ lực đặt mỗi vấn đề lên hai trục nào?",
+    "options": [
+      "Mức tác động và mức nỗ lực cần thiết",
+      "Số cuộc họp và số thành viên",
+      "Độ mới của công nghệ và độ dài tài liệu",
+      "Số ý tưởng và số biểu đồ"
+    ],
+    "answer": 0,
+    "why": "Ma trận giúp so sánh giá trị tác động với chi phí hoặc nỗ lực thực hiện để hỗ trợ ưu tiên.",
+    "traps": {
+      "1": "Đây không phải hai tiêu chí tạo nên ma trận.",
+      "2": "Độ mới công nghệ không trực tiếp đại diện cho tác động hay nỗ lực.",
+      "3": "Số lượng ý tưởng và biểu đồ không cho biết nên ưu tiên việc nào."
+    }
+  },
+  {
+    "id": "q15",
+    "node": "l_quickwin",
+    "q": "Ô nào trong ma trận tác động – nỗ lực thường được xem là quick win?",
+    "options": [
+      "Tác động cao, nỗ lực thấp",
+      "Tác động thấp, nỗ lực cao",
+      "Tác động thấp, nỗ lực thấp",
+      "Tác động cao, nỗ lực cao trong mọi trường hợp"
+    ],
+    "answer": 0,
+    "why": "Quick win tạo nhiều giá trị với mức nỗ lực tương đối thấp nên thường được ưu tiên sớm.",
+    "traps": {
+      "1": "Đây là nhóm nên tránh hoặc xem xét lại.",
+      "2": "Có thể làm nếu rẻ nhưng không phải quick win do tác động thấp.",
+      "3": "Tác động cao và nỗ lực cao là khoản đầu tư lớn, cần đánh giá riêng."
+    }
+  },
+  {
+    "id": "q16",
+    "node": "l_dongcam",
+    "q": "Trong vòng lặp Human-Centered Design, đồng cảm khác kiểm thử ở điểm nào?",
+    "options": [
+      "Đồng cảm để hiểu người dùng và vấn đề; kiểm thử để học từ phản ứng với giải pháp",
+      "Hai bước có cùng mục đích và diễn ra một lần",
+      "Đồng cảm chỉ đo tốc độ; kiểm thử chỉ đo chi phí",
+      "Kiểm thử luôn phải diễn ra trước khi hiểu người dùng"
+    ],
+    "answer": 0,
+    "why": "Đồng cảm mở đầu bằng việc hiểu bối cảnh và nhu cầu; kiểm thử đưa giải pháp hoặc nguyên mẫu trở lại người dùng để tiếp tục học.",
+    "traps": {
+      "1": "Hai bước liên quan nhưng tạo ra loại hiểu biết khác nhau.",
+      "2": "Tốc độ và chi phí không phải cách phân biệt hai bước.",
+      "3": "Hiểu người dùng là đầu vào quan trọng trước khi tạo và kiểm thử giải pháp."
+    }
+  },
+  {
+    "id": "q17",
+    "node": "l_boctach",
+    "q": "Câu hỏi nào giúp xác nhận một yêu cầu mơ hồ với stakeholder tốt nhất?",
+    "options": [
+      "Em hiểu mục tiêu là A, còn B và C không nằm trong phạm vi — có đúng không?",
+      "Anh/chị cứ để em tự quyết tất cả nhé?",
+      "Công nghệ nào đang thịnh hành nhất?",
+      "Có cần làm giống hệt đối thủ không?"
+    ],
+    "answer": 0,
+    "why": "Diễn đạt lại bằng các lựa chọn và ranh giới cụ thể giúp stakeholder xác nhận hoặc sửa cách hiểu.",
+    "traps": {
+      "1": "Tự quyết không giải quyết sự mơ hồ trong mục tiêu.",
+      "2": "Công nghệ chưa phải câu hỏi cần chốt ở bước xác định vấn đề.",
+      "3": "Sao chép đối thủ là nhảy vào một giải pháp có sẵn."
+    }
+  },
+  {
+    "id": "q18",
+    "node": "l_phanky",
+    "q": "Dấu hiệu nào cho thấy đội đang ở pha phân kỳ?",
+    "options": [
+      "Chủ động mở rộng nguồn quan sát và thu nhiều góc nhìn khác nhau",
+      "Loại bỏ ngay mọi ý kiến khác giả định ban đầu",
+      "Chốt một vấn đề duy nhất trước khi thu thập dữ liệu",
+      "Xếp hạng giải pháp để triển khai ngay"
+    ],
+    "answer": 0,
+    "why": "Phân kỳ ưu tiên mở rộng không gian hiểu biết trước khi thu hẹp và lựa chọn.",
+    "traps": {
+      "1": "Loại bỏ sớm làm mất mục tiêu mở rộng của phân kỳ.",
+      "2": "Chốt sớm là hành vi hội tụ khi chưa đủ dữ liệu.",
+      "3": "Xếp hạng để chọn là hoạt động hội tụ."
+    }
+  },
+  {
+    "id": "q19",
+    "node": "l_hoitu",
+    "q": "Five Whys hỗ trợ pha hội tụ như thế nào?",
+    "options": [
+      "Đào sâu từ triệu chứng đến nguyên nhân gốc có khả năng giải thích vấn đề",
+      "Tạo càng nhiều ý tưởng giải pháp càng tốt",
+      "Thay thế hoàn toàn việc quan sát người dùng",
+      "Chọn công nghệ dựa trên độ phổ biến"
+    ],
+    "answer": 0,
+    "why": "Hỏi tại sao nhiều lớp giúp đội thu hẹp từ biểu hiện bề mặt về nguyên nhân cần xử lý.",
+    "traps": {
+      "1": "Tạo nhiều ý tưởng là mục tiêu phân kỳ.",
+      "2": "Five Whys bổ sung chứ không thay thế bằng chứng từ người dùng.",
+      "3": "Kỹ thuật này tập trung vào nguyên nhân, không chọn công nghệ."
+    }
+  },
+  {
+    "id": "q20",
+    "node": "l_dungcaisai",
+    "q": "Vì sao làm đúng một bài toán sai dễ tạo cảm giác nguy hiểm rằng đội đang tiến triển?",
+    "options": [
+      "Các đầu việc vẫn hoàn thành đẹp dù kết quả không giải quyết nhu cầu thật",
+      "Đội sẽ không tạo ra bất kỳ sản phẩm nào",
+      "Mọi chỉ số kỹ thuật đều tự động giảm",
+      "Người dùng luôn phát hiện lỗi ngay lập tức"
+    ],
+    "answer": 0,
+    "why": "Tiến độ và chất lượng thực thi có thể rất tốt nhưng vẫn tối ưu cho một mục tiêu không đúng, che khuất thất bại về giá trị.",
+    "traps": {
+      "1": "Đội vẫn có thể giao sản phẩm đầy đủ nhưng sản phẩm không giải quyết đúng vấn đề.",
+      "2": "Chỉ số kỹ thuật không tự phản ánh việc chọn sai bài toán.",
+      "3": "Phản hồi có thể đến chậm hoặc bị hiểu sai nếu không kiểm chứng nhu cầu."
+    }
   }
 ]

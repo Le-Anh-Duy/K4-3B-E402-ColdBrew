@@ -8,7 +8,7 @@ test('Adaptive backend catalog and quiz are mapped into the current UI', async (
   }
   const quiz = Array.from({ length: 5 }, (_, index) => ({ id: `q${index + 1}`, node: 'leaf', q: `Câu backend ${index + 1}?`, options: ['A', 'B', 'C', 'D'] }))
   await page.route('**/api/v0/graph/tree', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ nodes }) }))
-  await page.route('**/api/v0/quiz', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(quiz) }))
+  await page.route('**/api/v0/quiz?count=*', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(quiz) }))
   await page.route('**/api/v0/session', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ session_id: 'backend-session', state: { stage: 'home' } }) }))
   await page.route('**/api/v0/session/**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ session_id: 'backend-session', state: { stage: 'quiz' } }) }))
 
