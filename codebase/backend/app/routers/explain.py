@@ -49,7 +49,7 @@ Nguồn trích dẫn: {slide_page}
 Tóm tắt concept: {node_info.get('content_summary', '')}
 """
     try:
-        res = llm.ask_json(prompt, system_prompt=EXPLAIN_SINGLE_SYSTEM, temperature=0.2)
+        res = llm.ask_json(prompt, system_prompt=EXPLAIN_SINGLE_SYSTEM, temperature=0.2, task="explain_single")
         return ExplainSingleOut(
             why=res.get("why", quiz_item.get("why", "Đáp án đúng dựa trên định nghĩa trong bài học.")),
             trap=res.get("trap", (quiz_item.get("traps") or {}).get(str(body.selected_idx))),
@@ -102,7 +102,7 @@ Chi tiết các câu trong vòng:
 {chr(10).join(questions_summary)}
 """
     try:
-        res = llm.ask_json(prompt, system_prompt=EXPLAIN_ROUND_SYSTEM, temperature=0.3)
+        res = llm.ask_json(prompt, system_prompt=EXPLAIN_ROUND_SYSTEM, temperature=0.3, task="explain_round")
         return ExplainRoundOut(
             summary=res.get("summary", f"Bạn làm sai {bad_count}/{len(body.records)} câu ở phần nền của {node_info.get('label')}."),
             per_question_notes=res.get("per_question_notes", []),

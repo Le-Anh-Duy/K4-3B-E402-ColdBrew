@@ -22,6 +22,10 @@ LLM_TIMEOUT_SEC = float(os.getenv("LLM_TIMEOUT_SEC", "45"))
 LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "1024"))
 LLM_REASONING_EFFORT = os.getenv("LLM_REASONING_EFFORT", "minimal")
 
+# Token quản trị cho trang admin (nạp transcript, xem sổ token).
+# Không đặt thì mọi route /admin đều bị khoá — không có mặc định để đoán.
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "").strip()
+
 SLOW_SEC = 25  # Ngưỡng đúng nhưng chậm (>25s)
 RUSH_SEC = 3   # Ngưỡng sai quá nhanh (<3s: bấm bừa)
 MAX_ROUNDS = 3 # Số vòng leo cây tối đa

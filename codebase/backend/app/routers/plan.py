@@ -65,7 +65,7 @@ Lịch sử các bước chẩn đoán (Trace):
 """
 
     try:
-        res = llm.ask_json(prompt, system_prompt=PLAN_SYSTEM_PROMPT, temperature=0.3)
+        res = llm.ask_json(prompt, system_prompt=PLAN_SYSTEM_PROMPT, temperature=0.3, task="plan")
         items_raw = res.get("items", [])
         items = [
             RemediationItem(text=it.get("text", ""), slide_page=it.get("slide_page", target_page))
@@ -114,7 +114,7 @@ def _generate_by_scenario(body: PlanGenerateIn, tree, probes_data) -> PlanGenera
     user_msg = scenario_prompts.build_user_msg(tree, gap, ceiling, level, records, quiz)
     system = scenario_prompts.PROMPTS[engine.PROMPT_KEY[body.scenario]]
 
-    advice = llm.ask(user_msg, system_prompt=system, temperature=0.3) or ""
+    advice = llm.ask(user_msg, system_prompt=system, temperature=0.3, task="plan_advice") or ""
     # khai đúng những mã đoạn đã đưa vào prompt; bộ đo chấm "có trích lạc không" theo danh sách này
     allowed_spans = sorted(set(re.findall(r"\[(T\d{2}-\d{3})\]", user_msg)))
 

@@ -1,5 +1,6 @@
-from typing import List, Optional, Dict
-from pydantic import BaseModel
+from ..core.usage import last as last_usage
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
 
 class ExplainSingleIn(BaseModel):
     node_id: str
@@ -15,6 +16,9 @@ class ExplainSingleOut(BaseModel):
     trap: Optional[str] = None
     timing_note: Optional[str] = None
     slide_page: Optional[str] = None
+    # Token của chính lời gọi LLM vừa rồi — default_factory chạy lúc dựng object,
+    # tức vẫn trong context của request đó, nên UI nhận đúng số của mình.
+    usage: Optional[Dict[str, Any]] = Field(default_factory=last_usage)
 
 class RoundRecordIn(BaseModel):
     question: str
@@ -34,3 +38,6 @@ class ExplainRoundOut(BaseModel):
     summary: str
     per_question_notes: List[str]
     advice: str
+    # Token của chính lời gọi LLM vừa rồi — default_factory chạy lúc dựng object,
+    # tức vẫn trong context của request đó, nên UI nhận đúng số của mình.
+    usage: Optional[Dict[str, Any]] = Field(default_factory=last_usage)

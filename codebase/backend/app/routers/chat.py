@@ -49,7 +49,7 @@ Câu hỏi của học viên: "{body.message}"
 """
 
     try:
-        res = llm.ask_json(prompt, system_prompt=CHAT_SYSTEM_PROMPT, temperature=0.3)
+        res = llm.ask_json(prompt, system_prompt=CHAT_SYSTEM_PROMPT, temperature=0.3, task="chat")
         return ChatOut(
             reply=res.get("reply", f"Hệ thống nghi ngờ mục '{node_label}' dựa trên các tín hiệu yếu của bạn. Nguồn tham khảo: {slide_page}."),
             grounded_node=node_label,

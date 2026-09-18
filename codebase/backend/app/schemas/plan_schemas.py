@@ -1,5 +1,6 @@
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel
+from ..core.usage import last as last_usage
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
 
 class TraceStep(BaseModel):
     t: str
@@ -31,21 +32,6 @@ class PlanGenerateOut(BaseModel):
     prompt_key: Optional[str] = None
     advice_text: Optional[str] = None      # nguyên văn AI viết, dùng cho bộ đo
     allowed_spans: Optional[List[str]] = None  # mã đoạn ĐÃ CẤP cho prompt — bộ đo chấm theo đây
-
-class SessionStateIn(BaseModel):
-    stage: str
-    records: Optional[List[Dict[str, Any]]] = []
-    target: Optional[str] = None
-    round: int = 0
-    retry: int = 0
-    hits: Optional[List[str]] = []
-    round_recs: Optional[List[Dict[str, Any]]] = []
-    decision: Optional[str] = None
-    next_target: Optional[str] = None
-    trace: Optional[List[TraceStep]] = []
-    status: Optional[Dict[str, str]] = {}
-    verdict: Optional[str] = None
-
-class SessionOut(BaseModel):
-    session_id: str
-    state: Dict[str, Any]
+    # Token của chính lời gọi LLM vừa rồi — default_factory chạy lúc dựng object,
+    # tức vẫn trong context của request đó, nên UI nhận đúng số của mình.
+    usage: Optional[Dict[str, Any]] = Field(default_factory=last_usage)

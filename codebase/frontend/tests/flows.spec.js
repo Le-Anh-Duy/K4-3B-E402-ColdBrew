@@ -64,10 +64,11 @@ test('quiz draft survives a reload and ending a session requires confirmation', 
     .filter(key => key.startsWith('coldbrew-flow:'))
     .some(key => JSON.parse(localStorage.getItem(key) || '{}').drafts?.quiz?.picked?.[0] === 0))).toBe(true)
 
+  // Reload phải quay lại đúng màn đang làm, không đẩy về Home rồi bắt bấm tiếp tục.
   await page.reload()
-  await page.getByRole('button', { name: 'Tiếp tục phiên học' }).click()
   await expect(page.getByText('Câu 1/5', { exact: true })).toBeVisible()
   await expect(page.locator('.answer.selected')).toHaveCount(1)
+  await expect(page.getByRole('button', { name: 'Tiếp tục phiên học' })).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Kết thúc phiên học' }).click()
   const confirmation = page.getByRole('alertdialog', { name: 'Xác nhận kết thúc phiên học' })
@@ -105,12 +106,9 @@ test('each quiz result has an individual explanation toggle', async ({ page }) =
   await expect(page.locator('.source-citation')).toHaveCount(0)
   await page.getByRole('button', { name: 'Giải thích', exact: true }).first().click()
   await expect(page.locator('.answer-explanation')).toHaveCount(1)
-  const sourceLink = page.getByRole('button', { name: /Mở nguồn:/ }).first()
-  await expect(sourceLink).toBeVisible()
-  await sourceLink.click()
-  await expect(page.locator('.source-popover')).toHaveCount(1)
-  await expect(page.locator('.source-popover')).toContainText('TRÍCH NGUỒN')
-  await page.getByRole('button', { name: 'Đóng trích nguồn' }).click()
+  // Dữ liệu demo cố tình không có mã đoạn, nên không được dựng nút trích dẫn giả.
+  await expect(page.locator('.source-citation-wrap')).toContainText('Nội dung demo')
+  await expect(page.locator('.citation-ref')).toHaveCount(0)
   await expect(page.locator('.source-popover')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Ẩn giải thích' })).toHaveAttribute('aria-expanded', 'true')
   const firstCard = page.locator('.review-answer').first()
@@ -152,6 +150,7 @@ test('diagnosis chat calls Gemini through the backend even for a demo session', 
         grounded_node: requestBody.target_label,
         slide_page: requestBody.source_page || '(chưa có mã đoạn nguồn)',
         suggested_actions: [],
+        usage: { task: 'chat', model: 'gemini-3.5-flash-lite', prompt_tokens: 593, completion_tokens: 225, total_tokens: 818, latency_ms: 3702 },
       }),
     })
   })
@@ -164,6 +163,8 @@ test('diagnosis chat calls Gemini through the backend even for a demo session', 
   await page.getByRole('button', { name: 'Gửi' }).click()
 
   await expect(page.getByText('Phản hồi từ Gemini')).toBeVisible()
+  // Token của chính lời gọi đó phải hiện ngay dưới câu trả lời để đối chiếu khi báo cáo.
+  await expect(page.locator('.bub.ai .usage-chip')).toHaveText('⇅ 593↑ 225↓ token · 3.7s')
   expect(requestBody.message).toBe('Vì sao lại chẩn đoán như vậy?')
   expect(requestBody.target_label).toBeTruthy()
   expect(requestBody.weak_signals.length).toBeGreaterThan(0)

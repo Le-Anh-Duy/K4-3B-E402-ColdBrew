@@ -42,7 +42,7 @@ Các tín hiệu yếu thu được từ quiz:
 """
 
     try:
-        res = llm.ask_json(prompt, system_prompt=DIAGNOSIS_HYPOTHESIS_SYSTEM, temperature=0.3)
+        res = llm.ask_json(prompt, system_prompt=DIAGNOSIS_HYPOTHESIS_SYSTEM, temperature=0.3, task="hypothesis")
         return DiagnosisHypothesisOut(
             target_node_id=body.target_node_id,
             target_label=node_label,

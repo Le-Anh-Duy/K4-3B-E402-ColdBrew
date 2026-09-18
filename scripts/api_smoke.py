@@ -65,6 +65,11 @@ check("Health", "GET", "/health", must=("ok",))
 tree = check("Cây tri thức", "GET", "/graph/tree", must=("nodes",))
 quiz = check("Đề quiz", "GET", "/quiz")
 check("Câu chẩn đoán 1 node", "GET", "/probes/c3s1", must=("questions",))
+src = check("Trích nguồn theo mã đoạn", "GET", "/source/T06-136", must=("text", "file"))
+if src:
+    # Mã đoạn phải trỏ đúng file transcript và trả nguyên văn, không rỗng.
+    ok = src["file"] == "transcript-06-clean.md" and len(src["text"]) > 40
+    rows.append(("  ↳ đúng file nguồn và có nguyên văn", "", "OK" if ok else "SAI", 0, ""))
 
 # ---- chấm quiz: sai 2 câu của mục 3.1 ----
 graded = check("Chấm quiz", "POST", "/quiz/grade",
@@ -92,13 +97,29 @@ if r2:
 
 # ---- phiên học ----
 ses = check("Tạo phiên", "POST", "/session",
-            {"stage": "quiz", "records": [], "round": 0, "retry": 0, "trace": []},
+            {"owner": "smoke@coldbrew.test",
+             "session": {"topic": "Chủ đề rà máy", "document": {"title": "Bộ rà"}, "questions": [{"id": "q1"}]}},
             must=("session_id",))
 if ses:
     sid = ses["session_id"]
-    check("Đọc phiên (resume)", "GET", f"/session/{sid}", must=("state",))
-    check("Cập nhật phiên", "PUT", f"/session/{sid}",
-          {"stage": "plan", "records": [], "round": 2, "retry": 0, "trace": []}, must=("state",))
+    check("Đọc phiên (resume)", "GET", f"/session/{sid}", must=("state", "session"))
+    # camelCase và các khoá ngoài schema phải sống sót nguyên vẹn — đây là chỗ từng mất dữ liệu.
+    rich = {"stage": "plan", "roundRecs": [{"node": "c3s1"}], "nextTarget": "c3",
+            "plan": {"title": "Lộ trình do AI sinh"}, "drafts": {"quiz": {"index": 2}}}
+    saved = check("Cập nhật phiên", "PUT", f"/session/{sid}", {"state": rich}, must=("state",))
+    back = check("Đọc lại sau khi ghi", "GET", f"/session/{sid}", must=("state",))
+    if back:
+        kept = back["state"] == rich and (back.get("session") or {}).get("topic") == "Chủ đề rà máy"
+        rows.append(("  ↳ state giữ nguyên vẹn, không rơi khoá", "", "OK" if kept else "SAI", 0,
+                     "" if kept else f"nhận lại: {sorted((back.get('state') or {}).keys())}"))
+    listed = check("Danh sách phiên theo học viên", "GET", "/session?owner=smoke@coldbrew.test")
+    if isinstance(listed, list):
+        found = any(item.get("session_id") == sid and item.get("has_plan") for item in listed)
+        rows.append(("  ↳ tìm lại được phiên có lộ trình", "", "OK" if found else "SAI", 0, ""))
+    check("Xoá phiên", "DELETE", f"/session/{sid}", must=("deleted",))
+
+# ---- sổ token ----
+usage = check("Sổ token theo tác vụ", "GET", "/usage", must=("calls", "by_task"))
 
 # ---- các route gọi LLM ----
 if not NO_AI:

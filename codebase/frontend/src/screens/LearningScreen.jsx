@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
 import { Button, CoffeeBeanIcon, Feedback, ProgressBar } from '../components/UI'
 import { learningService } from '../services/learningService'
 
@@ -25,6 +25,14 @@ const INITIAL_FLOW = {
   retestRecs: [],
   feedback: null,
   drafts: {},
+  queue: [],
+  resolved: [],
+  skipped: [],
+  hypotheses: {},
+  plans: {},
+  probeKey: null,
+  probeSource: null,
+  probeUsage: null,
   chat: [],
   chatOpen: false,
 }
@@ -55,8 +63,8 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
   }
 
   useEffect(() => {
-    learningService.saveProgress(session.id, state, session.remote).catch(() => {})
-  }, [session.id, session.remote, state])
+    learningService.saveProgress(session.id, state, session.remote, session.owner).catch(() => {})
+  }, [session.id, session.owner, session.remote, state])
 
   useEffect(() => {
     if (state.stage !== 'complete' || completedRef.current) return
@@ -102,6 +110,8 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
         stage: 'analysis',
         target: diagnosis.target,
         hits: diagnosis.hits,
+        queue: diagnosis.queue || [{ target: diagnosis.target, hits: diagnosis.hits }],
+        hypotheses: { ...state.hypotheses, [diagnosis.target]: hypothesis },
         hypothesis,
         round: 1,
         retry: 0,
@@ -123,8 +133,14 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
     setBusy(true)
     setError('')
     try {
-      const probeQuestions = await learningService.getProbes(session, target)
-      update({ stage: 'probe', target, probeQuestions, ...patch })
+      const round = patch.round ?? state.round
+      const retry = patch.retry ?? state.retry
+      const probe = await learningService.getProbes(session, target, { round, retry, purpose: 'probe' })
+      update({
+        stage: 'probe', target, probeQuestions: probe.questions,
+        probeKey: probe.probeKey, probeSource: probe.source, probeUsage: probe.usage,
+        ...patch,
+      })
     } catch (nextError) {
       setError(nextError.message)
     } finally {
@@ -144,6 +160,7 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
         picked,
         times,
         lastFailed: state.lastFailed,
+        probeKey: state.probeKey,
       })
       const targetLabel = tree[state.target]?.label || state.target
       update({
@@ -166,12 +183,61 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
   }
 
   async function openPlan(verdict) {
+    const cached = state.plans?.[state.target]
+    if (cached && cached.verdict === verdict) {
+      update({ stage: 'plan', verdict, plan: cached })
+      return
+    }
     setBusy(true)
     setError('')
     const nextState = { ...state, verdict, stage: 'plan' }
     try {
-      const plan = await learningService.generatePlan({ session, state: nextState })
-      update({ stage: 'plan', verdict, plan })
+      const plan = { ...(await learningService.generatePlan({ session, state: nextState })), verdict }
+      update({ stage: 'plan', verdict, plan, plans: { ...(state.plans || {}), [state.target]: plan } })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // Xong một vùng thì đi tiếp vùng còn lại, thay vì kết thúc phiên ngay.
+  const dropped = [...(state.resolved || []), ...(state.skipped || [])]
+  const remaining = (state.queue || []).filter(item => !dropped.includes(item.target))
+  const nextArea = remaining.find(item => item.target !== state.target) || null
+
+  async function goToArea(item, resolvedTarget = null) {
+    // Giả thuyết và lộ trình của mục đã phân tích rồi thì lấy lại từ phiên,
+    // không gọi Gemini lần nữa — quay đi quay lại giữa các mục là chuyện thường.
+    const cached = state.hypotheses?.[item.target]
+    const label = tree[item.target]?.label || item.target
+    const shared = {
+      ...INITIAL_FLOW,
+      records: state.records,
+      queue: state.queue,
+      resolved: [...new Set([...(state.resolved || []), resolvedTarget].filter(Boolean))],
+      skipped: state.skipped || [],
+      hypotheses: state.hypotheses || {},
+      plans: state.plans || {},
+      status: state.status,
+      stage: 'analysis',
+      target: item.target,
+      hits: item.hits,
+      plan: state.plans?.[item.target] || null,
+      round: 1,
+      trace: [...state.trace, { t: 'Chuyển mục', d: label }],
+    }
+
+    if (cached) {
+      update({ ...shared, hypothesis: cached })
+      return
+    }
+
+    setBusy(true)
+    setError('')
+    try {
+      const hypothesis = await learningService.getHypothesis({ session, target: item.target, hits: item.hits, records: state.records })
+      update({ ...shared, hypothesis, hypotheses: { ...(state.hypotheses || {}), [item.target]: hypothesis } })
     } catch (nextError) {
       setError(nextError.message)
     } finally {
@@ -184,8 +250,12 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
     setBusy(true)
     setError('')
     try {
-      const probeQuestions = await learningService.getProbes(session, target)
-      update({ stage: 'retest', target, probeQuestions })
+      // Retest phải là bộ câu KHÁC vòng chẩn đoán, không thì chỉ đo được trí nhớ.
+      const probe = await learningService.getProbes(session, target, { round: state.round, retry: state.retry, purpose: 'retest' })
+      update({
+        stage: 'retest', target, probeQuestions: probe.questions,
+        probeKey: probe.probeKey, probeSource: probe.source, probeUsage: probe.usage,
+      })
     } catch (nextError) {
       setError(nextError.message)
     } finally {
@@ -205,6 +275,7 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
         picked,
         times,
         lastFailed: state.lastFailed,
+        probeKey: state.probeKey,
       })
       const passed = result.records.every(record => record.correct)
       update({
@@ -248,6 +319,18 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
             <p className="muted">{state.stage === 'quiz' ? 'Làm hết bài trước khi xem đáp án. Bạn có thể quay lại, bỏ chọn hoặc bỏ qua.' : 'Mỗi kết luận đều dựa trên tín hiệu và cây tri thức của bài.'}</p>
           </div>
 
+          {state.queue.length > 1 && !['quiz', 'result', 'complete'].includes(state.stage) && (
+            <AreaProgress
+              state={state}
+              tree={tree}
+              onPick={item => goToArea(item)}
+              onSkip={item => update({ skipped: [...new Set([...(state.skipped || []), item.target])] })}
+              onRestore={item => update({
+                skipped: (state.skipped || []).filter(id => id !== item.target),
+                resolved: (state.resolved || []).filter(id => id !== item.target),
+              })}
+            />
+          )}
           {error && <Feedback type="error" title={error} />}
           {busy && <Thinking />}
 
@@ -277,7 +360,7 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
             <AnalysisPanel session={session} state={state} onAccept={() => openProbe()} onPlan={() => openPlan('accepted')} onUpdate={update} />
           )}
           {state.stage === 'probe' && (
-            <QuestionRunner key={`${state.target}-${state.round}-${state.retry}`} items={state.probeQuestions} isActive={isActive} submitting={busy} initialDraft={state.drafts[`probe-${state.target}-${state.round}-${state.retry}`]} onDraftChange={draft => saveDraft(`probe-${state.target}-${state.round}-${state.retry}`, draft)} onDone={submitProbe} submitLabel="Kiểm tra" source={node?.page} />
+            <QuestionRunner key={`${state.target}-${state.round}-${state.retry}`} items={state.probeQuestions} isActive={isActive} submitting={busy} initialDraft={state.drafts[`probe-${state.target}-${state.round}-${state.retry}`]} onDraftChange={draft => saveDraft(`probe-${state.target}-${state.round}-${state.retry}`, draft)} onDone={submitProbe} submitLabel="Kiểm tra" source={node?.page} originNote={<ProbeOrigin state={state} />} />
           )}
           {!busy && state.stage === 'review' && (
             <ReviewPanel
@@ -292,10 +375,10 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
             <PlanPanel state={state} tree={tree} onRetest={startRetest} onBack={() => update({ stage: 'analysis', chatOpen: true })} />
           )}
           {state.stage === 'retest' && (
-            <QuestionRunner key={`retest-${state.target}`} items={state.probeQuestions} isActive={isActive} submitting={busy} initialDraft={state.drafts[`retest-${state.target}`]} onDraftChange={draft => saveDraft(`retest-${state.target}`, draft)} onDone={submitRetest} submitLabel="Nộp kiểm tra lại" source={node?.page} />
+            <QuestionRunner key={`retest-${state.target}`} items={state.probeQuestions} isActive={isActive} submitting={busy} initialDraft={state.drafts[`retest-${state.target}`]} onDraftChange={draft => saveDraft(`retest-${state.target}`, draft)} onDone={submitRetest} submitLabel="Nộp kiểm tra lại" source={node?.page} originNote={<ProbeOrigin state={state} />} />
           )}
           {!busy && state.stage === 'retestDone' && (
-            <RetestResult state={state} tree={tree} onPlan={() => update({ stage: 'plan' })} onFeedback={feedback => update({ feedback })} onComplete={() => update({ stage: 'complete' })} />
+            <RetestResult state={state} tree={tree} nextArea={nextArea} onNextArea={() => goToArea(nextArea, state.target)} onPlan={() => update({ stage: 'plan' })} onFeedback={feedback => update({ feedback })} onComplete={() => update({ stage: 'complete' })} />
           )}
           {!busy && state.stage === 'complete' && (
             <Completion state={state} total={session.questions.length} onHome={onHome} />
@@ -307,7 +390,7 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
   )
 }
 
-function QuestionRunner({ items, isActive, submitting = false, initialDraft, onDraftChange, onDone, submitLabel, source }) {
+function QuestionRunner({ items, isActive, submitting = false, initialDraft, onDraftChange, onDone, submitLabel, source, originNote = null }) {
   const [index, setIndex] = useState(() => Math.min(initialDraft?.index || 0, Math.max(items.length - 1, 0)))
   const [picked, setPicked] = useState(() => initialDraft?.picked || {})
   const [times, setTimes] = useState(() => initialDraft?.times || {})
@@ -375,7 +458,7 @@ function QuestionRunner({ items, isActive, submitting = false, initialDraft, onD
             </button>
           ))}
         </div>
-        {source && <p className="source-line">▤ {source}</p>}
+        {source && <p className="source-line">▤ <CitedText text={source} />{originNote}</p>}
         <div className="runner-note">
           {selected === undefined ? <span>Chưa chọn — bạn có thể bỏ qua câu này.</span> : <button className="text-button" disabled={submitting} onClick={() => setPicked(previous => { const next = { ...previous }; delete next[index]; return next })}>Bỏ chọn</button>}
           <span>{doneCount}/{items.length} câu đã chọn</span>
@@ -393,6 +476,51 @@ function QuestionRunner({ items, isActive, submitting = false, initialDraft, onD
   )
 }
 
+// Nhận xét chung TRƯỚC khi chẩn đoán: nói rõ có mấy vùng yếu, không chỉ vùng sắp làm.
+function AreasOverview({ session, state }) {
+  const diagnosis = learningService.pickTarget(state.records, session.tree)
+  const areas = diagnosis.queue || []
+  if (areas.length < 2) return null
+  return <div className="areas-overview">
+    <strong>Bài làm của bạn có tín hiệu yếu ở {areas.length} mục:</strong>
+    <ul>{areas.map(item => (
+      <li key={item.target}>{session.tree[item.target]?.label || item.target} — {item.hits.length} câu</li>
+    ))}</ul>
+    <p className="muted">Hệ thống chẩn đoán lần lượt từng mục, bắt đầu từ mục nhiều tín hiệu nhất. Xong mục nào sẽ mời bạn sang mục kế tiếp.</p>
+  </div>
+}
+
+// Học viên tự chọn ôn mục nào, bỏ mục nào — hệ thống xếp thứ tự chứ không áp đặt.
+function AreaProgress({ state, tree, onPick, onSkip, onRestore }) {
+  const resolved = state.resolved || []
+  const skipped = state.skipped || []
+
+  return <ol className="area-progress" aria-label="Các mục cần xử lý">
+    {state.queue.map((item, index) => {
+      const label = tree[item.target]?.label || item.target
+      const current = item.target === state.target
+      const done = resolved.includes(item.target)
+      const off = skipped.includes(item.target)
+      const mark = done ? '✓' : off ? '–' : index + 1
+
+      return <li key={item.target} className={[current && 'current', done && 'done', off && 'skipped'].filter(Boolean).join(' ')}>
+        <button
+          type="button"
+          className="area-pick"
+          disabled={current}
+          aria-current={current ? 'step' : undefined}
+          aria-label={current ? `Mục đang chẩn đoán: ${label}` : off ? `Ôn lại: ${label}` : `Chuyển sang: ${label}`}
+          title={current ? 'Mục đang chẩn đoán' : off ? `Ôn lại: ${label}` : `Chuyển sang: ${label}`}
+          onClick={() => (off ? onRestore(item) : onPick(item))}
+        >
+          <span className="area-mark">{mark}</span>{label}
+        </button>
+        {!current && !off && <button type="button" className="area-skip" aria-label={`Bỏ qua mục ${label}`} title="Không ôn mục này" onClick={() => onSkip(item)}>×</button>}
+      </li>
+    })}
+  </ol>
+}
+
 function QuizResult({ session, state, onExplain, onDiagnose, onComplete }) {
   const correct = state.records.filter(record => record.correct).length
   const weak = state.records.some(record => !record.correct || record.flag === 'slow')
@@ -400,7 +528,9 @@ function QuizResult({ session, state, onExplain, onDiagnose, onComplete }) {
     <section>
       <div className="result-summary"><strong>{correct}/{state.records.length}</strong><div><h2>Kết quả bài quiz</h2><p>Tổng thời gian {fmt(state.records.reduce((sum, record) => sum + record.sec, 0))}</p></div></div>
       {weak ? (
-        <section className="result-next"><h3 className="choice-title">Bạn muốn làm gì tiếp?</h3><div className="review-choices"><button onClick={onExplain}><span className="square-icon">✦</span><h2>Giải thích đáp án</h2><p>Hiểu mình sai điều gì và vì sao phương án kia chưa phù hợp.</p><strong>Xem giải thích →</strong></button><button onClick={onDiagnose}><span className="square-icon peach">◎</span><h2>Tìm phần nền bị hổng</h2><p>Tổng hợp toàn bộ tín hiệu để kiểm tra kiến thức nền.</p><strong>Bắt đầu chẩn đoán →</strong></button></div></section>
+        <section className="result-next">
+          <AreasOverview session={session} state={state} />
+          <h3 className="choice-title">Bạn muốn làm gì tiếp?</h3><div className="review-choices"><button onClick={onExplain}><span className="square-icon">✦</span><h2>Giải thích đáp án</h2><p>Hiểu mình sai điều gì và vì sao phương án kia chưa phù hợp.</p><strong>Xem giải thích →</strong></button><button onClick={onDiagnose}><span className="square-icon peach">◎</span><h2>Tìm phần nền bị hổng</h2><p>Tổng hợp toàn bộ tín hiệu để kiểm tra kiến thức nền.</p><strong>Bắt đầu chẩn đoán →</strong></button></div></section>
       ) : (
         <Feedback title="Bạn trả lời đúng và dứt khoát tất cả câu hỏi."><Button onClick={onComplete}>Hoàn thành phiên →</Button></Feedback>
       )}
@@ -444,7 +574,7 @@ function AnswerReviewContent({ items, records, tree, showExplanation }) {
       <small>{record.sel === null ? 'Bạn đã bỏ trống' : `Bạn chọn: ${question.options?.[record.sel] || `Phương án ${record.sel + 1}`}`}</small>
       {!record.correct && record.answer !== null && record.answer !== undefined && <small>Đáp án: <b>{question.options?.[record.answer] || `Phương án ${record.answer + 1}`}</b></small>}
       {FLAG_TEXT[record.flag] && <p className={`signal ${record.flag}`}>{FLAG_TEXT[record.flag]}</p>}
-      {isExpanded && <div className="answer-explanation" id={explanationId}><strong>Vì sao?</strong><p>{record.why || 'Phần giải thích chưa sẵn sàng.'}</p>{record.trap && <p><b>Bẫy:</b> {record.trap}</p>}{tree?.[record.node]?.page && <SourceCitation source={tree[record.node].page} excerpt={record.why} />}</div>}
+      {isExpanded && <CitationScope><div className="answer-explanation" id={explanationId}><strong>Vì sao?</strong><p><CitedText text={record.why || 'Phần giải thích chưa sẵn sàng.'} /></p>{record.trap && <p><b>Bẫy:</b> <CitedText text={record.trap} /></p>}{tree?.[record.node]?.page && <SourceCitation source={tree[record.node].page} />}</div></CitationScope>}
       <button
         type="button"
         className="explanation-toggle"
@@ -484,9 +614,9 @@ function AnalysisPanel({ session, state, onAccept, onPlan, onUpdate }) {
     setDraft('')
     setSending(true)
     try {
-      const reply = await learningService.chat({ session, target: state.target, records: targetRecords, message: message.trim(), history: chat })
+      const { reply, usage } = await learningService.chat({ session, target: state.target, records: targetRecords, message: message.trim(), history: chat })
       onUpdate({
-        chat: [...nextChat, { me: false, text: reply }],
+        chat: [...nextChat, { me: false, text: reply, usage }],
         trace: [...state.trace, { t: 'Học viên hỏi lại', d: message.trim() }],
       })
     } catch {
@@ -497,10 +627,10 @@ function AnalysisPanel({ session, state, onAccept, onPlan, onUpdate }) {
   }
 
   return <section>
-    <div className="analysis-card"><span className="eyebrow">TÍN HIỆU THU ĐƯỢC</span><ul>{targetRecords.map((record, index) => <li key={index}>{session.tree[record.node]?.label || record.node} — {FLAG_TEXT[record.flag] || 'đúng'} ({fmt(record.sec)})</li>)}</ul><div className="divider" /><span className="eyebrow">GIẢ THUYẾT</span><h2>{session.tree[state.target]?.label || state.target}</h2><p>{state.hypothesis?.hypothesis_text}</p><p className="muted">Mức chắc chắn: <b>{state.hypothesis?.confidence || 'thấp'}</b></p>{session.tree[state.target]?.page && <p className="source-line">▤ {session.tree[state.target].page}</p>}</div>
+    <CitationScope><div className="analysis-card"><span className="eyebrow">TÍN HIỆU THU ĐƯỢC</span><ul>{targetRecords.map((record, index) => <li key={index}>{session.tree[record.node]?.label || record.node} — {FLAG_TEXT[record.flag] || 'đúng'} ({fmt(record.sec)})</li>)}</ul><div className="divider" /><span className="eyebrow">GIẢ THUYẾT</span><h2>{session.tree[state.target]?.label || state.target}</h2><p><CitedText text={state.hypothesis?.hypothesis_text} /></p><p className="muted">Mức chắc chắn: <b>{state.hypothesis?.confidence || 'thấp'}</b><UsageChip usage={state.hypothesis?.usage} /></p>{session.tree[state.target]?.page && <p className="source-line">▤ <CitedText text={session.tree[state.target].page} /></p>}</div></CitationScope>
     <h3 className="choice-title">Bạn thấy suy luận này có hợp lý không?</h3>
     <div className="action-row"><Button onClick={onAccept}>Hợp lý — kiểm tra câu nền →</Button><Button variant="secondary" onClick={onPlan}>Hợp lý — ôn luôn</Button><Button variant="ghost" onClick={() => onUpdate({ chatOpen: !open })}>Chưa thuyết phục — hỏi thêm</Button></div>
-    {open && <section className="chat-panel"><div className="chat">{chat.map((message, index) => <p key={index} className={`bub ${message.me ? 'me' : 'ai'}`}>{message.text}</p>)}{sending && <p className="muted">Đang trả lời…</p>}<span ref={chatEndRef} /></div><div className="chat-compose"><input ref={inputRef} value={draft} disabled={sending} onChange={event => setDraft(event.target.value)} onKeyDown={event => event.key === 'Enter' && !event.isComposing && send(draft)} placeholder="Hỏi về chẩn đoán này…" /><Button disabled={sending || !draft.trim()} onClick={() => send(draft)}>Gửi</Button></div></section>}
+    {open && <section className="chat-panel"><div className="chat">{chat.map((message, index) => <p key={index} className={`bub ${message.me ? 'me' : 'ai'}`}>{message.me ? message.text : <><CitedText text={message.text} /><UsageChip usage={message.usage} /></>}</p>)}{sending && <p className="muted">Đang trả lời…</p>}<span ref={chatEndRef} /></div><div className="chat-compose"><input ref={inputRef} value={draft} disabled={sending} onChange={event => setDraft(event.target.value)} onKeyDown={event => event.key === 'Enter' && !event.isComposing && send(draft)} placeholder="Hỏi về chẩn đoán này…" /><Button disabled={sending || !draft.trim()} onClick={() => send(draft)}>Gửi</Button></div></section>}
   </section>
 }
 
@@ -528,50 +658,122 @@ function PlanPanel({ state, tree, onRetest, onBack }) {
   const plan = state.plan || {}
   const reviewLabel = text => (text || '').replace(/^Nghe lại\b/i, 'Xem lại')
   return <section>
-    <div className="plan-hero"><span className="eyebrow">LỘ TRÌNH CÁ NHÂN HÓA</span><h2>{plan.title}</h2><p>{plan.why_explanation}</p></div>
-    <div className="knowledge-list">{(plan.items || []).map((item, index) => <section className="knowledge-card" key={index}><div className="knowledge-number">0{index + 1}</div><div><h2>{reviewLabel(item.text)}</h2>{item.slide_page && <SourceCitation source={item.slide_page} excerpt={reviewLabel(item.text)} />}</div></section>)}</div>
-    {plan.advice_text && <section className="mini-lesson"><span className="eyebrow">AI GỢI Ý CÁCH ÔN</span><p className="pre-line">{plan.advice_text}</p></section>}
+    <CitationScope><div className="plan-hero"><span className="eyebrow">LỘ TRÌNH CÁ NHÂN HÓA</span><h2>{plan.title}</h2><p><CitedText text={plan.why_explanation} /></p><UsageChip usage={plan.usage} /></div></CitationScope>
+    <div className="knowledge-list">{(plan.items || []).map((item, index) => <CitationScope key={index}><section className="knowledge-card"><div className="knowledge-number">0{index + 1}</div><div><h2><CitedText text={reviewLabel(item.text)} /></h2>{item.slide_page && <SourceCitation source={item.slide_page} />}</div></section></CitationScope>)}</div>
+    {plan.advice_text && <CitationScope><section className="mini-lesson"><span className="eyebrow">AI GỢI Ý CÁCH ÔN</span><p className="pre-line"><CitedText text={plan.advice_text} /></p></section></CitationScope>}
     <section className="trace-card"><h3>Vì sao bạn nhận lộ trình này?</h3><ol>{state.trace.map((entry, index) => <li key={index}><b>{entry.t}:</b> {entry.d}</li>)}</ol></section>
     <div className="action-row"><Button onClick={onRetest}>Mình ôn xong rồi — kiểm tra lại →</Button><Button variant="secondary" onClick={onBack}>Chưa ổn — cần thêm</Button></div>
     <p className="muted small-note">Chỉ báo “đã ôn xong” chưa làm mất cờ lỗ hổng; bạn cần đúng toàn bộ bài kiểm tra lại.</p>
   </section>
 }
 
-function RetestResult({ state, tree, onPlan, onFeedback, onComplete }) {
+function RetestResult({ state, tree, nextArea, onNextArea, onPlan, onFeedback, onComplete }) {
   const passed = state.retestRecs.every(record => record.correct)
   return <section>
     <Feedback type={passed ? 'success' : 'error'} title={passed ? `Đã nắm: ${tree[state.target]?.label || state.target}` : 'Bạn thấy ổn rồi, nhưng vẫn còn phần chưa chắc'}>{passed ? 'Bạn trả lời đúng toàn bộ câu kiểm tra lại. Node kiến thức đã chuyển sang trạng thái ổn.' : `Bạn còn sai ${state.retestRecs.filter(record => !record.correct).length}/${state.retestRecs.length} câu. Cờ cần ôn vẫn được giữ.`}</Feedback>
     <AnswerReview items={state.probeQuestions} records={state.retestRecs} tree={tree} showExplanation />
     <Rating value={state.feedback} onSubmit={onFeedback} />
-    <div className="action-row">{!passed && <Button onClick={onPlan}>Xem lại lộ trình</Button>}<Button variant={passed ? 'primary' : 'secondary'} onClick={onComplete}>Kết thúc phiên →</Button></div>
+    <div className="action-row">
+      {!passed && <Button onClick={onPlan}>Xem lại lộ trình</Button>}
+      {nextArea && <Button onClick={onNextArea}>Sang mục tiếp: {tree[nextArea.target]?.label || nextArea.target} →</Button>}
+      <Button variant={nextArea || !passed ? 'secondary' : 'primary'} onClick={onComplete}>Kết thúc phiên</Button>
+    </div>
+    {nextArea && <p className="muted">Bài quiz còn tín hiệu yếu ở mục khác. Kết thúc bây giờ thì những mục đó không được chẩn đoán.</p>}
   </section>
 }
 
-function SourceCitation({ source, excerpt }) {
-  const [open, setOpen] = useState(false)
-  const popoverId = useId()
-  const summary = (excerpt || 'Chưa có nội dung tóm lược cho đoạn nguồn này.')
-    .replace(/\s*\[T\d{2}-\d{3}\]/g, '')
-    .trim()
+// Trích dẫn kiểu bài báo: mỗi mã đoạn [Txx-NNN] là một nút riêng, bấm lại để ẩn.
+// Mọi CitedText trong cùng một CitationScope dùng CHUNG một ô nguồn đặt ở cuối khối,
+// nên bấm mã trong thân bài hay ở dòng ▤ đều mở ra cùng chỗ.
+const CITE_SPLIT_RE = /(\[T\d{2}-\d{3}(?:\s*[,;·]\s*T\d{2}-\d{3})*\])/g
+const CITE_CHUNK_RE = /^\[T\d{2}-\d{3}(?:\s*[,;·]\s*T\d{2}-\d{3})*\]$/
+const CITE_CODE_RE = /T\d{2}-\d{3}/g
+const CitationContext = createContext(null)
 
-  return <div className="source-citation-wrap">
-    <button
-      type="button"
-      className="source-citation"
-      aria-expanded={open}
-      aria-controls={popoverId}
-      aria-label={`${open ? 'Đóng' : 'Mở'} nguồn: ${source}`}
-      onClick={() => setOpen(previous => !previous)}
-    >
-      <span aria-hidden="true">▤</span>
-      <span>{source}</span>
-    </button>
-    {open && <aside className="source-popover" id={popoverId} aria-label={`Trích nguồn ${source}`}>
-      <div className="source-popover-head"><strong>TRÍCH NGUỒN</strong><button type="button" aria-label="Đóng trích nguồn" onClick={() => setOpen(false)}>×</button></div>
-      <p>“{summary}”</p>
-      <small>{source}</small>
-    </aside>}
-  </div>
+export function CitationScope({ children }) {
+  const [openCode, setOpenCode] = useState(null)
+  const scopeId = useId()
+  const toggle = code => setOpenCode(previous => (previous === code ? null : code))
+
+  return <CitationContext.Provider value={{ openCode, toggle, popoverId: `${scopeId}-popover` }}>
+    {children}
+    {openCode && <SourcePopover id={`${scopeId}-popover`} code={openCode} onClose={() => setOpenCode(null)} />}
+  </CitationContext.Provider>
+}
+
+function CitedText(props) {
+  // Dùng ô nguồn của scope cha nếu có; đứng một mình thì tự dựng scope riêng.
+  const scope = useContext(CitationContext)
+  if (scope) return <CitedTextBody {...props} scope={scope} />
+  return <CitationScope><CitedTextBody {...props} /></CitationScope>
+}
+
+function CitedTextBody({ text, className, scope: injected }) {
+  const fromContext = useContext(CitationContext)
+  const scope = injected || fromContext
+  const parts = String(text ?? '').split(CITE_SPLIT_RE)
+  if (!parts.some(part => CITE_CHUNK_RE.test(part))) return <span className={className}>{text}</span>
+
+  return <span className={className}>
+    {parts.map((part, index) => {
+      if (!CITE_CHUNK_RE.test(part)) return <span key={index}>{part}</span>
+      // Ngoặc gộp nhiều mã thì tách thành từng nút riêng, bấm được độc lập.
+      return part.match(CITE_CODE_RE).map(code => {
+        const isOpen = scope.openCode === code
+        return <button
+          key={`${index}-${code}`}
+          type="button"
+          className={`citation-ref ${isOpen ? 'open' : ''}`}
+          aria-expanded={isOpen}
+          aria-controls={scope.popoverId}
+          aria-label={`${isOpen ? 'Ẩn' : 'Xem'} nguồn ${code}`}
+          onClick={() => scope.toggle(code)}
+        >[{code}]</button>
+      })
+    })}
+  </span>
+}
+
+// Số token của chính lời gọi AI vừa sinh ra khối này — nhỏ, đặt ngay dưới nội dung.
+// Nói thật với học viên bộ câu này từ đâu ra — câu AI vừa sinh hay bộ có sẵn.
+function ProbeOrigin({ state }) {
+  if (state.probeSource === 'ai') return <> · <span className="probe-origin">câu vừa được AI soạn riêng<UsageChip usage={state.probeUsage} /></span></>
+  if (state.probeSource === 'bank') return <> · <span className="probe-origin">bộ câu có sẵn</span></>
+  return null
+}
+
+function UsageChip({ usage }) {
+  if (!usage?.total_tokens) return null
+  const seconds = (usage.latency_ms || 0) / 1000
+  return <span className="usage-chip" title={`${usage.task} · ${usage.model} · ${usage.total_tokens} token · ${seconds.toFixed(1)}s`}>
+    ⇅ {usage.prompt_tokens}↑ {usage.completion_tokens}↓ token · {seconds.toFixed(1)}s
+  </span>
+}
+
+function SourcePopover({ id, code, onClose }) {
+  const [source, setSource] = useState(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    setSource(null)
+    setError('')
+    learningService.getSource(code)
+      .then(result => { if (!cancelled) setSource(result) })
+      .catch(err => { if (!cancelled) setError(err.message || 'Không tải được đoạn nguồn.') })
+    return () => { cancelled = true }
+  }, [code])
+
+  // Toàn span: ô nguồn có thể nằm trong <p> (bong bóng chat, dòng ▤) mà không sai lồng thẻ.
+  return <span className="source-popover" role="note" id={id} aria-label={`Trích nguồn ${code}`}>
+    <span className="source-popover-head"><strong>TRÍCH NGUỒN · {code}</strong><button type="button" aria-label="Đóng trích nguồn" onClick={onClose}>×</button></span>
+    <span className={`source-popover-body ${error ? 'is-error' : ''}`}>{error || (source ? `“${source.text}”` : 'Đang tải đoạn nguồn…')}</span>
+    {source && <small>{source.file} · {code}</small>}
+  </span>
+}
+
+function SourceCitation({ source }) {
+  return <div className="source-citation-wrap"><span aria-hidden="true">▤ </span><CitedTextBody className="source-citation-text" text={source} /></div>
 }
 
 function Rating({ value, onSubmit }) {

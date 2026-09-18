@@ -1,5 +1,6 @@
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel
+from ..core.usage import last as last_usage
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field
 
 class SignalHit(BaseModel):
     node: str
@@ -21,3 +22,6 @@ class DiagnosisHypothesisOut(BaseModel):
     confidence_explanation: str
     hypothesis_text: str
     suggested_action: str
+    # Token của chính lời gọi LLM vừa rồi — default_factory chạy lúc dựng object,
+    # tức vẫn trong context của request đó, nên UI nhận đúng số của mình.
+    usage: Optional[Dict[str, Any]] = Field(default_factory=last_usage)

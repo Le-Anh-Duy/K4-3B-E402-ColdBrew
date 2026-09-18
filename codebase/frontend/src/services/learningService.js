@@ -3,11 +3,15 @@ import {
   apiCreateSession,
   apiEvaluateRound,
   apiGeneratePlan,
+  apiGenerateProbes,
   apiGetHypothesis,
   apiGetProbes,
   apiGetQuiz,
+  apiGetSource,
   apiGetTree,
   apiGradeQuiz,
+  apiListSessions,
+  apiGetSession,
   apiUpdateSession,
 } from '../api.js'
 import { backendService } from './backendService'
@@ -16,6 +20,7 @@ import { demoLearningService } from './demoLearningService'
 const ACTIVE_KEY = 'coldbrew-active-session'
 const FLOW_KEY = 'coldbrew-flow'
 const progressBySession = new Map()
+const sourceCache = new Map()
 let connection = { state: 'unchecked' }
 
 const normalizeQuestion = (question, source = 'backend') => ({
@@ -49,7 +54,7 @@ function fallbackTarget(records, tree) {
   const missed = records.filter(record => !record.correct)
   const shaky = records.filter(record => record.flag === 'slow')
   const candidates = missed.length ? missed : shaky
-  const refusal = reason => ({ target: null, hits: [], missed, shaky, candidates, reason })
+  const refusal = reason => ({ target: null, hits: [], queue: [], missed, shaky, candidates, reason })
   if (!candidates.length) return refusal('Không có tín hiệu yếu nào.')
   if (candidates.every(record => record.flag === 'rush')) {
     return refusal('Các câu sai đều được trả lời quá nhanh; chưa đủ căn cứ để xác định lỗ hổng.')
@@ -67,7 +72,14 @@ function fallbackTarget(records, tree) {
   for (const entry of groups.entries()) if (entry[1].length > hits.length) [target, hits] = entry
   const prerequisite = (tree[target]?.prereq || []).find(id => groups.has(id))
   if (prerequisite) [target, hits] = [prerequisite, groups.get(prerequisite)]
-  return { target, hits: hits.map(record => record.node), missed, shaky, candidates, reason: null }
+
+  // Sai nhiều câu ở nhiều mục thì có NHIỀU nhóm tín hiệu. Trước đây chỉ giữ nhóm đầu
+  // rồi bỏ phần còn lại, nên học xong một mục là phiên kết thúc. Giữ cả hàng đợi.
+  const queue = [...groups.entries()]
+    .map(([node, group]) => ({ target: node, hits: group.map(record => record.node) }))
+    .sort((a, b) => (a.target === target ? -1 : b.target === target ? 1 : b.hits.length - a.hits.length))
+
+  return { target, hits: hits.map(record => record.node), queue, missed, shaky, candidates, reason: null }
 }
 
 
@@ -145,10 +157,10 @@ export const learningService = {
     connection = { state: 'unavailable' }
     return demoLearningService.getCatalog()
   },
-  async startQuiz(config) {
+  async startQuiz(config, owner = null) {
     const isBackendDoc = config.documentId === 'adaptive-backend' || config.documentId === 'day-01' || config.documentId === 'day-02'
     if (isBackendDoc) {
-      const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(config.count, config.documentId), apiGetTree(), apiCreateSession()])
+      const [quiz, graph] = await Promise.all([apiGetQuiz(config.count, config.documentId), apiGetTree()])
       const docTitle = config.documentId === 'day-01'
         ? 'Day 01 · Nền tảng kỹ thuật của LLM (Transcript 04, 05, 06)'
         : config.documentId === 'day-02'
@@ -159,15 +171,16 @@ export const learningService = {
 
       if (rawQuestions.length) {
         const document = { id: config.documentId, title: docTitle, topics: [config.topic] }
-        return {
-          id: remoteSession?.session_id || `${Date.now()}`,
-          remote: !!remoteSession?.session_id,
+        const envelope = {
           document,
           topic: config.topic,
           source: 'backend',
           tree: graph?.nodes || {},
           questions: rawQuestions.map(question => normalizeQuestion(question, 'backend')),
         }
+        // Gửi cả vỏ phiên lên backend ngay từ đầu: có nó mới dựng lại được phiên ở máy khác.
+        const remoteSession = await apiCreateSession({ owner, session: envelope })
+        return { id: remoteSession?.session_id || `${Date.now()}`, remote: !!remoteSession?.session_id, owner, ...envelope }
       }
     }
     const session = await demoLearningService.startQuiz(config)
@@ -216,6 +229,14 @@ export const learningService = {
       hypothesis_text: `${targetRecords.length} tín hiệu yếu cùng nằm dưới “${session.tree[target]?.label || target}”. Có thể lỗ hổng nằm ở mục này hoặc phần nền phía trên.`,
     }
   },
+  async getSource(code) {
+    const cached = sourceCache.get(code)
+    if (cached) return cached
+    const result = await apiGetSource(code)
+    if (!result?.text) throw new Error('Đoạn nguồn này chưa có trong bản dữ liệu đang chạy.')
+    sourceCache.set(code, result)
+    return result
+  },
   async chat({ session, target, records, message, history }) {
     const targetNode = session.tree[target] || {}
     const result = await apiChatMessage({
@@ -227,20 +248,44 @@ export const learningService = {
       message,
       history: history.map(item => ({ role: item.me ? 'user' : 'assistant', content: item.text })),
     })
-    if (result?.reply) return result.reply
-    return 'Gemini đang tạm thời chưa phản hồi. Bạn vui lòng thử lại sau ít phút.'
+    if (result?.reply) return { reply: result.reply, usage: result.usage }
+    return { reply: 'Gemini đang tạm thời chưa phản hồi. Bạn vui lòng thử lại sau ít phút.', usage: null }
   },
-  async getProbes(session, target) {
+  async getProbes(session, target, { round = 1, retry = 0, purpose = 'probe' } = {}) {
     if (session.source === 'backend') {
+      // Câu do AI sinh theo phiên: mỗi vòng một bộ khác, nên không học vẹt được.
+      if (session.remote) {
+        const generated = await apiGenerateProbes({
+          session_id: session.id, target_node_id: target, round_num: round, retry, purpose, count: 3,
+        })
+        if (generated?.questions?.length) {
+          return {
+            questions: generated.questions.map(question => normalizeQuestion(question, 'backend')),
+            probeKey: generated.probe_key,
+            source: generated.source,
+            usage: generated.usage,
+            note: generated.note,
+          }
+        }
+      }
       const result = await apiGetProbes(target)
-      if (result?.questions?.length) return result.questions.map(question => normalizeQuestion(question, 'backend'))
+      if (result?.questions?.length) {
+        return { questions: result.questions.map(question => normalizeQuestion(question, 'backend')), probeKey: null, source: 'bank' }
+      }
     }
     const support = await demoLearningService.getSupport(session.topic)
-    return [...support.checks, support.similar].slice(0, 3).map(question => normalizeQuestion(question, 'demo'))
+    return {
+      questions: [...support.checks, support.similar].slice(0, 3).map(question => normalizeQuestion(question, 'demo')),
+      probeKey: null,
+      source: 'demo',
+    }
   },
-  async evaluateRound({ session, target, round, questions, picked, times, lastFailed }) {
+  async evaluateRound({ session, target, round, questions, picked, times, lastFailed, probeKey }) {
     if (session.source === 'backend') {
-      const result = await apiEvaluateRound({ target_node_id: target, round_num: round, picked, times, last_failed: lastFailed })
+      const result = await apiEvaluateRound({
+        target_node_id: target, round_num: round, picked, times, last_failed: lastFailed,
+        session_id: probeKey ? session.id : null, probe_key: probeKey || null,
+      })
       if (result?.records) return result
     }
     const records = await Promise.all(questions.map(async (question, index) => {
@@ -282,11 +327,24 @@ export const learningService = {
     }
   },
   getFlow(sessionId) { return readJson(`${FLOW_KEY}:${sessionId}`, progressBySession.get(sessionId) || null) },
-  async saveProgress(sessionId, progress, remote = false) {
+  async saveProgress(sessionId, progress, remote = false, owner = null) {
     progressBySession.set(sessionId, progress)
     writeJson(`${FLOW_KEY}:${sessionId}`, progress)
-    if (remote) void apiUpdateSession(sessionId, progress)
+    if (remote) void apiUpdateSession(sessionId, { state: progress, owner })
     return progress
+  },
+  async restoreSession(email) {
+    // Backend là nguồn sự thật; localStorage chỉ là cache cho lần mở lại nhanh.
+    const local = this.getActiveSession(email)
+    const list = await apiListSessions(email).catch(() => null)
+    const newest = (Array.isArray(list) ? list : []).find(item => !item.completed && item.session_id !== local?.id)
+    if (!newest) return local
+    const record = await apiGetSession(newest.session_id).catch(() => null)
+    if (!record?.session?.questions?.length) return local
+    const session = { ...record.session, id: record.session_id, remote: true, owner: record.owner || email }
+    if (record.state) writeJson(`${FLOW_KEY}:${session.id}`, record.state)
+    this.setActiveSession(email, session)
+    return session
   },
   clearProgress(sessionId) {
     progressBySession.delete(sessionId)
@@ -297,6 +355,7 @@ export const learningService = {
   clearActiveSession(email) { try { localStorage.removeItem(`${ACTIVE_KEY}:${email}`) } catch { /* optional */ } },
   getHistory(email) { return readJson(`coldbrew-history:${email}`, []) },
   async saveSession(email, session) {
+    if (session.remote !== false) void apiUpdateSession(session.id, { completed: true, owner: email })
     const updated = [session, ...this.getHistory(email).filter(item => item.id !== session.id)].slice(0, 20)
     writeJson(`coldbrew-history:${email}`, updated)
     this.clearActiveSession(email)

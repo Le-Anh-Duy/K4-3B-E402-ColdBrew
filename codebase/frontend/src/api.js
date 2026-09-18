@@ -47,6 +47,10 @@ export async function apiGradeQuiz(questionIds, picked, times) {
   });
 }
 
+export async function apiGetSource(code) {
+  return await fetchJson(`${API_BASE}/source/${encodeURIComponent(code)}`);
+}
+
 // 4. AI Explain (AI #1)
 export async function apiExplainSingle(payload) {
   // payload: { node_id, question, options, correct_idx, selected_idx, time_sec, flag }
@@ -78,6 +82,14 @@ export async function apiGetProbes(targetNodeId) {
   return await fetchJson(`${API_BASE}/probes/${targetNodeId}`);
 }
 
+export async function apiGenerateProbes(payload) {
+  // payload: { session_id, target_node_id, round_num, retry, purpose, count }
+  return await fetchJson(`${API_BASE}/probes/generate`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function apiEvaluateRound(payload) {
   // payload: { target_node_id, round_num, picked, times }
   return await fetchJson(`${API_BASE}/probes/evaluate-round`, {
@@ -105,17 +117,59 @@ export async function apiGeneratePlan(payload) {
 }
 
 // 9. Session (Learner state)
-export async function apiCreateSession() {
-  return await fetchJson(`${API_BASE}/session`, { method: 'POST' });
+export async function apiCreateSession(payload = {}) {
+  // payload: { owner, session } — gửi luôn vỏ phiên để resume được ở máy khác.
+  return await fetchJson(`${API_BASE}/session`, { method: 'POST', body: JSON.stringify(payload) });
 }
 
 export async function apiGetSession(sessionId) {
   return await fetchJson(`${API_BASE}/session/${sessionId}`);
 }
 
-export async function apiUpdateSession(sessionId, state) {
+export async function apiListSessions(owner, limit = 20) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (owner) params.set('owner', owner);
+  return await fetchJson(`${API_BASE}/session?${params}`);
+}
+
+export async function apiUpdateSession(sessionId, payload) {
+  // payload: { state?, owner?, session?, completed? } — trường nào không gửi thì backend giữ nguyên.
   return await fetchJson(`${API_BASE}/session/${sessionId}`, {
     method: 'PUT',
-    body: JSON.stringify(state),
+    body: JSON.stringify(payload),
   });
+}
+
+export async function apiGetUsage() {
+  return await fetchJson(`${API_BASE}/usage`);
+}
+
+// 10. Admin — token gửi qua header, không bao giờ nằm trong URL.
+// Khác fetchJson: admin cần biết LÝ DO hỏng (401 sai token, 503 chưa cấu hình).
+async function adminFetch(path, token, options = {}) {
+  const res = await fetch(`${API_BASE}/admin${path}`, {
+    ...options,
+    headers: { 'X-Admin-Token': token || '', ...options.headers },
+  });
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const error = new Error(body?.detail || `Backend trả lỗi HTTP ${res.status}.`);
+    error.status = res.status;
+    throw error;
+  }
+  return body;
+}
+
+export async function apiAdminLogin(token) {
+  return await adminFetch('/login', token, { method: 'POST' });
+}
+
+export async function apiAdminStatus(token) {
+  return await adminFetch('/status', token);
+}
+
+export async function apiAdminUploadTranscripts(token, files) {
+  const form = new FormData();
+  for (const file of files) form.append('files', file);
+  return await adminFetch('/transcripts', token, { method: 'POST', body: form });
 }

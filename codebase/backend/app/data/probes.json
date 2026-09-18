@@ -283,5 +283,1878 @@
     "review": [
       "Đi lại chương 3 [T01-030…T01-073]: tìm vấn đề đúng → Double Diamond → kỹ thuật khám phá"
     ]
+  },
+  "root": {
+    "questions": [
+      {
+        "q": "Tại sao trong thực tế triển khai, lãnh đạo thường gặp quán tính nhảy thẳng vào giải pháp thay vì tìm hiểu kỹ vấn đề?",
+        "options": [
+          "Vì họ muốn áp dụng ngay một công nghệ cụ thể như AI support theo trào lưu mà chưa trả lời được câu hỏi làm để làm gì và cho ai",
+          "Vì công nghệ sinh ra vốn dĩ để giải quyết vấn đề nên việc chọn công nghệ trước sẽ giúp tiết kiệm thời gian khám phá",
+          "Vì các vị trí phát triển sản phẩm đang rất thiếu kỹ năng bóc tách yêu cầu mơ hồ thành bài toán cụ thể",
+          "Vì mô hình kim cương đôi yêu cầu phải xác định giải pháp trước rồi mới quay lại tìm vấn đề ở viên kim cương thứ hai"
+        ],
+        "answer": 0,
+        "why": "Nhiều lãnh đạo có quán tính nhảy thẳng vào giải pháp, ví dụ đòi làm AI support nhưng chưa trả lời được support để làm gì và cho ai [T01-004].",
+        "traps": {
+          "1": "Nhầm lẫn rằng công nghệ có thể đi trước vấn đề trong khi tư liệu khẳng định phải xác định đúng vấn đề trước [T01-004].",
+          "3": "Hiểu sai chiều của mô hình kim cương đôi, trong khi viên thứ nhất mới là tìm vấn đề [T01-049].",
+          "2": "Nhầm nguyên nhân do thiếu nhân sự phát triển trong khi đoạn văn nói về quán tính của lãnh đạo [T01-001, T01-004]."
+        },
+        "span": "[T01-004]",
+        "node": "root"
+      },
+      {
+        "q": "Mô hình double diamond (kim cương đôi) hoạt động theo cơ chế nào để giúp tìm ra đúng vấn đề và đúng giải pháp?",
+        "options": [
+          "Đi thẳng từ yêu cầu mơ hồ của doanh nghiệp xuống thẳng bước phát triển của team development mà không cần qua hội tụ",
+          "Trải qua bốn pha gồm hai viên kim cương, trong đó mỗi viên đều có quy trình mở rộng rồi thu hẹp để đi tìm vấn đề hoặc giải pháp",
+          "Chỉ tập trung mở rộng ở viên kim cương thứ nhất để tìm vấn đề và thu hẹp toàn bộ ở viên thứ hai để chọn ra một giải pháp duy nhất",
+          "Sử dụng ma trận trục ngang trục dọc để sắp xếp các ý tưởng theo mức độ high impact và low effort ngay từ pha đầu tiên"
+        ],
+        "answer": 1,
+        "why": "Mô hình gồm hai viên kim cương với bốn pha mở rộng rồi hội tụ; viên thứ nhất tìm vấn đề, viên thứ hai tìm giải pháp [T01-049].",
+        "traps": {
+          "2": "Nghĩ rằng mô hình phân chia rạch ròi một viên chỉ mở rộng và một viên chỉ thu hẹp [T01-049].",
+          "3": "Nhầm lẫn cơ chế của mô hình kim cương đôi với ma trận sắp xếp ưu tiên impact và effort [T01-049, T01-079].",
+          "0": "Bỏ qua bản chất qua lại giữa mở rộng và hội tụ của mô hình [T01-049]."
+        },
+        "span": "[T01-049]",
+        "node": "root"
+      },
+      {
+        "q": "Làm thế nào để sử dụng ma trận ưu tiên nhằm mang lại quick win sớm khi có nhiều vấn đề hoặc ý tưởng khác nhau?",
+        "options": [
+          "Đưa mọi ý tưởng vào pha khám phá giải pháp của mô hình kim cương đôi mà không cần đánh giá nỗ lực",
+          "Sắp xếp các ý tưởng vào các cung của bảng trục ngang và trục dọc để chọn ra những cái có high impact và low effort",
+          "Chỉ tập trung vào các yêu cầu mơ hồ từ lãnh đạo để team development tự bóc tách thành các tính năng",
+          "Chọn tất cả những giải pháp có high effort vì chúng thường mang lại giá trị cao nhất cho doanh nghiệp"
+        ],
+        "answer": 1,
+        "why": "Dùng bảng trục ngang trục dọc sắp xếp vào các cung sẽ thấy ngay ưu tiên high impact và low effort giúp mang lại quick win sớm [T01-079].",
+        "traps": {
+          "3": "Chọn high effort trái ngược với tiêu chí mang lại quick win sớm bằng low effort [T01-079].",
+          "2": "Nhầm lẫn việc xử lý yêu cầu mơ hồ thay vì dùng ma trận ưu tiên [T01-001, T01-079].",
+          "0": "Đưa công cụ ma trận nhầm sang quy trình mở rộng hội tụ của kim cương đôi [T01-049, T01-079]."
+        },
+        "span": "[T01-079]",
+        "node": "root"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01+06 · [T01-001] [T06-147]: Khóa học AI20k · Foundation & AI Product (Day 1 & Day 2)"
+    ]
+  },
+  "c0": {
+    "questions": [
+      {
+        "q": "Tại sao các sản phẩm như ChatGPT, Claude hay Gemini không nên được đồng nhất hoàn toàn với khái niệm mô hình ngôn ngữ lớn (LLM)?",
+        "options": [
+          "Vì LLM chỉ là bộ não cốt lõi nằm bên dưới, trong khi chatbot chỉ là lớp vỏ bọc giao diện tương tác hoặc làm việc ngầm",
+          "Vì LLM chỉ chịu trách nhiệm sinh hình ảnh và video, còn các sản phẩm chatbot mới sinh ra văn bản và tài liệu",
+          "Vì chatbot là trái tim của AI, còn LLM chỉ là một lớp giao diện phụ trợ bên ngoài để tương tác với con người",
+          "Vì chatbot hoạt động dựa trên xác suất thống kê và similarity score, còn LLM hoạt động hoàn toàn không dùng tham số"
+        ],
+        "answer": 0,
+        "why": "LLM là trái tim, bộ não của AI nằm bên dưới, còn chatbot thực chất chỉ là một lớp vỏ bọc giao diện bên ngoài hoặc làm ngầm để tương tác [T04-046].",
+        "traps": {
+          "1": "Nhầm lẫn ngược vai trò sinh dữ liệu giữa LLM và chatbot.",
+          "2": "Nhầm lẫn ngược vai trò cốt lõi giữa chatbot và LLM.",
+          "3": "Gán nhầm cơ chế xác suất thống kê của LLM sang cho chatbot và cho rằng LLM không dùng tham số."
+        },
+        "span": "[T04-046]",
+        "node": "c0"
+      },
+      {
+        "q": "Điều gì xảy ra về mặt bản chất kỹ thuật khi mô hình ngôn ngữ lớn (LLM) thực hiện quá trình dự báo next token?",
+        "options": [
+          "Mô hình hiểu sâu sắc ý nghĩa ngữ nghĩa của ngôn ngữ giống như con người rồi dịch lại thành chuỗi token",
+          "Mô hình sử dụng lớp giao diện chatbot để phân tích tâm lý người dùng trước khi chọn token tiếp theo",
+          "Mô hình tính toán biểu đồ phân bố xác suất để dịch trực tiếp ngôn ngữ tự nhiên thành hình ảnh và video",
+          "Mô hình thực chất không hiểu ngôn ngữ giống con người mà chỉ dự đoán token có xác suất cao nhất dựa trên similarity score"
+        ],
+        "answer": 3,
+        "why": "LLM không hiểu ngôn ngữ giống con người mà nó chỉ dự đoán token nào có xác suất cao nhất hay còn gọi là similarity score [T06-136].",
+        "traps": {
+          "0": "Cho rằng LLM thực sự hiểu ngôn ngữ giống con người.",
+          "2": "Nhầm lẫn quá trình dự đoán next token với việc sinh ra hình ảnh và video.",
+          "1": "Lẫn lộn giữa cơ chế xử lý token bên trong của LLM với lớp giao diện chatbot."
+        },
+        "span": "[T06-136]",
+        "node": "c0"
+      },
+      {
+        "q": "Khi điều chỉnh tham số temperature trong quá trình dự báo của LLM, điều gì sẽ xảy ra nếu thông số này được set về mức gần 0?",
+        "options": [
+          "Lớp giao diện chatbot bên ngoài sẽ ngừng hoạt động ngầm",
+          "Việc trả về các token sẽ theo lý thuyết rất chặt chẽ",
+          "Mức độ sáng tạo sẽ tăng lên tối đa và sinh ra nhiều random token",
+          "Mô hình sẽ bắt đầu hiểu ngôn ngữ giống hệt con người"
+        ],
+        "answer": 1,
+        "why": "Nếu set temperature về gần 0 thì theo lý thuyết nó sẽ rất chặt chẽ [T06-136].",
+        "traps": {
+          "2": "Nhầm lẫn hiệu ứng của temperature gần 0 với khi nó lên 1 (làm tăng random token).",
+          "3": "Gắn nhầm việc thay đổi tham số kỹ thuật với khả năng hiểu ngôn ngữ của con người.",
+          "0": "Liên hệ sai lầm giữa tham số temperature với hoạt động của lớp giao diện chatbot."
+        },
+        "span": "[T06-136]",
+        "node": "c0"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 04+06 · [T04-046] [T06-136]: Nền tảng Day 1 · Bản chất kỹ thuật của LLM"
+    ]
+  },
+  "l_probabilistic": {
+    "questions": [
+      {
+        "q": "Tại sao các mô hình ngôn ngữ lớn (LLM) như Transformer lại có thể tạo ra được các câu trả lời mạch lạc thay vì chỉ là các từ rời rạc?",
+        "options": [
+          "Vì nó sử dụng tham số temperature để tự động dịch nghĩa câu lệnh của người dùng thành ngôn ngữ máy.",
+          "Vì nó thực sự hiểu sâu sắc ý nghĩa của ngôn ngữ giống như cách tư duy của con người.",
+          "Vì nó truy xuất trực tiếp các tri thức chắc chắn đã được lưu trữ sẵn trong cơ sở dữ liệu của mô hình.",
+          "Vì nó lặp liên tục quá trình dự đoán từ tiếp theo dựa trên xác suất, sau đó nối thêm từ đó vào chuỗi ban đầu rồi tiếp tục lặp lại vòng đời đó cho đến hết."
+        ],
+        "answer": 3,
+        "why": "LLM thực hiện một vòng lặp cơ bản là dự đoán từ tiếp theo, sinh ra, append (thêm vào chuỗi ban đầu) rồi lại chạy lại quá trình đó cho đến khi sinh ra hết [T04-047].",
+        "traps": {
+          "1": "Nhầm tưởng LLM hiểu ngôn ngữ giống con người, trong khi thực tế nó chỉ dự đoán token theo xác suất [T06-136].",
+          "2": "Hiểu sai lầm rằng mô hình sở hữu và truy xuất tri thức chắc chắn, nhưng bản chất của nó là dự đoán chứ không phải biết tri thức [T04-047].",
+          "0": "Gán nhầm vai trò của tham số temperature thành công cụ dịch nghĩa thay vì dùng để điều chỉnh mức độ sáng tạo [T06-136]."
+        },
+        "span": "[T04-047]",
+        "node": "l_probabilistic"
+      },
+      {
+        "q": "Điều gì xảy ra ở cấp độ cơ chế khi người dùng nhập một câu vào hệ thống Transformer?",
+        "options": [
+          "Hệ thống sẽ phân tích cú pháp câu của người dùng để hiểu ý định rồi tự động sửa lỗi ngữ pháp.",
+          "Hệ thống sẽ kích hoạt tham số temperature lên mức cao nhất để chọn ra từ có similarity score thấp nhất.",
+          "Hệ thống sẽ tra cứu kho tri thức chắc chắn để tìm ra câu trả lời chính xác nhất.",
+          "Hệ thống dựa trên hàng triệu câu đã học để tính xác suất từ tiếp theo xuất hiện, lấy theo xác suất đó để sinh ra từ rồi tiếp tục lặp lại quá trình."
+        ],
+        "answer": 3,
+        "why": "Khi người dùng nhập một từ vào, mô hình dựa trên hàng triệu câu đã học để đoán xác suất từ tiếp theo, sinh ra từ đó, rồi cập nhật lặp lại vòng đời dự đoán [T04-047].",
+        "traps": {
+          "2": "Nhầm rằng hệ thống tìm kiếm trong kho tri thức chắc chắn thay vì dự đoán dựa trên xác suất [T04-047].",
+          "0": "Cho rằng mô hình có khả năng phân tích cú pháp và sửa lỗi như con người, trong khi bản chất nó chỉ dự đoán token [T06-136].",
+          "1": "Hiểu sai về cơ chế hoạt động của similarity score và temperature khi chọn token [T06-136]."
+        },
+        "span": "[T04-047]",
+        "node": "l_probabilistic"
+      },
+      {
+        "q": "Quá trình dự báo next token của LLM khác biệt với cách con người xử lý ngôn ngữ ở điểm cốt lõi nào?",
+        "options": [
+          "LLM chỉ có thể dự đoán một từ duy nhất trong toàn bộ vòng đời hoạt động của nó.",
+          "LLM không hiểu ngôn ngữ giống con người mà chỉ dự đoán token có xác suất cao nhất dựa trên similarity score.",
+          "LLM phân tích ngữ nghĩa sâu sắc của từng từ trước khi quyết định sinh ra câu.",
+          "LLM luôn luôn trả về các random token ở mọi mức thiết lập tham số."
+        ],
+        "answer": 1,
+        "why": "LLM không hiểu ngôn ngữ giống con người mà chỉ dự đoán token nào có xác suất cao nhất hay còn gọi là similarity score [T06-136].",
+        "traps": {
+          "3": "Cực đoan hóa việc trả về random token, trong khi việc này chỉ xảy ra khi chỉnh temperature lên 1 [T06-136].",
+          "2": "Nhầm lẫn giữa việc phân tích ngữ nghĩa của con người với cơ chế dự đoán xác suất của máy [T06-136].",
+          "0": "Cho rằng mô hình chỉ dự đoán một từ duy nhất, trái ngược với mô hình lặp lại liên tục việc dự đoán và append từ vào chuỗi [T04-047]."
+        },
+        "span": "[T06-136]",
+        "node": "l_probabilistic"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 04+06 · [T04-047] [T06-136]: LLM dự đoán next token theo xác suất, không phải tri thức "
+    ]
+  },
+  "l_hallucination": {
+    "questions": [
+      {
+        "q": "Tại sao hiện tượng ảo giác (hallucination) lại là một đặc tính tất yếu xuất hiện ở các mô hình ngôn ngữ lớn (LLM)?",
+        "options": [
+          "Vì bản chất của mô hình chỉ là tự động nối từ tiếp theo cho có nghĩa dựa trên dữ liệu đầu vào đã có sẵn bias từ internet và các chuyên gia.",
+          "Vì các mô hình này bị giới hạn về dung lượng bộ nhớ nên không thể ghi nhớ chính xác toàn bộ dữ liệu được huấn luyện.",
+          "Vì quá trình học tăng cường (reinforcement learning) sử dụng phần thưởng và hình phạt làm triệt tiêu hoàn toàn khả năng dự đoán từ.",
+          "Vì chế độ streaming trả về kết quả từng từ một khiến cho mô hình bị mất ngữ cảnh của toàn bộ đoạn văn bản."
+        ],
+        "answer": 0,
+        "why": "Hiện tượng ảo giác xảy ra do mô hình chỉ đang cố nối các từ cho có nghĩa và từ đầu đến cuối dữ liệu lẫn quá trình fine-tuning bởi chuyên gia đều mang sẵn bias [T04-048], [T06-138], [T06-139].",
+        "traps": {
+          "1": "Nhầm tưởng mô hình bị giới hạn bộ nhớ trong khi tư liệu khẳng định nó học song song và đọc 10.000 trang không quên.",
+          "2": "Hiểu ngược rằng học tăng cường với phần thưởng và hình phạt triệt tiêu khả năng dự đoán thay vì quy trình này vẫn chịu ảnh hưởng từ bias của chuyên gia.",
+          "3": "Đổ lỗi cho chế độ streaming làm mất ngữ cảnh trong khi streaming chỉ đơn thuần là cách trả kết quả từng từ một."
+        },
+        "span": "[T04-048]",
+        "node": "l_hallucination"
+      },
+      {
+        "q": "Điều gì xảy ra đối với tính chính xác của LLM khi toàn bộ dữ liệu tạo ra trên internet và quá trình huấn luyện đều có sự tham gia của con người?",
+        "options": [
+          "Mô hình chỉ gặp hiện tượng ảo giác khi người dùng yêu cầu dự đoán các dữ liệu tài chính như giá vàng hay giá Bitcoin.",
+          "Mô hình sẽ đạt độ chính xác tuyệt đối nếu được các chuyên gia giám sát chặt chẽ qua giai đoạn reinforcement learning.",
+          "Mô hình không bao giờ đạt độ chính xác 100% và chắc chắn sẽ vẫn sinh ra hiện tượng ảo giác.",
+          "Mô hình sẽ tự động loại bỏ hoàn toàn các thông tin sai lệch trước khi bước sang giai đoạn fine-tuning."
+        ],
+        "answer": 2,
+        "why": "Phần lớn dữ liệu internet và quá trình fine-tuning/reinforcement learning của chuyên gia đều có bias, dẫn đến việc LLM không bao giờ đúng 100% và kiểu gì cũng vẫn có hallucination [T06-138], [T06-139].",
+        "traps": {
+          "1": "Tin rằng sự giám sát chặt chẽ của chuyên gia có thể giúp mô hình đạt độ chính xác tuyệt đối.",
+          "3": "Cho rằng mô hình có cơ chế tự động lọc sạch thông tin sai lệch trước khi tinh chỉnh.",
+          "0": "Thu hẹp nguyên nhân gây ảo giác chỉ xuất hiện khi dự đoán giá vàng hay giá Bitcoin trong khi bản chất sinh từ việc nối từ và bias dữ liệu."
+        },
+        "span": "[T06-138]",
+        "node": "l_hallucination"
+      },
+      {
+        "q": "Khác biệt cơ bản nào giải thích vì sao văn bản do AI sinh ra thường trông rất có lý và thuận mắt nhưng thực chất lại có thể chứa thông tin sai lệch?",
+        "options": [
+          "Vì hệ thống truy xuất tăng cường (RAG) chưa kịp cung cấp các trích dẫn chuẩn xác cho từng token.",
+          "Vì mô hình áp dụng chế độ streaming để trả về kết quả từng từ một thay vì chờ đợi hoàn thành cả đoạn văn.",
+          "Vì các chuyên gia khi thực hiện học tăng cường đã cố tình đưa vào các hình phạt để đánh lừa người dùng.",
+          "Vì mô hình thực chất chỉ là cỗ máy tự động nối từ tiếp theo cho có ý nghĩa thay vì đảm bảo tính đúng đắn tuyệt đối của thông tin."
+        ],
+        "answer": 3,
+        "why": "Văn bản trông có lý nhưng thực ra sai là vì bản chất mô hình chỉ sinh ra và tự động nối từ tiếp theo cho có nghĩa [T04-048].",
+        "traps": {
+          "1": "Đánh đồng chế độ trả kết quả từng từ (streaming) là nguyên nhân tạo ra nội dung sai lệch.",
+          "2": "Suy diễn rằng các chuyên gia cố tình dùng hình phạt để đánh lừa người dùng.",
+          "0": "Cho rằng sự thiếu hụt trích dẫn từ hệ thống RAG là nguyên nhân gốc rễ khiến AI sinh văn bản sai."
+        },
+        "span": "[T04-048]",
+        "node": "l_hallucination"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 04+06 · [T04-048] [T06-138] [T06-139]: Ảo giác (Hallucination) là tất yếu do bias dữ liệu và auto"
+    ]
+  },
+  "l_context_rot": {
+    "questions": [
+      {
+        "q": "Vì sao việc sử dụng cửa sổ ngữ cảnh (context window) có dung lượng rất lớn như 1 triệu token không phải lúc nào cũng mang lại hiệu quả cao hơn so với context ngắn?",
+        "options": [
+          "Vì mô hình sẽ tự động kích hoạt tính năng cắt nhỏ thông tin, làm mất mát dữ liệu phía trước.",
+          "Vì xảy ra hiện tượng context rot, khiến mô hình càng về sau càng kém đi và hay quên thông tin ở lúc đầu.",
+          "Vì khi context quá lớn, mô hình sẽ bị dính hiện tượng cutoff dẫn đến hallucination.",
+          "Vì mô hình có giới hạn tiếp nhận, chỉ đọc được vài chục trang sách nên sẽ bị lỗi hệ thống."
+        ],
+        "answer": 1,
+        "why": "Khi đưa càng nhiều thông tin và ngữ cảnh, mô hình sẽ gặp hiện tượng context rot, dẫn đến việc càng về sau càng kém đi và thường quên những thông tin ở lúc đầu [T04-052].",
+        "traps": {
+          "0": "Nhầm lẫn với cơ chế cắt nhỏ thông tin khi mô hình có context ngắn phải xử lý nhiều tài liệu [T04-051].",
+          "3": "Nhầm lẫn với giới hạn của các mô hình thời đầu chỉ tiếp nhận được vài chục trang sách [T04-051].",
+          "2": "Nhập nhằng hiện tượng context rot với hiện tượng cutoff gây ra hallucination [T06-147]."
+        },
+        "span": "[T04-052]",
+        "node": "l_context_rot"
+      },
+      {
+        "q": "Điều gì xảy ra với mô hình khi phải xử lý một lượng thông tin vượt quá giới hạn cửa sổ ngữ cảnh ban đầu của nó?",
+        "options": [
+          "Mô hình sẽ tự động mở rộng context lên 1 triệu token để tiếp nhận toàn bộ dữ liệu.",
+          "Mô hình chuyển sang chế độ multi-head attention để phân tích thông tin rộng hơn.",
+          "Mô hình bắt buộc phải cắt nhỏ thông tin ra để xử lý, việc này có thể làm phức tạp quy trình và dẫn đến mất mát thông tin ở những phần phía trước.",
+          "Mô hình sẽ kích hoạt ngay hiện tượng context rot khiến nó quên hết dữ liệu ở phần cuối."
+        ],
+        "answer": 2,
+        "why": "Khi gửi thông tin vượt quá giới hạn, mô hình phải cắt nhỏ ra và làm, dẫn đến sự phức tạp và có thể bị mất mát thông tin của những phần phía trước [T04-051].",
+        "traps": {
+          "0": "Nhầm tưởng mô hình có khả năng tự động mở rộng context linh hoạt theo ý muốn [T04-051].",
+          "3": "Hiểu ngược hiện tượng context rot (quên thông tin ở lúc đầu thành quên thông tin ở cuối) [T04-052].",
+          "1": "Dùng khái niệm 'multi-head attention' không xuất hiện trong ngữ cảnh xử lý giới hạn context [T05-012]."
+        },
+        "span": "[T04-051]",
+        "node": "l_context_rot"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 04+05+06 · [T04-051] [T04-052] [T05-012] [T06-147]: Giới hạn context window và hiện tượng suy giảm chú ý (Cont"
+    ]
+  },
+  "c1s2": {
+    "questions": [
+      {
+        "q": "Vì sao công việc của product manager và product owner lại có sự khác biệt rõ rệt về cách tiếp cận bài toán so với định nghĩa project manager truyền thống?",
+        "options": [
+          "Project manager luôn áp dụng tư duy user-centered để tìm ra các tính năng và kế hoạch phát triển.",
+          "Project manager là người đi trước nhìn ra cơ hội thị trường còn product manager chỉ quản lý tính năng.",
+          "Product manager chỉ tập trung khảo sát điểm đau của user khi bài toán đã rất cụ thể và rõ ràng.",
+          "Product manager phải tự đi tìm bài toán, giải pháp và thị trường thay vì có người đến bảo phải làm gì, luôn đặt người dùng làm trung tâm."
+        ],
+        "answer": 3,
+        "why": "Product manager đi trước, tự đi tìm bài toán, giải pháp đáng làm, tìm thị trường và lấy người dùng làm trung tâm khác với kiểu dự án project manager xưa [T01-011].",
+        "traps": {
+          "2": "Nhầm lẫn vai trò của product manager với công việc khảo sát điểm đau chuyên sâu của product owner.",
+          "1": "Gán nhầm đặc điểm 'đi trước nhìn ra cơ hội' của product manager cho project manager.",
+          "0": "Nhầm lẫn tư duy lấy người dùng làm trung tâm của product với project manager xưa."
+        },
+        "span": "[T01-011]",
+        "node": "c1s2"
+      },
+      {
+        "q": "Sự khác biệt cốt lõi nào thể hiện rõ nhất qua bộ skill và tư duy giữa product manager và product owner khi triển khai một sản phẩm?",
+        "options": [
+          "Product owner là người đi trước tìm thị trường còn product manager chỉ quản lý từng tính năng đơn lẻ.",
+          "Product manager phạm vi rộng hơn, đi trước để nhìn ra cơ hội và khoanh vùng; còn product owner đi sâu vào khảo sát user, tìm điểm đau và đưa ra tính năng khi bài toán đã cụ thể.",
+          "Product manager chỉ tập trung vào các công ty outsourcing còn product owner chỉ làm việc ở các công ty lớn.",
+          "Product owner không quan tâm đến đối tượng user mà chỉ nhận lệnh từ người khác để làm."
+        ],
+        "answer": 1,
+        "why": "Product manager rộng hơn và đi trước tìm cơ hội, trong khi product owner đi sâu vào khảo sát user, điểm đau và tính năng khi bài toán đã cụ thể [T01-011].",
+        "traps": {
+          "0": "Đảo ngược vai trò tìm thị trường của product manager sang cho product owner.",
+          "2": "Hiểu nhầm product manager chỉ gắn liền với công ty outsourcing vốn dùng từ PM cho project.",
+          "3": "Cho rằng product owner không quan tâm đến user trong khi họ thực chất là người khảo sát user và điểm đau."
+        },
+        "span": "[T01-011]",
+        "node": "c1s2"
+      },
+      {
+        "q": "Tại sao việc định nghĩa lại thuật ngữ PM (Product Manager) lại được đặt ra trong bối cảnh thị trường Việt Nam?",
+        "options": [
+          "Vì các công ty Việt Nam không có khái niệm product owner mà chỉ có duy nhất product manager.",
+          "Vì project manager và product manager có bộ skill hoàn toàn giống hệt nhau ở các công ty outsourcing.",
+          "Vì không ai ở Việt Nam biết cách định nghĩa từ product owner.",
+          "Vì ở Việt Nam từ PM thường hay bị dùng cho project nhiều do các công ty làm outsourcing nhiều, nên cần phân biệt rõ bộ skill khác nhau."
+        ],
+        "answer": 3,
+        "why": "Ở Việt Nam từ PM hay dùng cho project nhiều do các công ty outsourcing nhiều nên cần định nghĩa lại [T01-008].",
+        "traps": {
+          "0": "Nhầm tưởng công ty Việt Nam hoàn toàn thiếu vắng vị trí product owner.",
+          "1": "Cho rằng hai vị trí này có bộ skill giống nhau trong các công ty outsourcing.",
+          "2": "Đổ lỗi rằng không ai biết định nghĩa product owner thay vì vấn đề lạm dụng từ PM cho project."
+        },
+        "span": "[T01-008]",
+        "node": "c1s2"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-008] [T01-011]: 1.2 Product manager và project manager"
+    ]
+  },
+  "c2": {
+    "questions": [
+      {
+        "q": "Vì sao việc phát triển sản phẩm AI lại được xem là khó hơn nhiều lần so với việc phát triển sản phẩm thông thường?",
+        "options": [
+          "Vì bản thân sản phẩm AI phải chứa đựng quá trình phát triển sản phẩm truyền thống, đồng thời người làm phải vừa có năng lực xây dựng sản phẩm, vừa phải xài AI để tăng năng suất và thích ứng với quy trình đang thay đổi.",
+          "Vì tài liệu People + AI Guidebook của Google quy định các bước thực hiện quá trình xây dựng sản phẩm AI cực kỳ phức tạp và không thể thay đổi.",
+          "Vì các mô hình AI machine learning và mô hình ngôn ngữ lớn hiện nay không cho phép người dùng bám vào bất kỳ cái sườn nào để đi theo từng bước.",
+          "Vì quy trình phát triển sản phẩm AI hoàn toàn tách biệt với các nguyên lý phát triển sản phẩm truyền thống và không cần tuân theo bất kỳ cấu phần nào của sản phẩm thông thường."
+        ],
+        "answer": 0,
+        "why": "Phát triển sản phẩm AI chứa đựng việc phát triển sản phẩm nên vẫn phải nắm vững nguyên lý của nó, đồng thời phải vừa có năng lực xây dựng sản phẩm, vừa xài AI tăng năng suất trong từng công đoạn và quy trình bên trong đang thay đổi [T01-018].",
+        "traps": {
+          "3": "Nhầm lẫn rằng quy trình phát triển sản phẩm AI hoàn toàn tách biệt và không tuân theo nguyên lý sản phẩm truyền thống.",
+          "1": "Hiểu sai rằng tài liệu của Google làm cho quá trình xây dựng sản phẩm trở nên khó khăn hơn thay vì dùng làm cái sườn để bám vào.",
+          "2": "Nhầm lẫn nguyên nhân là do các mô hình AI không có cái sườn để đi theo từng bước."
+        },
+        "span": "[T01-018]",
+        "node": "c2"
+      },
+      {
+        "q": "Điều gì là cơ sở quan trọng nhất giúp người làm sản phẩm có thể thiết kế được sản phẩm và trải nghiệm phù hợp khi sử dụng framework của Google?",
+        "options": [
+          "Nắm vững toàn bộ mã nguồn của các mô hình ngôn ngữ lớn.",
+          "Hiểu được mô hình tư duy (mental model) và sự kỳ vọng của con người.",
+          "Tập trung hoàn toàn vào việc thay đổi cấu phần phần cứng của sản phẩm.",
+          "Loại bỏ hoàn toàn các module về data và niềm tin của người dùng."
+        ],
+        "answer": 1,
+        "why": "Trong module kiến thức về mental model và expectation, việc hiểu được mô hình tư duy và sự kỳ vọng của con người chính là cơ sở để thiết kế sản phẩm và trải nghiệm phù hợp [T01-029].",
+        "traps": {
+          "0": "Nhầm lẫn rằng cần phải nắm vững mã nguồn kỹ thuật sâu bên trong mô hình.",
+          "3": "Hiểu sai rằng cần loại bỏ các module kiến thức về data và niềm tin người dùng.",
+          "2": "Gán ghép việc thiết kế trải nghiệm phù hợp với việc thay đổi cấu phần phần cứng."
+        },
+        "span": "[T01-029]",
+        "node": "c2"
+      },
+      {
+        "q": "Tài liệu People + AI Guidebook của Google có đặc điểm và vai trò như thế nào trong quá trình xây dựng sản phẩm AI?",
+        "options": [
+          "Chỉ là một tài liệu lý thuyết thuần túy, không thể áp dụng làm sườn để thực hiện từng bước trong quá trình làm sản phẩm.",
+          "Có thể được dùng làm một cái sườn chi tiết, đầy đủ để các bạn bám vào đi theo từng bước trong cả quá trình làm sản phẩm.",
+          "Chỉ tập trung duy nhất vào việc quản lý phần cứng mà không hề chứa các module kiến thức về data hay mental model.",
+          "Là một bộ công cụ lập trình tự động giúp thay thế hoàn toàn con người trong việc xây dựng các mô hình ngôn ngữ lớn."
+        ],
+        "answer": 1,
+        "why": "Framework này rất chi tiết, đầy đủ và người học hoàn toàn có thể dùng nó làm một cái sườn để đi theo từng bước một trong cả quá trình làm sản phẩm [T01-029].",
+        "traps": {
+          "0": "Nhầm lẫn cho rằng đây chỉ là tài liệu lý thuyết suông và không dùng làm sườn thực tế được.",
+          "3": "Hiểu sai bản chất tài liệu thành một công cụ lập trình tự động thay thế con người.",
+          "2": "Cho rằng tài liệu không chứa các module kiến thức về data hay mental model."
+        },
+        "span": "[T01-029]",
+        "node": "c2"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-018] [T01-029]: Chương 2 · Đặc thù của sản phẩm AI"
+    ]
+  },
+  "c2s1": {
+    "questions": [
+      {
+        "q": "Vì sao việc xử lý lỗi trong sản phẩm AI lại khác biệt và phức tạp hơn so với các sản phẩm phần mềm truyền thống?",
+        "options": [
+          "Vì sản phẩm truyền thống có thể chạy ổn định suốt 20 năm mà không cần đụng vào",
+          "Vì chi phí chuyển đổi người dùng sang sản phẩm khác hiện nay rất rẻ và dễ dàng",
+          "Vì AI hoạt động dựa trên xác suất nên không đảm bảo 100 lần chạy sẽ cho ra kết quả đúng y hệt nhau",
+          "Vì người làm sản phẩm AI phải hiểu rõ các mô hình và cách thiết kế trải nghiệm người dùng"
+        ],
+        "answer": 2,
+        "why": "AI sinh ra xác suất và không phải lúc nào cũng trả lời 100 lần giống nhau như sản phẩm truyền thống, dẫn đến việc xử lý lỗi khác thường [T01-019].",
+        "traps": {
+          "0": "Nhầm lẫn đặc tính bền vững của sản phẩm truyền thống với bản chất gây ra lỗi của AI.",
+          "1": "Nhầm lẫn với nguyên nhân làm cho chi phí chuyển đổi người dùng sang sản phẩm khác trở nên rẻ hơn.",
+          "3": "Nhầm lẫn với yêu cầu về kiến thức và kỹ năng thiết kế trải nghiệm, không trực tiếp giải thích vì sao xử lý lỗi lại khác."
+        },
+        "span": "[T01-019]",
+        "node": "c2s1"
+      },
+      {
+        "q": "Điều gì đã làm cho chi phí chuyển đổi giữa các sản phẩm của người dùng hiện nay bị xoá nhoà so với ngày xưa?",
+        "options": [
+          "Vì các sản phẩm AI sinh ra xác suất nên người dùng không cần phải học cách trải nghiệm lại từ đầu",
+          "Vì nhà phát triển phải xây dựng rất nhiều cấu phần cùng một lúc trong sản phẩm AI",
+          "Vì người dùng có thể dễ dàng export dữ liệu mang đi và dừng sử dụng mà không phải học lại cách làm mới",
+          "Vì việc xử lý lỗi trong sản phẩm AI đã được kiểm soát tốt để đáp ứng kỳ vọng của người dùng"
+        ],
+        "answer": 2,
+        "why": "Chi phí chuyển đổi bị xoá nhoà vì người dùng rất dễ dàng export mang dữ liệu sang nơi khác hoặc dừng ngay lập tức mà không phải học lại cách làm mới [T01-021].",
+        "traps": {
+          "0": "Nhầm lẫn việc học trải nghiệm mới với bản chất xác suất của AI.",
+          "3": "Nhầm lẫn việc kiểm soát kỳ vọng lỗi với yếu tố dữ liệu và cách học trải nghiệm của người dùng.",
+          "1": "Nhầm lẫn với việc xây dựng nhiều cấu phần của người làm sản phẩm."
+        },
+        "span": "[T01-021]",
+        "node": "c2s1"
+      },
+      {
+        "q": "Vì sao việc xây dựng sản phẩm AI lại được đánh giá là rất khó khăn đối với người làm sản phẩm?",
+        "options": [
+          "Vì sản phẩm truyền thống đòi hỏi thời gian xây dựng kéo dài tới 20 năm",
+          "Vì người làm sản phẩm phải đồng thời xây dựng rất nhiều thứ và các lớp khác nhau cùng một lúc",
+          "Vì dữ liệu của người dùng luôn bị giữ lại ở sản phẩm cũ và không thể export được",
+          "Vì người dùng sẽ ngay lập tức chuyển đổi sang sản phẩm khác mà không cần phải học cách trải nghiệm"
+        ],
+        "answer": 1,
+        "why": "Làm sản phẩm AI rất khó vì phải xây dựng rất nhiều thứ cùng một lúc, bao gồm các cấu phần và các lớp khác nhau như sản phẩm trong sản phẩm AI [T01-025].",
+        "traps": {
+          "0": "Nhầm lẫn với thông tin sản phẩm truyền thống có thể chạy 20 năm trong đoạn trước.",
+          "2": "Trái ngược hoàn toàn với tư liệu vì tư liệu cho biết dữ liệu hiện nay rất dễ export.",
+          "3": "Nhầm lẫn với hệ quả của việc chi phí chuyển đổi rẻ chứ không phải là nguyên nhân gốc gây khó khăn khi build sản phẩm AI."
+        },
+        "span": "[T01-025]",
+        "node": "c2s1"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-019] [T01-021] [T01-025]: 2.1 Vì sao làm sản phẩm AI khó hơn"
+    ]
+  },
+  "l_cost_of_error": {
+    "questions": [
+      {
+        "q": "Tại sao việc lựa chọn giữa hai thang mức độ tự động hóa là automation và augmentation lại đòi hỏi sự đánh đổi?",
+        "options": [
+          "Vì thang đo này chỉ là một phổ tăng dần nên không thể áp dụng cho các nhóm công việc đặc thù.",
+          "Vì augmentation yêu cầu phải lập trình hệ thống guardrail phức tạp hơn automation hoàn toàn.",
+          "Vì người dùng có xu hướng lạm dụng chương trình AI dẫn đến các vụ kiện tụng pháp lý.",
+          "Vì khi cho AI toàn quyền (automation), chúng ta phải chấp nhận những rủi ro nhất định phát sinh."
+        ],
+        "answer": 3,
+        "why": "Khi cho AI toàn quyền làm thay (automation), hệ quả là phải đánh đổi và chấp nhận một số rủi ro nhất định [T02-032].",
+        "traps": {
+          "1": "Tư liệu không hề đề cập đến việc lập trình guardrail phức tạp hơn giữa hai hình thức này.",
+          "2": "Vụ kiện tụng là hệ quả của việc người dùng sử dụng sai, không phải là bản chất sự đánh đổi của hai thang đo.",
+          "0": "Tư liệu khẳng định đây là một phổ tăng dần, không phủ nhận việc áp dụng nó cho các công việc."
+        },
+        "span": "[T02-032]",
+        "node": "l_cost_of_error"
+      },
+      {
+        "q": "Điều gì có thể xảy ra khi một hệ thống AI đưa ra sai sót do người dùng sử dụng chương trình theo cách mà nhà phát triển không lường trước?",
+        "options": [
+          "Người dùng có thể kiện và quy trách nhiệm đền tiền cho đơn vị hoặc AI cung cấp câu trả lời.",
+          "Nhà nước sẽ bắt buộc chuyển đổi toàn bộ hệ thống sang thang đo automation hoàn toàn.",
+          "Hệ thống sẽ tự động kích hoạt mức độ augmentation để ngăn chặn người dùng.",
+          "Người dùng sẽ tự nhận ra rủi ro hóa học và không tiếp tục thực hiện hành vi sai lầm."
+        ],
+        "answer": 0,
+        "why": "Khi xảy ra sai sót do người dùng làm theo AI và bị bệnh, họ bắt đầu kiện và yêu cầu đền tiền, dẫn đến các vấn đề về luật pháp [T03-088].",
+        "traps": {
+          "2": "Tư liệu không nói hệ thống tự động chuyển đổi mức độ khi xảy ra lỗi.",
+          "1": "Tư liệu không đề cập nhà nước bắt buộc chuyển sang automation hoàn toàn khi có kiện tụng.",
+          "3": "Thực tế trong ví dụ, người dùng đã mua về ăn vài tháng và nhập viện chứ không tự nhận ra rủi ro."
+        },
+        "span": "[T03-088]",
+        "node": "l_cost_of_error"
+      },
+      {
+        "q": "Sự khác biệt cốt lõi về vai trò của máy móc giữa hai hình thức 'automation' và 'augmentation' là gì?",
+        "options": [
+          "Automation dùng để xử lý các tác vụ hóa học, còn augmentation dùng cho các tác vụ thông thường.",
+          "Automation loại bỏ hoàn toàn rủi ro pháp lý, trong khi augmentation luôn gây ra hậu quả sai sót đặc thù.",
+          "Automation hoạt động dựa trên system guardrail, còn augmentation hoạt động dựa trên câu hỏi của người dùng.",
+          "Automation là AI tự động làm thay hoàn toàn, trong khi augmentation là con người vẫn tham gia và AI chỉ hỗ trợ tăng cường."
+        ],
+        "answer": 3,
+        "why": "Automation nghĩa là để máy tự động làm thay, còn augmentation là vẫn cần con người, AI chỉ giúp tăng cường và hỗ trợ công việc [T02-032].",
+        "traps": {
+          "0": "Tư liệu không phân loại automation và augmentation theo tính chất tác vụ hóa học.",
+          "1": "Tư liệu chỉ ra automation phải chấp nhận rủi ro, và sai sót đặc thù nằm ở cách người dùng dùng chương trình [T02-032, T03-088].",
+          "2": "System guardrail là khái niệm liên quan đến việc phát hiện sai sót, không phải định nghĩa cốt lõi của hai thang đo [T03-088]."
+        },
+        "span": "[T02-032]",
+        "node": "l_cost_of_error"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 02+03 · [T02-032] [T03-088]: Chi phí lỗi cao thì phải giữ Human-in-the-loop (Augmentati"
+    ]
+  },
+  "l_guardrail_odd": {
+    "questions": [
+      {
+        "q": "Vì sao việc để chatbot tự động lấy input và trả thẳng output mà không có lớp bảo mật phía sau lại dẫn đến rủi ro lộ thông tin (như trường hợp agent bình luận secret key)?",
+        "options": [
+          "Vì hệ thống thiếu quy tắc kiểm tra, không chặn các phản hồi có chứa thông tin bí mật.",
+          "Vì chatbot bị mất kết nối internet nên tự động phát tán dữ liệu.",
+          "Vì người dùng đã chủ động hack được mã nguồn của hệ thống từ trước.",
+          "Vì mô hình AI tự động sinh ra mã độc để tấn công người dùng."
+        ],
+        "answer": 0,
+        "why": "Việc không có lớp bảo mật kiểm tra các response chứa secret key sẽ khiến hệ thống leak thông tin khi gặp các yêu cầu đánh lừa từ bên ngoài [T03-090].",
+        "traps": {
+          "2": "Nhầm lẫn rằng người dùng phải hack mã nguồn, trong khi vấn đề nằm ở việc thiếu lớp bảo mật kiểm duyệt response [T03-090].",
+          "3": "Cho rằng AI tự sinh mã độc, điều này không được nhắc đến trong tư liệu [T03-090].",
+          "1": "Đổ lỗi cho mất kết nối internet, vốn là ví dụ về constraint ở đoạn khác chứ không phải nguyên nhân lộ secret key [T03-097]."
+        },
+        "span": "[T03-090]",
+        "node": "l_guardrail_odd"
+      },
+      {
+        "q": "Khi xây dựng hệ thống, tại sao việc xác định phạm vi (scope) và các ràng buộc (constraint) lại đóng vai trò quan trọng trong việc đánh giá chất lượng hệ thống?",
+        "options": [
+          "Vì nó đảm bảo hệ thống luôn luôn chạy tốt trong mọi hoàn cảnh dù không có internet hay cảm biến hỏng.",
+          "Vì nó giúp phân định rõ hệ thống chỉ hoạt động chính xác khi đáp ứng đủ các điều kiện và tiêu chí đặt ra.",
+          "Vì nó giúp loại bỏ hoàn toàn khả năng bị tấn công phá sóng từ kẻ địch.",
+          "Vì nó giúp ứng dụng tự động khắc phục toàn bộ lỗi phần cứng do ngoại cảnh gây ra."
+        ],
+        "answer": 1,
+        "why": "Hệ thống cần phải định nghĩa rõ scope và constraint để biết nó chạy đúng trong điều kiện nào và đạt mức độ ra sao, không thể bắt hệ thống hoạt động hoàn hảo khi thiếu điều kiện [T03-097].",
+        "traps": {
+          "3": "Nhầm rằng scope giúp tự động khắc phục lỗi phần cứng, trong khi tư liệu khẳng định sensor hỏng hoặc thiếu điều kiện thì hệ thống không thể hoạt động như ý muốn [T03-097].",
+          "0": "Cho rằng hệ thống luôn chạy tốt trong mọi hoàn cảnh, trái với ví dụ app không load được khi không có internet [T03-097].",
+          "2": "Nghĩ rằng scope giúp loại bỏ khả năng bị tấn công, thực tế tư liệu nêu rõ hệ thống vẫn có thể bị tấn công nhưng cần phòng thủ [T03-097]."
+        },
+        "span": "[T03-097]",
+        "node": "l_guardrail_odd"
+      },
+      {
+        "q": "Điều gì phân biệt giữa việc hệ thống bị lỗi do bản thân tính năng và việc hệ thống gặp sự cố do không đủ điều kiện vận hành?",
+        "options": [
+          "Hệ thống không thể bị quy trách nhiệm là kém chất lượng nếu nó không đạt tác vụ do thiếu đi các điều kiện hoặc cảm biến cần thiết.",
+          "Hệ thống tự động chuyển sang chế độ dự phòng khi thiếu internet mà không ảnh hưởng gì đến người dùng.",
+          "Hệ thống sẽ tự động cập nhật lại scope để thích ứng với môi trường bị nhiễu từ trường.",
+          "Hệ thống luôn phải chịu hoàn toàn trách nhiệm trong mọi tình huống dù bị phá sóng hay mất kết nối."
+        ],
+        "answer": 0,
+        "why": "Tư liệu chỉ rõ không thể trách hệ thống không làm được tác vụ nếu nó hoạt động trong điều kiện thiếu cảm biến hoặc bị tấn công mà thiếu phòng thủ [T03-097].",
+        "traps": {
+          "3": "Nhầm lẫn rằng hệ thống phải chịu trách nhiệm trong mọi tình huống, điều mà giảng viên đã bác bỏ qua ví dụ app tệ vì không có internet [T03-097].",
+          "1": "Cho rằng hệ thống tự chuyển sang chế độ dự phòng, thông tin này hoàn toàn không có trong tư liệu [T03-097].",
+          "2": "Nghĩ rằng hệ thống tự động cập nhật scope, trong khi con người phải là người define và làm rõ scope [T03-097]."
+        },
+        "span": "[T03-097]",
+        "node": "l_guardrail_odd"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 03 · [T03-090] [T03-097]: Ràng buộc phạm vi ODD và guardrail chặn rủi ro"
+    ]
+  },
+  "c3s3": {
+    "questions": [
+      {
+        "q": "Tại sao việc áp dụng First principle thinking lại giúp loại bỏ được lối mòn khi giải quyết vấn đề thay vì đi sao chép cách làm của người khác?",
+        "options": [
+          "Vì nó giúp chúng ta hoàn toàn loại bỏ kinh nghiệm của chuyên gia và các thế hệ đi trước ngay từ giai đoạn đầu.",
+          "Vì nó buộc người giải quyết phải bóc tách vấn đề về những nguyên lý nguyên bản nhất, không thể chia nhỏ hơn để tìm cách làm mới và sáng tạo.",
+          "Vì nó giúp giảm chi phí sản xuất và tái sử dụng các cấu phần giống như cách Elon Musk đã làm với tên lửa SpaceX.",
+          "Vì nó cho phép tự động cập nhật bối cảnh mới của thế giới vào các hộp tư duy mà không cần đặt câu hỏi lại."
+        ],
+        "answer": 1,
+        "why": "First principle thinking yêu cầu bóc tách vấn đề về những nguyên lý nguyên bản nhất không thể chia nhỏ hơn, từ đó tìm ra cách làm mới, sáng tạo mà không bị đi theo lối mòn [T01-062] [T01-064].",
+        "traps": {
+          "0": "Nhầm ở chỗ tư liệu chỉ nói kinh nghiệm người cũ dùng để tham khảo và xây dựng năng lực cơ bản, chứ không bảo hoàn toàn loại bỏ ngay từ đầu [T01-068].",
+          "3": "Nhầm ở thao tác cập nhật bối cảnh trong mental model, nhưng đáp án này thiếu đi bước cốt lõi là bóc tách nguyên bản của tư duy gốc.",
+          "2": "Nhầm lẫn giữa ví dụ cụ thể về SpaceX với bản chất cơ chế tư duy trừu tượng của phương pháp."
+        },
+        "span": "[T01-062]",
+        "node": "c3s3"
+      },
+      {
+        "q": "Theo tư liệu, kinh nghiệm của người cũ và chuyên gia đóng vai trò như thế nào khi một người muốn xây dựng năng lực giải quyết vấn đề?",
+        "options": [
+          "Chỉ mang tính chất tham khảo để xây dựng một số năng lực cơ bản ban đầu, song song với việc xây dựng mental model riêng.",
+          "Là tiêu chuẩn duy nhất và chính xác nhất để áp dụng vào mọi bối cảnh mới mà không cần xem lại.",
+          "Là công cụ để sao chép hoàn toàn cách làm của người khác nhằm tiết kiệm chi phí sản xuất.",
+          "Là nguyên lý nguyên bản nhất không thể chia nhỏ hơn để thay thế cho First principle thinking."
+        ],
+        "answer": 0,
+        "why": "Kecnghiệm của người cũ chỉ mang tính tham khảo để xây dựng năng lực cơ bản ban đầu, song song với việc tự xây dựng mental model [T01-068].",
+        "traps": {
+          "1": "Nhầm ở chỗ coi kinh nghiệm cũ là chuẩn mực tuyệt đối, mâu thuẫn với việc cần xem lại tính đúng đắn trong bối cảnh mới [T01-062].",
+          "3": "Nhầm lẫn khái niệm khi đánh đồng kinh nghiệm chuyên gia với các nguyên lý nguyên bản không thể chia nhỏ.",
+          "2": "Nhầm lẫn giữa việc 'không đi sao chép cách làm của người khác' trong First principle thinking với việc học hỏi kinh nghiệm."
+        },
+        "span": "[T01-068]",
+        "node": "c3s3"
+      },
+      {
+        "q": "Điều gì xảy ra trong sơ đồ tư duy (mental model) khi một người luôn cập nhật bối cảnh mới của thế giới vào các hộp tư duy của mình?",
+        "options": [
+          "Họ có thể xem lại xem các vấn đề hiện tại có thực sự còn đúng trong bối cảnh đó nữa hay không và tìm giải pháp mới.",
+          "Họ sẽ biến mọi chi phí sản xuất đắt đỏ trở thành rẻ mà không cần bóc tách các cấu phần.",
+          "Họ sẽ tự động loại bỏ hoàn toàn mọi câu hỏi về việc chẻ nhỏ vấn đề hay tìm cách làm khác.",
+          "Họ sẽ quay lại sao chép chính xác cách làm của người cũ vì bối cảnh mới không có gì thay đổi."
+        ],
+        "answer": 0,
+        "why": "Việc cập nhật bối cảnh mới vào hộp tư duy giúp luôn xem lại các vấn đề hiện tại có thực sự còn đúng hay không và tìm ra các giải pháp mới [T01-062].",
+        "traps": {
+          "2": "Nhầm ở chỗ việc cập nhật bối cảnh thực chất đi kèm với việc đặt câu hỏi liên tục thay vì loại bỏ nó [T01-064].",
+          "3": "Mâu thuẫn trực tiếp với tinh thần 'không đi sao chép cách làm của người khác' của First principle thinking [T01-062].",
+          "1": "Đánh đồng cơ chế tư duy trừu tượng với một kết quả kinh doanh cụ thể của SpaceX."
+        },
+        "span": "[T01-062]",
+        "node": "c3s3"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-062] [T01-064] [T01-068]: 3.3 First principle thinking"
+    ]
+  },
+  "c3s4": {
+    "questions": [
+      {
+        "q": "Tại sao chiến lược dogfood lại giúp tối ưu hóa sản phẩm liên tục mà không cần phải chờ có user bên ngoài?",
+        "options": [
+          "Vì người làm sản phẩm sẽ dựa hoàn toàn vào tri thức ẩn của chuyên gia để đưa ra quyết định trực giác.",
+          "Vì công ty sẽ thuê một đội ngũ chuyên gia tâm lý độc lập để kiểm thử sản phẩm từ xa.",
+          "Vì người làm sản phẩm đồng thời là user trực tiếp sử dụng nó hàng ngày để cảm nhận nỗi đau và làm tester đầu tiên.",
+          "Vì sản phẩm sử dụng trí tuệ nhân tạo để tự động phát hiện lỗi mà không cần con người can thiệp."
+        ],
+        "answer": 2,
+        "why": "Dogfooding là chiến lược bạn tự làm ra và tự dùng sản phẩm của mình, giúp bạn cảm nhận pain, làm tester đầu tiên và tối ưu liên tục mà không phải chờ user [T01-042].",
+        "traps": {
+          "1": "Nhầm lẫn với việc thuê chuyên gia nghiên cứu tâm lý như trường hợp của team NotebookLM [T01-072].",
+          "3": "Nhầm tưởng công nghệ AI tự phát hiện lỗi, trong khi tư liệu nhấn mạnh con người tự xài sản phẩm [T01-042].",
+          "0": "Nhầm lẫn với khái niệm tri thức ẩn của chuyên gia ra quyết định bằng trực giác [T01-048]."
+        },
+        "span": "[T01-042]",
+        "node": "c3s4"
+      },
+      {
+        "q": "Theo Don Norman trong The Design of Everyday Things, khi được người khác giao cho một vấn đề, chúng ta nên xử lý như thế nào để tìm ra điểm đau thực sự?",
+        "options": [
+          "Không ngay lập tức tin đó là vấn đề thật mà phải luôn đặt câu hỏi để đi tìm điểm đau ở phía sau.",
+          "Từ chối giải quyết ngay lập tức vì đó chắc chắn là một yêu cầu sai lệch từ phía người dùng.",
+          "Xây dựng ngay một phiên bản sản phẩm sơ sài để tự mình trải nghiệm như chiến lược dogfood.",
+          "Dùng trực giác và kinh nghiệm lâu năm để đưa ra giải pháp ngay lập tức mà không cần lý giải."
+        ],
+        "answer": 0,
+        "why": "Đừng ngay lập tức tin đó là vấn đề thật mà hãy luôn đặt câu hỏi để đi tìm cái điểm đau thực sự ở phía sau theo quan điểm của Don Norman [T01-045].",
+        "traps": {
+          "1": "Hiểu sai rằng Don Norman khuyên từ chối giải quyết, trong khi tư liệu nêu rõ 'không phải là mình từ chối giải quyết' [T01-045].",
+          "3": "Nhầm lẫn với cách xử lý của tri thức ẩn của chuyên gia đưa ra quyết định dựa trên trực giác [T01-048].",
+          "2": "Nhầm lẫn với kỹ thuật dogfooding trong việc tự xây dựng và trải nghiệm sản phẩm [T01-042]."
+        },
+        "span": "[T01-045]",
+        "node": "c3s4"
+      },
+      {
+        "q": "Sự khác biệt cơ bản giữa một chuyên gia và một người mới khi đối diện với các lựa chọn giải pháp là gì?",
+        "options": [
+          "Chuyên gia luôn tìm đến nơi học sinh sinh viên hay xuất hiện để ngồi cùng và quan sát họ.",
+          "Chuyên gia luôn áp dụng chiến lược dogfood để tự mình trở thành người dùng đầu tiên của sản phẩm.",
+          "Chuyên gia sở hữu tri thức ẩn hình thành qua nhiều năm giúp tự động đưa ra quyết định bằng trực giác mà không cần dừng lại lý giải.",
+          "Chuyên gia từ chối giải quyết vấn đề ngay từ đầu theo đúng tinh thần của Don Norman."
+        ],
+        "answer": 2,
+        "why": "Chuyên gia có tri thức ẩn được hình thành rất nhiều năm, tự động đưa ra quyết định bằng trực giác và kinh nghiệm mà không dừng lại để lý giải, khác với người mới [T01-048].",
+        "traps": {
+          "1": "Nhầm lẫn tri thức ẩn với chiến lược tự xài sản phẩm dogfood [T01-042].",
+          "3": "Nhầm lẫn với việc áp dụng câu nói không giải quyết vấn đề được giao của Don Norman [T01-045].",
+          "0": "Nhầm lẫn với kỹ năng quan sát tìm đến nơi người dùng hay xuất hiện [T01-072]."
+        },
+        "span": "[T01-048]",
+        "node": "c3s4"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-042] [T01-045] [T01-048] [T01-072]: 3.4 Kỹ thuật khám phá vấn đề"
+    ]
+  },
+  "c4": {
+    "questions": [
+      {
+        "q": "Tại sao việc dùng ma trận tác động và nỗ lực lại giúp khoanh vùng được vấn đề đáng làm nhất trong pha hội tụ?",
+        "options": [
+          "Vì nó tự động loại bỏ các vấn đề đòi hỏi team năm người làm việc trong cả một tháng [T01-074].",
+          "Vì nó áp dụng các câu hỏi Five Whys để đào sâu và tìm ra lý do sâu hơn của từng vấn đề [T01-074].",
+          "Vì nó chuyển đổi ngay lập tức tất cả các vấn đề thành dạng problem statement trước khi sang pha giải pháp [T01-074].",
+          "Vì nó giúp xác định rõ mức độ tác động đạt được khi giải quyết và lượng công sức cần bỏ ra cho vấn đề đó [T01-074]."
+        ],
+        "answer": 3,
+        "why": "Ma trận tác động và nỗ lực yêu cầu xác định tác động (impact) đạt được nếu giải quyết và mất bao nhiêu công (nỗ lực) để làm, từ đó khoanh vùng cái đáng làm nhất [T01-074].",
+        "traps": {
+          "0": "Nhầm lẫn ví dụ cụ thể về team năm người làm trong một tháng thành một quy tắc tự động loại bỏ của ma trận [T01-074].",
+          "2": "Nhầm lẫn bước dùng ma trận với bước viết thành phát biểu bài toán (problem statement) sau đó [T01-074].",
+          "1": "Nhầm lẫn kỹ thuật ma trận tác động và nỗ lực với kỹ thuật đặt câu hỏi Five Whys [T01-074]."
+        },
+        "span": "[T01-074]",
+        "node": "c4"
+      },
+      {
+        "q": "Điều gì thể hiện vai trò của những câu hỏi nguyên bản và sự tò mò trong việc tạo ra ý tưởng mới?",
+        "options": [
+          "Nó giúp chúng ta dễ dàng xây dựng sản phẩm hơn nhờ sự trợ giúp của AI trong thế giới hiện đại [T01-086].",
+          "Nó giúp chuyển đổi trực tiếp các quan sát thực tế thành ma trận tác động và nỗ lực [T01-086].",
+          "Nó giúp đặt ra những câu hỏi không ai dám đặt ra, từ đó dẫn đến các sản phẩm thành công như máy ảnh hay Airbnb [T01-086].",
+          "Nó giúp loại bỏ hoàn toàn các đánh giá và định kiến ở bên ngoài trong suốt quá trình làm việc [T01-086]."
+        ],
+        "answer": 2,
+        "why": "Nhiều sản phẩm thành công xuất phát từ sự tò mò và những câu hỏi không ai dám đặt ra như trường hợp máy ảnh hay Airbnb [T01-086].",
+        "traps": {
+          "0": "Nhầm lẫn việc AI giúp trả lời sự tò mò với vai trò tạo ra ý tưởng mới của câu hỏi nguyên bản [T01-086].",
+          "3": "Hiểu sai thành việc tò mò sẽ tự động loại bỏ định kiến thay vì việc ta cần giữ sự tò mò để không bị định kiến làm ngừng lại [T01-086].",
+          "1": "Gắn nhầm kỹ thuật tư duy tò mò với công cụ phân tích ma trận tác động vốn thuộc pha hội tụ [T01-074]."
+        },
+        "span": "[T01-086]",
+        "node": "c4"
+      },
+      {
+        "q": "Khác biệt giữa pha hội tụ và việc nuôi dưỡng sự tò mò với các câu hỏi nguyên bản nằm ở điểm nào theo tư liệu?",
+        "options": [
+          "Pha hội tụ chuyên dùng để tìm kiếm giải pháp kỹ thuật, còn sự tò mò chỉ dùng để viết các phát biểu bài toán (problem statement) [T01-074], [T01-086].",
+          "Pha hội tụ giúp xây dựng sản phẩm dễ dàng hơn nhờ AI, còn sự tò mò giúp tối ưu hóa tiết kiệm chi phí vài trăm đô [T01-074], [T01-086].",
+          "Pha hội tụ dùng các kỹ thuật như lọc trùng, Five Whys hay ma trận để khoanh vùng bài toán, còn sự tò mò là không gian tạo ra ý tưởng mới từ những câu hỏi chưa ai dám đặt ra [T01-074], [T01-086].",
+          "Pha hội tụ dựa vào các câu hỏi ngẫu nhiên như quả táo rơi, còn sự tò mò dựa vào số lượng nhân sự trong team [T01-074], [T01-086]."
+        ],
+        "answer": 2,
+        "why": "Pha hội tụ áp dụng các kỹ thuật như nhóm lại, Five Whys, lọc trùng, ma trận để khoanh vùng bài toán [T01-074], trong khi câu hỏi nguyên bản và sự tò mò là không gian tạo ra ý tưởng mới [T01-086].",
+        "traps": {
+          "0": "Nhầm lẫn pha hội tụ là pha đi tìm giải pháp và gán sai mục đích của problem statement [T01-074].",
+          "1": "Gán nhầm vai trò của AI và ví dụ tiết kiệm chi phí sang các khái niệm khác trong bài [T01-074], [T01-086].",
+          "3": "Lấy sai hình ảnh quả táo rơi (vốn là câu chuyện tò mò của Newton) gán cho pha hội tụ và gán nhầm nhân sự [T01-074], [T01-086]."
+        },
+        "span": "[T01-074]",
+        "node": "c4"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-074] [T01-086]: Chương 4 · Chọn bài toán để làm"
+    ]
+  },
+  "c4s1": {
+    "questions": [
+      {
+        "q": "Tại sao Ma trận tác động – nỗ lực lại được áp dụng sau bước gom các vấn đề thành các đầu mục lớn thay vì làm ngay khi vừa tìm ra vấn đề?",
+        "options": [
+          "Vì cần gom thành các cụm lớn có liên quan để cùng đánh giá tác động và nỗ lực trên ma trận",
+          "Vì lúc mới tìm ra vấn đề số lượng quá ít không đủ để sắp xếp vào các cung",
+          "Vì cần phải dùng kỹ thuật Five Whys để đào sâu thêm lý do rồi mới vẽ bảng",
+          "Vì phải chờ viết xong phát biểu bài toán problem statement mới đưa lên ma trận được"
+        ],
+        "answer": 0,
+        "why": "Ma trận tác động – nỗ lực là bạn đánh giá sau khi gom xong rồi: bạn gom thành các đầu mục lớn, thành các cụm; các cụm liên quan đến nhau có thể cùng giải quyết bằng một giải pháp — lúc đấy bạn mới đặt lên ma trận để đánh giá [T01-078].",
+        "traps": {
+          "3": "Nhầm lẫn thứ tự với việc viết phát biểu bài toán problem statement, trong khi tư liệu nêu viết phát biểu bài toán diễn ra sau bước dùng ma trận [T01-074].",
+          "2": "Nhầm rằng Five Whys là điều kiện bắt buộc phải làm ngay trước khi vẽ bảng ma trận [T01-074].",
+          "1": "Nhầm lẫn về số lượng vấn đề, tư liệu thực tế cho thấy cần mở rộng tìm ra được nhiều rồi mới đưa tất cả những vấn đề tìm thấy lên ma trận [T01-074]. "
+        },
+        "span": "[T01-078]",
+        "node": "c4s1"
+      },
+      {
+        "q": "Điều gì xảy ra đối với các vấn đề được xác định thuộc nhóm 'high effort mà low impact' trên ma trận tác động – nỗ lực?",
+        "options": [
+          "Chúng sẽ mang lại quick win sớm cho dự án",
+          "Chúng ta sẽ bỏ qua chúng vì không hiệu quả",
+          "Chúng được chọn để làm ngay lập tức nhờ tốn ít công sức",
+          "Chúng sẽ được gom lại thành các đầu mục lớn để tiết kiệm thời gian"
+        ],
+        "answer": 1,
+        "why": "Còn tất nhiên mình sẽ bỏ cái high effort mà low impact rồi [T01-079].",
+        "traps": {
+          "0": "Nhầm lẫn với nhóm high impact và low effort là nhóm giúp mang lại quick win sớm [T01-079].",
+          "2": "Hiểu sai rằng nhóm tốn nhiều công sức lại được ưu tiên làm ngay [T01-079].",
+          "3": "Nhầm lẫn với quy trình gom cụm ban đầu trước khi đưa lên ma trận [T01-078]."
+        },
+        "span": "[T01-079]",
+        "node": "c4s1"
+      },
+      {
+        "q": "Khi đánh giá yếu tố 'tác động' (impact) trong ma trận tác động – nỗ lực đối với một vấn đề cụ thể, chúng ta dựa vào tiêu chí nào?",
+        "options": [
+          "Số lượng người và thời gian cần thiết để thực hiện công việc đó",
+          "Số giờ phải bỏ ra hàng tuần để tổng hợp báo cáo",
+          "Số lượng team tham gia và mức lương ước lượng của nhân sự",
+          "Lợi ích, tiền tiết kiệm được hoặc doanh thu đạt thêm sau khi giải quyết vấn đề"
+        ],
+        "answer": 3,
+        "why": "Tác động ở đây là: nếu bạn giải được vấn đề đấy thì bạn tiết kiệm được bao nhiêu, hay đạt thêm được bao nhiêu doanh thu, nhận được lợi ích gì sau khi giải được vấn đề đấy [T01-078].",
+        "traps": {
+          "0": "Nhầm lẫn sang định nghĩa của yếu tố 'nỗ lực' là số lượng người và thời gian cần thiết [T01-078].",
+          "2": "Nhầm lẫn sang cách ước lượng chi phí công sức dựa trên số lượng team và mức lương [T01-078].",
+          "1": "Nhầm lẫn với một ví dụ cụ thể về pain point tổng hợp báo cáo, vốn chỉ là một trường hợp để minh họa cho tác động tiết kiệm thời gian [T01-078]."
+        },
+        "span": "[T01-078]",
+        "node": "c4s1"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-074] [T01-078] [T01-079]: 4.1 Ma trận tác động – nỗ lực"
+    ]
+  },
+  "c4s2": {
+    "questions": [
+      {
+        "q": "Tại sao bước đồng cảm (Empathize) trong vòng lặp HCD lại không phải là bước thử nghiệm (Test) sản phẩm với người dùng?",
+        "options": [
+          "Vì bước đồng cảm bắt buộc phải diễn ra sau khi đã hoàn thành xong toàn bộ quá trình xây dựng nguyên mẫu hoàn chỉnh.",
+          "Vì bước test chỉ dùng để tìm kiếm vấn đề mới chứ không liên quan đến việc đánh giá ý tưởng.",
+          "Vì bước đồng cảm chỉ được thực hiện thông qua việc mô tả giải pháp trực tiếp chứ không được phép quan sát thực tế.",
+          "Vì đồng cảm là bước cố gắng hiểu người dùng qua khảo sát, phỏng vấn và quan sát để xác định vấn đề, còn test là đưa sản phẩm hoặc ý tưởng cho người dùng."
+        ],
+        "answer": 3,
+        "why": "Đồng cảm là bước đầu tiên như survey, phỏng vấn và quan sát để hiểu người dùng nhằm xác định vấn đề, trong khi test là đưa sản phẩm hoặc ý tưởng cho người dùng [T01-084].",
+        "traps": {
+          "0": "Nhầm lẫn về trình tự thời gian và yêu cầu hoàn thành nguyên mẫu trong tư liệu.",
+          "2": "Hiểu sai bản chất công cụ của bước đồng cảm được nhắc đến trong văn bản.",
+          "1": "Nhầm lẫn mục đích cốt lõi giữa việc xác định vấn đề và đánh giá ý tưởng."
+        },
+        "span": "[T01-084]",
+        "node": "c4s2"
+      },
+      {
+        "q": "Điều gì xảy ra trong vòng tròn nhỏ hơn của vòng lặp HCD khi người thiết kế ngồi trao đổi và mô tả một giải pháp ngay với người dùng?",
+        "options": [
+          "Người thiết kế đang thực hiện ngay lập tức một vòng xoay bao gồm đồng cảm, đưa ý tưởng và test trong lúc đó mà không cần xây dựng hẳn prototype.",
+          "Người thiết kế phải dừng ngay quá trình thiết kế lại để chuyển sang bước khảo sát diện rộng.",
+          "Người thiết kế đang vi phạm quy trình cốt lõi vì bắt buộc phải tạo prototype vật lý mới được coi là hoàn thành vòng lặp.",
+          "Người thiết kế đang thực hiện bước xác định vấn đề thông qua bảng hỏi khảo sát."
+        ],
+        "answer": 0,
+        "why": "Nếu ngồi trao đổi với người dùng và mô tả giải pháp thì đó là vòng tròn nhỏ hơn: ngay lập tức đồng cảm, đưa ý tưởng và test trong lúc đấy, chỉ là không xây dựng hẳn prototype mà đang mô tả [T01-084].",
+        "traps": {
+          "2": "Cho rằng quy trình HCD là cứng nhắc và bắt buộc phải có prototype vật lý.",
+          "1": "Nhầm lẫn việc trao đổi trực tiếp với việc phải dừng quy trình.",
+          "3": "Đồng nhất việc mô tả giải pháp với việc làm bảng hỏi khảo sát ở bước đầu."
+        },
+        "span": "[T01-084]",
+        "node": "c4s2"
+      },
+      {
+        "q": "Cốt lõi của giai đoạn tìm giải pháp và xây dựng trong vòng lặp HCD (Human-Centered Design) là gì?",
+        "options": [
+          "Chỉ tập trung vào việc mô tả ý tưởng bằng lời nói mà không cần kiểm chứng.",
+          "Có thể nhanh chóng xây dựng và mang các ý tưởng, giải pháp ra test.",
+          "Phải tìm ra chính xác một vấn đề duy nhất trước khi bắt đầu phỏng vấn.",
+          "Phải trải qua tất cả các kỹ thuật mở rộng và thu hẹp giải pháp một cách chậm rãi."
+        ],
+        "answer": 1,
+        "why": "Cốt lõi của việc này là bạn có thể nhanh chóng xây dựng và mang ra test cái giải pháp đấy, test các ý tưởng trong vòng lặp HCD [T01-081].",
+        "traps": {
+          "3": "Nhầm lẫn về tốc độ và tính linh hoạt trong việc xây dựng giải pháp.",
+          "2": "Hiểu sai rằng việc tìm vấn đề quan trọng hơn việc test giải pháp.",
+          "0": "Bỏ qua bước xây dựng và kiểm tra thực tế được nhắc trong tư liệu."
+        },
+        "span": "[T01-081]",
+        "node": "c4s2"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-081] [T01-084]: 4.2 Vòng lặp HCD"
+    ]
+  },
+  "l_quantinh": {
+    "questions": [
+      {
+        "q": "Tại sao các nhà lãnh đạo ở thị trường Việt Nam thường có quán tính yêu cầu làm ngay 'AI support' mà chưa xác định rõ mục đích?",
+        "options": [
+          "Vì họ muốn tiết kiệm năng lượng thần kinh bằng cách bắt chước đối thủ cạnh tranh.",
+          "Vì họ có thói quen nhảy thẳng vào giải pháp do não bộ phản ứng theo bản năng và phản xạ.",
+          "Vì họ muốn áp dụng ngay công nghệ mới nhất để giải quyết vấn đề đã được nghiên cứu kỹ.",
+          "Vì hệ thống tư duy chậm của họ hoạt động quá mạnh mẽ khi đối mặt với công nghệ mới."
+        ],
+        "answer": 1,
+        "why": "Quán tính nhảy thẳng vào giải pháp xuất phát từ thói quen của não bộ đi theo phản xạ và bản năng khi không chịu dừng lại đặt câu hỏi [T01-004], [T01-016].",
+        "traps": {
+          "2": "Nhầm lẫn vì tư liệu nêu rõ là họ chưa trả lời được support để làm gì, cho ai, chứ chưa nghiên cứu kỹ vấn đề [T01-004].",
+          "3": "Nhầm lẫn vì việc nhảy thẳng vào giải pháp là do tư duy nhanh (phản xạ), không phải do tư duy chậm [T01-016].",
+          "0": "Tư liệu không đề cập đến việc bắt chước đối thủ cạnh tranh hay tiết kiệm năng lượng vì lý do này [T01-004], [T01-016]."
+        },
+        "span": "[T01-004]",
+        "node": "l_quantinh"
+      },
+      {
+        "q": "Điều gì xảy ra với lối tư duy của một người nếu họ liên tục nhảy thẳng vào giải pháp mà không dừng lại đặt câu hỏi?",
+        "options": [
+          "Họ sẽ rèn luyện được phản xạ nhanh nhạy giống như việc đi đường gặp đèn đỏ dừng lại.",
+          "Họ sẽ bị cuốn theo thói quen đó mãi và không thể xây dựng được lối tư duy mới.",
+          "Họ sẽ cảm thấy rất mệt mỏi vì não bộ phải tiêu tốn nhiều năng lượng thần kinh.",
+          "Họ sẽ kích hoạt được hệ thống tư duy chậm giúp hình thành các kỹ năng và thói quen mới."
+        ],
+        "answer": 1,
+        "why": "Nếu luôn nhảy thẳng vào solution và không dừng lại đặt câu hỏi để xây dựng lối tư duy mới, bạn sẽ bị cuốn theo lối mòn đó mãi [T01-016].",
+        "traps": {
+          "0": "Tuy việc đi đường là phản xạ của tư duy nhanh, nhưng việc liên tục nhảy thẳng vào giải pháp thay vì tìm đúng vấn đề sẽ khiến bạn bị kẹt trong thói quen cũ thay vì tiến bộ [T01-016].",
+          "3": "Nhầm lẫn ngược vì tư duy chậm mới hình thành kỹ năng mới, còn nhảy thẳng vào giải pháp là biểu hiện của việc không dùng tư duy chậm [T01-016].",
+          "2": "Nhầm lẫn vì tư liệu khẳng định tư duy nhanh (phản ứng luôn) là không tốn nhiều nơ-ron và não không bị mệt, chỉ có tư duy chậm mới mệt [T01-016]."
+        },
+        "span": "[T01-016]",
+        "node": "l_quantinh"
+      },
+      {
+        "q": "Vì sao việc thay đổi từ tư duy nhanh sang tư duy chậm để khắc phục quán tính giải pháp lại khiến con người cảm thấy mệt mỏi?",
+        "options": [
+          "Vì tư duy chậm không giúp ích gì cho việc xác định đúng vấn đề trước khi dùng công nghệ.",
+          "Vì tư duy chậm chỉ được kích hoạt khi con người đã kiệt sức vì giải quyết quá nhiều vấn đề công nghệ cùng lúc.",
+          "Vì tư duy chậm buộc não bộ phải tiêu tốn nhiều năng lượng để đặt câu hỏi và suy nghĩ thay vì hành động theo phản xạ.",
+          "Vì tư duy chậm yêu cầu con người phải tuân theo các quy tắc cứng nhắc giống như phản xạ dừng đèn đỏ."
+        ],
+        "answer": 2,
+        "why": "Tư duy chậm là kiểu tư duy rất tốn năng lượng, đòi hỏi phải chấp nhận sự mệt mỏi, cố gắng đặt câu hỏi và suy nghĩ để thay đổi [T01-016].",
+        "traps": {
+          "1": "Tư liệu không nói tư duy chậm chỉ kích hoạt khi kiệt sức, mà đây là dạng tư duy tốn năng lượng để hình thành thói quen mới [T01-016].",
+          "3": "Nhầm lẫn vì phản xạ dừng đèn đỏ thuộc về tư duy nhanh, không tốn năng lượng, trái ngược với bản chất của tư duy chậm [T01-016].",
+          "0": "Nhầm lẫn vì tư duy chậm chính là công cụ cốt lõi giúp hình thành kỹ năng và thay đổi lối tư duy [T01-016]."
+        },
+        "span": "[T01-016]",
+        "node": "l_quantinh"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-004] [T01-016]: Quán tính nhảy thẳng vào giải pháp"
+    ]
+  },
+  "l_boctach": {
+    "questions": [
+      {
+        "q": "Khi sếp đưa ra một yêu cầu chung chung và không rõ ràng, điều gì xảy ra nếu bạn áp dụng cách bóc tách thành các option (A, B, C) để mang đi hỏi lại?",
+        "options": [
+          "Biến một thứ mơ hồ thành cái cụ thể để dễ dàng verify lại với stakeholder",
+          "Chứng minh rằng yêu cầu ban đầu của sếp hoàn toàn sai sót và không thể thực hiện",
+          "Ép sếp phải tự viết lại toàn bộ tài liệu chi tiết trước khi triển khai",
+          "Xác định ngay lập tức đâu là giải pháp duy nhất đúng đắn để làm luôn"
+        ],
+        "answer": 0,
+        "why": "Cách làm này giúp chuyển đổi một yêu cầu mơ hồ thành các option cụ thể để mang đi verify lại với stakeholder [T01-006].",
+        "traps": {
+          "2": "Nhầm lẫn rằng việc đưa ra option là để ép sếp viết tài liệu, trong khi thực tế là mình chủ động biến nó thành cái cụ thể [T01-006].",
+          "3": "Nghĩ rằng các option được tạo ra để tìm ra một đáp án duy nhất đúng ngay từ đầu thay vì mục đích verify [T01-006].",
+          "1": "Hiểu sai là dùng option để phán xét yêu cầu của sếp là sai sót thay vì để làm rõ ý [T01-006]."
+        },
+        "span": "[T01-006]",
+        "node": "l_boctach"
+      },
+      {
+        "q": "Vì sao kỹ năng bóc tách yêu cầu mơ hồ rồi verify lại được xem là rất quan trọng đối với các bạn phát triển theo định hướng generalist?",
+        "options": [
+          "Vì công việc chính của generalist là viết tài liệu dài cho các yêu cầu mơ hồ",
+          "Vì generalist thường phải tự chủ động biến các yêu cầu chung chung thành các phương án cụ thể để xác nhận với stakeholder",
+          "Vì generalist không được phép hỏi lại sếp khi gặp các yêu cầu chưa rõ ràng",
+          "Vì định hướng generalist đòi hỏi phải luôn tự quyết định mọi thứ mà không cần sự đồng thuận của stakeholder"
+        ],
+        "answer": 1,
+        "why": "Kỹ năng biến thứ mơ hồ thành cụ thể rồi verify với stakeholder rất quan trọng, đặc biệt với các bạn phát triển theo định hướng generalist [T01-006].",
+        "traps": {
+          "2": "Nghĩ rằng generalist bị cấm hỏi lại sếp, trong khi việc hỏi lại và đưa ra option là cách làm chính [T01-006].",
+          "3": "Cho rằng generalist làm việc độc lập hoàn toàn mà không cần verify với stakeholder [T01-006].",
+          "0": "Nhầm tưởng vai trò của generalist là viết tài liệu thay vì bóc tách và verify [T01-006]."
+        },
+        "span": "[T01-006]",
+        "node": "l_boctach"
+      },
+      {
+        "q": "Khi đối mặt với một yêu cầu khá chung chung từ sếp, thay vì chờ đợi, bạn nên chủ động thực hiện hành động nào?",
+        "options": [
+          "Yêu cầu sếp phải định nghĩa lại toàn bộ cấu trúc dự án từ đầu",
+          "Loại bỏ yêu cầu đó vì nó không đủ chi tiết để triển khai",
+          "Bóc tách từ đề bài ra vài option cụ thể rồi mang đi hỏi lại sếp",
+          "Tự mình làm theo cách hiểu cá nhân mà không cần trao đổi lại"
+        ],
+        "answer": 2,
+        "why": "Cách làm hiệu quả là thử từ đề bài bóc tách ra vài option cụ thể và mang lại hỏi lại xem mình hiểu đúng ý hay chưa [T01-006].",
+        "traps": {
+          "3": "Chọn cách làm mò mẫm theo ý cá nhân mà không verify lại với stakeholder [T01-006].",
+          "0": "Đùn đẩy trách nhiệm bắt sếp định nghĩa lại toàn bộ thay vì mình chủ động đưa ra option [T01-006].",
+          "1": "Bỏ qua yêu cầu chung chung thay vì tìm cách bóc tách để làm rõ [T01-006]."
+        },
+        "span": "[T01-006]",
+        "node": "l_boctach"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-006]: Bóc tách yêu cầu mơ hồ rồi verify với stakeholder"
+    ]
+  },
+  "l_pm": {
+    "questions": [
+      {
+        "q": "Tại sao công việc của project manager trong các công ty outsourcing lại tập trung nhiều vào việc bố trí nguồn lực và điều phối thay vì đi tìm bài toán?",
+        "options": [
+          "Vì công ty outsourcing quy định project manager chỉ được phép quản lý tiến độ và con người.",
+          "Vì project manager không có kỹ năng liên quan đến việc khảo sát điểm đau của người dùng.",
+          "Vì ngân sách của các dự án outsourcing thường rất hạn hẹp nên không cho phép tìm bài toán mới.",
+          "Vì dự án outsourcing nhận bài toán từ khách hàng với spec đã rõ ràng, cụ thể từ trước."
+        ],
+        "answer": 3,
+        "why": "Project manager trong công ty outsourcing nhận bài toán từ khách hàng với spec rất rõ ràng và cụ thể, nên nhiệm vụ chính là bố trí nguồn lực, quản lý dự án và tiến độ [T01-010].",
+        "traps": {
+          "1": "Nhầm lẫn rằng PM thiếu kỹ năng khảo sát, trong khi thực tế xuất phát từ đặc thù bài toán outsourcing đã có sẵn spec.",
+          "2": "Cho rằng vấn đề nằm ở ngân sách hạn hẹp, điều không được đề cập là nguyên nhân chính khiến PM không đi tìm bài toán.",
+          "0": "Quy chụp do quy định công ty, trong khi bản chất công việc và đặc thù bài toán đã định hình vai trò của PM."
+        },
+        "span": "[T01-010]",
+        "node": "l_pm"
+      },
+      {
+        "q": "Điều gì tạo nên sự khác biệt cốt lõi về định hướng công việc giữa một product manager và một project manager?",
+        "options": [
+          "Product manager chỉ tập trung vào việc quản lý tiền bạc và backup rủi ro cho team, còn project manager làm sản phẩm.",
+          "Product manager chịu trách nhiệm chia việc cho nhân sự trong công ty outsourcing, còn project manager đi trước tìm cơ hội thị trường.",
+          "Product manager làm việc theo spec có sẵn từ khách hàng outsourcing, còn project manager phải tự khảo sát điểm đau của user.",
+          "Product manager phải tự đi tìm bài toán, giải pháp đáng làm và tìm thị trường, còn project manager đảm bảo dự án chạy đúng tiến độ."
+        ],
+        "answer": 3,
+        "why": "Product manager phải tự đi tìm bài toán, giải pháp và thị trường, trong khi project manager tập trung đảm bảo dự án hoàn thành đúng tiến độ trong ngân sách [T01-010] [T01-011].",
+        "traps": {
+          "0": "Đổi ngược vai trò quản lý tiền bạc và backup rủi ro vốn là nhiệm vụ của project manager sang cho product manager.",
+          "2": "Gán nhầm đặc điểm làm việc theo spec có sẵn của outsourcing cho product manager.",
+          "1": "Hoán đổi chức năng chia việc của nhân sự (project manager) với việc tìm cơ hội thị trường (product manager)."
+        },
+        "span": "[T01-011]",
+        "node": "l_pm"
+      },
+      {
+        "q": "Vì sao tư duy của người làm sản phẩm (product) được gọi là 'user-centered' (lấy người dùng làm trung tâm) và khác biệt so với project manager truyền thống?",
+        "options": [
+          "Vì người làm sản phẩm luôn phải thường trực câu hỏi build cái này cho ai, ai dùng và họ có thực sự cần không.",
+          "Vì người làm sản phẩm chỉ tập trung hoàn thành đúng tiến độ công cụ cho các team kế toán hoặc nhân sự.",
+          "Vì người làm sản phẩm có trách nhiệm chính là tính toán chia tiền và làm backup plan dự phòng rủi ro cho team.",
+          "Vì người làm sản phẩm luôn nhận sẵn spec rõ ràng từ khách hàng rồi mới tiến hành phân chia công việc."
+        ],
+        "answer": 0,
+        "why": "Tư duy user-centered thể hiện qua việc luôn đặt câu hỏi build cho ai, ai dùng và họ có thực sự cần nó không, khác với kiểu dự án project manager xưa [T01-011].",
+        "traps": {
+          "1": "Nhầm lẫn nội dung công việc xây dựng công cụ cho team kế toán/nhân sự vốn thuộc về môi trường project manager [T01-010].",
+          "3": "Gán đặc điểm nhận spec sẵn của dự án outsourcing vào tư duy của người làm sản phẩm.",
+          "2": "Lấy các nhiệm vụ điều phối, chia tiền, backup rủi ro của project manager gán cho người làm sản phẩm [T01-010]."
+        },
+        "span": "[T01-011]",
+        "node": "l_pm"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-010] [T01-011]: PM tự đi tìm bài toán; project manager lo tiến độ"
+    ]
+  },
+  "l_po": {
+    "questions": [
+      {
+        "q": "Vì sao khi bài toán đã khá cụ thể, rõ ràng và có đối tượng user rồi, product owner lại cần phải đi sâu vào việc khảo sát user và tìm ra các điểm đau của họ?",
+        "options": [
+          "Vì họ cần thay thế vai trò của product manager để đi trước và khoanh vùng cơ hội rộng hơn",
+          "Vì họ bắt buộc phải chuyển đổi tư duy sang hình thức quản lý dự án project manager xưa",
+          "Vì đó là cơ chế cốt lõi để từ đó họ dần dần đưa ra các tính năng và kế hoạch phát triển phù hợp",
+          "Vì đây là giai đoạn để product owner tự đi tìm thị trường hoàn toàn mới và định hình bài toán từ đầu"
+        ],
+        "answer": 2,
+        "why": "Khi bài toán đã rõ và có đối tượng user, product owner sẽ đi sâu vào khảo sát user để tìm điểm đau, từ đó dần dần đưa ra các tính năng và kế hoạch phát triển [T01-011].",
+        "traps": {
+          "3": "Nhầm lẫn với giai đoạn đi tìm thị trường và bài toán ban đầu vốn dành cho product manager rộng hơn.",
+          "0": "Nhầm lẫn rằng product owner sẽ lấn sang vai trò đi trước và khoanh vùng cơ hội của product manager.",
+          "1": "Nhầm lẫn với mô hình quản lý dự án project manager xưa trong khi product owner mang tư duy lấy người dùng làm trung tâm."
+        },
+        "span": "[T01-011]",
+        "node": "l_po"
+      },
+      {
+        "q": "Khác với product manager là người đi trước nhiều hơn và nhìn ra cơ hội rồi khoanh vùng lại, công việc đặc thù của một product owner diễn ra trong điều kiện nào?",
+        "options": [
+          "Khi bài toán đã khá cụ thể, rõ ràng và có đối tượng user",
+          "Khi không có ai đến bảo bạn phải làm cái gì và bạn phải tự đi tìm bài toán từ con số không",
+          "Khi cần quản lý toàn bộ danh mục sản phẩm rộng lớn của công ty lớn",
+          "Khi sản phẩm chưa có bất kỳ tính năng nào và hoàn toàn mơ hồ về thị trường"
+        ],
+        "answer": 0,
+        "why": "Tư liệu chỉ rõ product owner hành động khi bài toán đã khá cụ thể, rõ ràng, có đối tượng user rồi [T01-011].",
+        "traps": {
+          "3": "Nhầm lẫn giai đoạn đầu khi bài toán còn mơ hồ thuộc về product manager hoặc người tự tìm bài toán.",
+          "2": "Hiểu nhầm product owner luôn quản lý toàn bộ sản phẩm thay vì chỉ phụ trách từng tính năng riêng ở công ty lớn.",
+          "1": "Nhầm lẫn với đặc thù chung của người làm product khi chưa có ai giao việc và phải tự đi tìm bài toán."
+        },
+        "span": "[T01-011]",
+        "node": "l_po"
+      },
+      {
+        "q": "Điều gì phân biệt tư duy và bộ skill của product owner so với kiểu quản lý dự án (project manager) xưa?",
+        "options": [
+          "Product owner tập trung hoàn toàn vào việc tuân thủ các mốc thời gian và kế hoạch do cấp trên giao sẵn",
+          "Product owner không cần quan tâm đến đối tượng người dùng hay điểm đau của họ mà chỉ tập trung triển khai kỹ thuật",
+          "Product owner chờ người khác đến bảo phải làm gì rồi mới bắt đầu tìm kiếm giải pháp",
+          "Product owner luôn đặt các câu hỏi thường trực về việc build cái này cho ai, ai dùng và họ có thực sự cần không (user-centered)"
+        ],
+        "answer": 3,
+        "why": "Sự khác biệt so với project manager xưa là người làm product dùng tư duy user-centered, luôn thường trực câu hỏi build cho ai và họ có thực sự cần không [T01-011].",
+        "traps": {
+          "0": "Nhầm lẫn phong cách project manager xưa với cách vận hành của product owner.",
+          "1": "Hiểu lầm rằng product owner tách rời khỏi việc khảo sát user và tìm điểm đau.",
+          "2": "Mâu thuẫn trực tiếp với tư liệu vì người làm product không đợi ai bảo 'hãy làm cái đấy đi' mà phải tự đi tìm."
+        },
+        "span": "[T01-011]",
+        "node": "l_po"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-011]: Product owner đào sâu user khi bài toán đã rõ"
+    ]
+  },
+  "l_kyvong": {
+    "questions": [
+      {
+        "q": "Vì sao sự thay đổi nhanh chóng trong kỳ vọng của người dùng lại làm thay đổi mức độ cạnh tranh khi xây dựng sản phẩm?",
+        "options": [
+          "Vì công nghệ ChatGPT đã độc quyền toàn bộ thị trường khiến các công ty mới không thể gia nhập",
+          "Vì người dùng sẵn sàng kiên nhẫn thử sai lâu dài với mọi sản phẩm không phải độc quyền",
+          "Vì việc dễ xây dựng sản phẩm khiến thị trường tràn lan và cạnh tranh khốc liệt để chiếm sự chú ý có hạn của con người",
+          "Vì con người ngày nay có nhiều hơn 24 giờ một ngày để trải nghiệm các sản phẩm công nghệ mới"
+        ],
+        "answer": 2,
+        "why": "Việc dễ build sản phẩm dẫn đến thị trường tràn lan, trong khi con người chỉ có 24 giờ một ngày nên cuộc chiến là tranh giành sự chú ý, làm cạnh tranh ngày càng cao [T01-020].",
+        "traps": {
+          "0": "Nhầm lẫn rằng ChatGPT tạo ra thế độc quyền ngăn cản công ty mới, trong khi tư liệu không đề cập điều này.",
+          "3": "Sai ở giả định con người có nhiều hơn 24 giờ, mâu thuẫn trực tiếp với tư liệu 'thế giới này vẫn từng đấy con người thôi, một người một ngày họ chỉ có 24 giờ'.",
+          "1": "Trái ngược hoàn toàn với tư liệu, vì tư liệu khẳng định người ta không đủ kiên nhẫn thử sai trừ khi là độc quyền."
+        },
+        "span": "[T01-020]",
+        "node": "l_kyvong"
+      },
+      {
+        "q": "Điều gì xảy ra với sự kiên nhẫn của người dùng khi họ trải nghiệm các sản phẩm không phải là độc quyền?",
+        "options": [
+          "Người dùng không quan tâm đến việc sản phẩm trả lời đúng hay sai",
+          "Người dùng sẵn sàng dành nhiều thời gian hơn trong 24 giờ để test sản phẩm",
+          "Người dùng không đủ kiên nhẫn để thử sai với sản phẩm",
+          "Người dùng sẽ chờ đợi nhà phát triển khắc phục lỗi trong nhiều năm"
+        ],
+        "answer": 2,
+        "why": "Tư liệu chỉ rõ người ta không đủ kiên nhẫn để thử sai với sản phẩm của bạn, trừ phi sản phẩm đó là độc quyền [T01-020].",
+        "traps": {
+          "1": "Nhầm lẫn về thời gian 24 giờ mà người dùng dành cho công việc và mạng xã hội, không phải để test sản phẩm.",
+          "3": "Phóng đại mức độ kiên nhẫn trong khi tư liệu khẳng định người dùng hiện nay chat sai một câu là đã la lên và thiếu kiên nhẫn.",
+          "0": "Mâu thuẫn với tư liệu vì bây giờ chat một câu trả lời sai là người ta đã la lên, chứng tỏ họ rất để ý."
+        },
+        "span": "[T01-020]",
+        "node": "l_kyvong"
+      },
+      {
+        "q": "Trong điều kiện nào thì một sản phẩm làm tệ vẫn buộc người dùng phải sử dụng mà không có lựa chọn khác?",
+        "options": [
+          "Khi sản phẩm đó được xây dựng rất dễ dàng và đang tràn lan trên thị trường",
+          "Khi đó là công ty duy nhất được ký với nhà nước, chính phủ để cung cấp giải pháp độc quyền",
+          "Khi người dùng có đủ sự kiên nhẫn để tiếp tục thử sai với sản phẩm",
+          "Khi sản phẩm đó giành được phần lớn thị phần sự chú ý trong 24 giờ của con người"
+        ],
+        "answer": 1,
+        "why": "Sản phẩm độc quyền theo kiểu là công ty duy nhất được ký với nhà nước, chính phủ thì làm tệ đến đâu người ta cũng phải dùng vì không có lựa chọn nào khác [T01-020].",
+        "traps": {
+          "0": "Nhầm lẫn giữa việc dễ build sản phẩm với tính độc quyền pháp lý được nhà nước ký kết.",
+          "3": "Đánh đồng việc cạnh tranh sự chú ý với thế độc quyền cung cấp giải pháp cho chính phủ.",
+          "2": "Lấy yếu tố kiên nhẫn của người dùng làm nguyên nhân, trong khi tư liệu nêu rõ người dùng không đủ kiên nhẫn, chỉ vì không có lựa chọn khác mới phải dùng."
+        },
+        "span": "[T01-020]",
+        "node": "l_kyvong"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-020]: Kỳ vọng người dùng thay đổi rất nhanh"
+    ]
+  },
+  "l_chuyendoi": {
+    "questions": [
+      {
+        "q": "Vì sao ngày xưa người dùng gặp khó khăn khi muốn chuyển đổi từ sản phẩm A sang sản phẩm B?",
+        "options": [
+          "Vì các sản phẩm ngày xưa có quá nhiều tính năng phức tạp không thể thao tác trên giao diện",
+          "Vì người dùng phải trả một khoản phí rất đắt trực tiếp bằng tiền mặt cho nhà phát triển",
+          "Vì dữ liệu nằm ở sản phẩm cũ gây khó khăn khi chuyển và phải mất thời gian học lại cách trải nghiệm, cách làm mới ở sản phẩm B",
+          "Vì các sản phẩm cũ không cho phép người dùng dừng sử dụng ngay lập tức"
+        ],
+        "answer": 2,
+        "why": "Ngày xưa chi phí ẩn gồm việc dữ liệu ở A khó chuyển đổi và sang B phải học lại cách trải nghiệm mới [T01-021].",
+        "traps": {
+          "0": "Nhầm lẫn sang việc sản phẩm có tính năng phức tạp trong khi tư liệu không đề cập.",
+          "1": "Nghĩ rằng chi phí ẩn là tiền mặt trực tiếp thay vì các rào cản về dữ liệu và thói quen.",
+          "3": "Cho rằng sản phẩm cũ bắt buộc giữ chân người dùng trong khi tư liệu nói về khó khăn do học cách làm mới."
+        },
+        "span": "[T01-021]",
+        "node": "l_chuyendoi"
+      },
+      {
+        "q": "Điều gì đã thay đổi rõ rệt trong việc chuyển đổi giữa các sản phẩm ở thời điểm hiện tại?",
+        "options": [
+          "Người dùng buộc phải trả thêm chi phí ẩn để export dữ liệu sang nền tảng khác",
+          "Dữ liệu của người dùng bị giữ lại hoàn toàn và không thể mang sang sản phẩm mới",
+          "Sản phẩm mới yêu cầu người dùng phải học lại toàn bộ trải nghiệm từ đầu",
+          "Chi phí chuyển đổi rẻ hơn rất nhiều và các rào cản trước đây gần như bị xoá nhoà"
+        ],
+        "answer": 3,
+        "why": "Hiện nay chi phí chuyển đổi rẻ hơn rất nhiều và cái đó gần như bị xoá nhoà [T01-021].",
+        "traps": {
+          "0": "Hiểu ngược là phải trả thêm chi phí ẩn trong khi tư liệu khẳng định các chi phí này đã giảm và bị xoá nhoà.",
+          "2": "Nhầm lẫn với việc phải học lại cách làm mới như ngày xưa.",
+          "1": "Nghĩ rằng dữ liệu bị giữ lại trái ngược với việc dễ dàng export dữ liệu trong tư liệu."
+        },
+        "span": "[T01-021]",
+        "node": "l_chuyendoi"
+      },
+      {
+        "q": "Yếu tố nào giúp con người hiện nay có thể chuyển đổi sản phẩm một cách rất nhanh chóng?",
+        "options": [
+          "Nhờ vào việc các sản phẩm mới áp dụng chung một giao diện độc quyền",
+          "Vì người dùng không còn lưu trữ bất kỳ dữ liệu cá nhân nào trên sản phẩm",
+          "Do các nhà cung cấp sản phẩm hỗ trợ hoàn tiền trực tiếp khi rời đi",
+          "Có thể dễ dàng export dữ liệu mang đi và dừng sử dụng ngay mà không phải học gì"
+        ],
+        "answer": 3,
+        "why": "Người dùng rất dễ dàng export và mang được dữ liệu sang hoặc dừng ngay mà không phải học gì nên chuyển đổi rất nhanh [T01-021].",
+        "traps": {
+          "0": "Bịa thêm chi tiết giao diện độc quyền chung ngoài tư liệu.",
+          "2": "Nhầm tưởng có chính sách hoàn tiền trong khi tư liệu chỉ nói về việc export dữ liệu và không phải học gì.",
+          "1": "Cho rằng không có dữ liệu lưu trữ, trái ngược với việc dữ liệu được export mang sang."
+        },
+        "span": "[T01-021]",
+        "node": "l_chuyendoi"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-021]: Chi phí chuyển đổi sản phẩm rẻ đi"
+    ]
+  },
+  "l_phanky": {
+    "questions": [
+      {
+        "q": "Tại sao các kỹ thuật như quan sát, phỏng vấn, khảo sát hay thu log hành vi lại được áp dụng trong bước đầu tiên của viên kim cương để tìm đúng vấn đề?",
+        "options": [
+          "Để loại bỏ hoàn toàn các phản hồi tiêu cực và chỉ giữ lại các topic mọi người quan tâm.",
+          "Để xác định ngay lập tức giải pháp kỹ thuật tối ưu mà không cần thông qua phân tích.",
+          "Để khám phá và mở rộng nhiều góc nhìn nhằm thu được nhiều insight nhất có thể từ người dùng.",
+          "Để tiến hành tối ưu hóa trực tiếp sản phẩm ngay trong quá trình người dùng đang trải nghiệm."
+        ],
+        "answer": 2,
+        "why": "Các kỹ thuật này đều thuộc quá trình khám phá nhằm mở rộng nhiều góc nhìn để thu được nhiều insight nhất có thể từ người dùng [T01-071].",
+        "traps": {
+          "3": "Nhầm lẫn giữa bước khám phá ban đầu với bước quay trở lại để tối ưu sản phẩm.",
+          "1": "Hiểu sai rằng việc thu thập insight dùng để tìm giải pháp kỹ thuật thay vì tìm đúng vấn đề.",
+          "0": "Cho rằng mục đích là loại bỏ phản hồi thay vì thu thập đa dạng các topic và điểm đau."
+        },
+        "span": "[T01-071]",
+        "node": "l_phanky"
+      },
+      {
+        "q": "Điều gì xảy ra với các hành vi của người dùng khi họ sử dụng sản phẩm trong ngữ cảnh của quá trình khám phá?",
+        "options": [
+          "Chúng bị xóa bỏ ngay sau khi người dùng hoàn thành việc để lại feedback cho sản phẩm.",
+          "Chúng tự động biến đổi thành các giải pháp thiết kế mà không cần sự can thiệp của team.",
+          "Chúng được dùng độc lập để thay thế hoàn toàn cho các phương pháp phỏng vấn và khảo sát trực tiếp.",
+          "Chúng được lưu lại để team xác định điểm đau và những topic mọi người quan tâm nhằm quay trở lại tối ưu."
+        ],
+        "answer": 3,
+        "why": "Những hành vi trên sản phẩm được lưu lại để từ đấy xác định được điểm đau, topic quan tâm và quay trở lại tối ưu [T01-071].",
+        "traps": {
+          "2": "Cực đoan hóa vai trò của log hành vi thành công cụ thay thế các kỹ thuật khác.",
+          "1": "Gán cho hành vi người dùng khả năng tự động giải quyết vấn đề mà team không cần làm gì.",
+          "0": "Nhầm tưởng dữ liệu hành vi sẽ bị tiêu hủy thay vì được dùng làm căn cứ tối ưu."
+        },
+        "span": "[T01-071]",
+        "node": "l_phanky"
+      },
+      {
+        "q": "Việc học viên để lại feedback trong quá trình sử dụng sản phẩm phản ánh điều gì về hoạt động của team?",
+        "options": [
+          "Team đang cố gắng làm nhiễu loạn dữ liệu hành vi để ẩn đi các điểm đau của người dùng.",
+          "Team đã kết thúc quá trình tìm vấn đề và chuyển sang giai đoạn phát hành phiên bản cuối.",
+          "Team đang tiến hành khảo sát nội bộ giữa các thành viên phát triển sản phẩm với nhau.",
+          "Team đang thực hiện bước khám phá để thu thập nhiều insight từ chính người dùng."
+        ],
+        "answer": 3,
+        "why": "Khi người dùng dùng và để lại feedback, đó là bước team đang khám phá nhiều insight từ user [T01-071].",
+        "traps": {
+          "1": "Nhầm lẫn giữa giai đoạn khám phá ban đầu với giai đoạn phát hành cuối cùng.",
+          "2": "Hiểu sai đối tượng được khảo sát là nội bộ team thay vì chính người dùng sản phẩm.",
+          "0": "Cho rằng feedback làm sai lệch dữ liệu trong khi thực tế nó dùng để tìm insight."
+        },
+        "span": "[T01-071]",
+        "node": "l_phanky"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-071]: Phân kỳ: mở rộng góc nhìn để thu insight"
+    ]
+  },
+  "l_hoitu": {
+    "questions": [
+      {
+        "q": "Tại sao trong pha hội tụ, việc sử dụng các kỹ thuật như gom nhóm, Five Whys hoặc lọc trùng lại được thực hiện ngay sau pha mở rộng không gian?",
+        "options": [
+          "Vì cần phải mất một team năm người làm việc trong cả một tháng để tối ưu các vấn đề.",
+          "Vì sau khi tìm ra được nhiều vấn đề từ việc mở rộng không gian, cần phải gom lại và đào sâu lý do.",
+          "Vì đây là thời điểm để viết thành những phát biểu bài toán nhằm đi sang pha tìm giải pháp.",
+          "Vì ma trận tác động và nỗ lực chỉ có thể áp dụng hiệu quả nhất khi chưa thực hiện việc lọc trùng."
+        ],
+        "answer": 1,
+        "why": "Sau khi mở rộng không gian và tìm ra được nhiều vấn đề, pha hội tụ diễn ra với các kỹ thuật như nhóm lại và đặt câu hỏi Five Whys để tìm cái lý do sâu hơn [T01-074].",
+        "traps": {
+          "2": "Viết phát biểu bài toán là bước được thực hiện sau khi đã hoàn thành các kỹ thuật hội tụ, không phải lý do của việc dùng các kỹ thuật đó [T01-074].",
+          "3": "Tư liệu không nêu việc ma trận tác động và nỗ lực bắt buộc phải áp dụng trước khi lọc trùng [T01-074].",
+          "0": "Đây chỉ là ví dụ về mức độ nỗ lực của một team, không phải là lý do thực hiện các kỹ thuật hội tụ [T01-074]."
+        },
+        "span": "[T01-074]",
+        "node": "l_hoitu"
+      },
+      {
+        "q": "Ma trận tác động và nỗ lực giúp ích gì ngay lập tức khi bạn đưa tất cả những vấn đề tìm thấy lên ma trận này?",
+        "options": [
+          "Giúp loại bỏ hoàn toàn việc cần phải sử dụng các câu hỏi Five Whys.",
+          "Giúp mở rộng không gian để tìm ra nhiều vấn đề hơn trong pha hội tụ.",
+          "Giúp ngay lập tức khoanh vùng ra được cái gì đáng làm nhất dựa trên impact và công sức bỏ ra.",
+          "Giúp tự động viết thành các phát biểu bài toán dưới dạng problem statement."
+        ],
+        "answer": 2,
+        "why": "Ma trận tác động và nỗ lực là framework đơn giản giúp bạn ngay lập tức khoanh vùng ra được cái gì đáng làm nhất dựa trên tác động và công sức bỏ ra [T01-074].",
+        "traps": {
+          "3": "Việc viết thành phát biểu bài toán diễn ra sau khi đã làm xong các bước trong ma trận tác động và nỗ lực [T01-074].",
+          "1": "Việc mở rộng không gian diễn ra trước pha hội tụ, không phải là kết quả của ma trận tác động và nỗ lực [T01-074].",
+          "0": "Tư liệu không đề cập ma trận này làm loại bỏ việc sử dụng các câu hỏi Five Whys [T01-074]."
+        },
+        "span": "[T01-074]",
+        "node": "l_hoitu"
+      },
+      {
+        "q": "Điều gì xảy ra ở bước cuối cùng của pha hội tụ trước khi chuyển sang pha đi tìm giải pháp?",
+        "options": [
+          "Viết các vấn đề đã xử lý thành những phát biểu bài toán (problem statement).",
+          "Thực hiện lọc trùng và gom nhóm các vấn đề vừa tìm được.",
+          "Sử dụng ma trận tác động và nỗ lực để khoanh vùng việc đáng làm nhất.",
+          "Tiến hành áp dụng Five Whys để đào sâu thêm các lý do."
+        ],
+        "answer": 0,
+        "why": "Sau khi làm xong những cái đấy (gom nhóm, Five Whys, lọc trùng, ma trận), mình mới viết thành những phát biểu bài toán để đi sang pha tìm giải pháp [T01-074].",
+        "traps": {
+          "3": "Five Whys là kỹ thuật nằm trong giai đoạn đầu của pha hội tụ, không phải bước cuối cùng trước khi chuyển pha [T01-074].",
+          "2": "Ma trận tác động và nỗ lực được làm trước bước viết phát biểu bài toán [T01-074].",
+          "1": "Lọc trùng và gom nhóm là các kỹ thuật thực hiện ở phần đầu của pha hội tụ [T01-074]."
+        },
+        "span": "[T01-074]",
+        "node": "l_hoitu"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-074]: Hội tụ: gom nhóm, Five Whys, lọc trùng"
+    ]
+  },
+  "l_dungcaisai": {
+    "questions": [
+      {
+        "q": "Tại sao việc làm đúng một vấn đề đã sai lại nguy hiểm hơn rất nhiều so với việc làm sai ngay từ đầu?",
+        "options": [
+          "Vì nó khiến con người ngay lập tức dừng lại và tự đặt câu hỏi về điểm đích ban đầu.",
+          "Vì nó tạo ra cảm giác ảo tưởng rằng mình đã làm đúng và khiến con người không muốn quay lại kiểm chứng nữa.",
+          "Vì nó làm cho thế giới bên ngoài thay đổi quá nhanh và làm phát sinh thêm nhiều thông tin mới.",
+          "Vì nó làm tốn kém nguồn tài chính trực tiếp và làm cạn kiệt toàn bộ ngân sách của dự án."
+        ],
+        "answer": 1,
+        "why": "Việc làm đúng cái sai gây nguy hiểm vì nó mang lại cảm giác ảo tưởng về năng lực và kết quả đúng, khiến ta không quay lại verify hay validate lại [T01-061].",
+        "traps": {
+          "3": "Phương án B nhầm lẫn giữa chi phí cơ hội/chi phí chìm với việc mất ngân sách tài chính trực tiếp.",
+          "2": "Phương án C lấy nguyên nhân bối cảnh thay đổi áp dụng nhầm thành hậu quả của việc làm đúng cái sai.",
+          "0": "Phương án D miêu tả ngược lại phản ứng thực tế của con người (thực tế là rất khó dừng lại)."
+        },
+        "span": "[T01-061]",
+        "node": "l_dungcaisai"
+      },
+      {
+        "q": "Điều gì diễn ra trong tư duy con người khi họ đã xác định và lao vào một vấn đề vốn đã sai từ đầu?",
+        "options": [
+          "Họ xem đó là điểm đích, lao vào và rất khó để ngay lập tức dừng lại tự đặt câu hỏi về tính đúng đắn ban đầu.",
+          "Họ sẽ chủ động tìm kiếm các thông tin mới để thay đổi bối cảnh hiện tại.",
+          "Họ dễ dàng nhận ra lỗi sai ngay từ những bước đầu tiên nhờ vào chi phí cơ hội.",
+          "Họ cảm thấy tự tin hơn trong việc từ bỏ các dự án cũ để chuyển sang hướng đi khác."
+        ],
+        "answer": 0,
+        "why": "Khi đã xác định được vấn đề, con người coi đó là điểm đích và lao vào, rất khó để ngay lập tức dừng lại đặt câu hỏi xem việc đặt vấn đề từ đầu có sai không [T01-060].",
+        "traps": {
+          "2": "Phương án A sai vì con người rất khó quay ngược lại chứ không dễ dàng nhận ra.",
+          "1": "Phương án C nhầm lẫn việc tìm thông tin mới với cơ chế tự giới hạn không gian giải pháp của con người.",
+          "3": "Phương án D trái ngược hoàn toàn với tư liệu vì chi phí chìm khiến con người rất khó từ bỏ."
+        },
+        "span": "[T01-060]",
+        "node": "l_dungcaisai"
+      },
+      {
+        "q": "Chi phí chìm (sunk cost) ảnh hưởng như thế nào đến khả năng ra quyết định của con người khi đối mặt với một vấn đề không còn đúng?",
+        "options": [
+          "Nó làm cho con người đã bỏ ra quá nhiều chi phí nên cảm thấy rất khó để từ bỏ nó.",
+          "Nó giúp con người nhận ra ngay lập tức số lượng công việc đã làm để dừng lại kịp thời.",
+          "Nó tạo ra động lực để con người tiếp tục tìm kiếm các không gian giải pháp mới hoàn toàn.",
+          "Nó giải phóng không gian tư duy giúp con người dễ dàng verify lại từ đầu."
+        ],
+        "answer": 0,
+        "why": "Chi phí chìm xuất hiện khi bạn đã bỏ ra quá nhiều chi phí để làm việc đó, khiến bạn cảm thấy rất khó để từ bỏ nó [T01-060].",
+        "traps": {
+          "1": "Phương án A sai vì chi phí chìm gây khó khăn cho việc từ bỏ chứ không giúp dừng lại kịp thời.",
+          "2": "Phương án B sai vì chi phí chìm làm giới hạn không gian giải pháp chứ không mở rộng ra giải pháp mới.",
+          "3": "Phương án D ngược lại với thực tế là con người bị trói buộc bởi chi phí đã bỏ ra."
+        },
+        "span": "[T01-060]",
+        "node": "l_dungcaisai"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-060] [T01-061]: Làm đúng cái sai nguy hiểm hơn"
+    ]
+  },
+  "l_firstprinciple": {
+    "questions": [
+      {
+        "q": "Tại sao việc sử dụng khung tư duy nguyên lý gốc (first principle) lại giúp công ty trong tư liệu đổi mới và không bị đi theo lối mòn?",
+        "options": [
+          "Vì nó cung cấp sẵn các lời giải có sẵn từ trước cho các ứng dụng học tiếng Anh của trẻ con.",
+          "Vì nó buộc người làm luôn đặt câu hỏi về cách làm và chẻ nhỏ vấn đề để tìm bản chất bên dưới.",
+          "Vì nó cho phép công ty sao chép lại các cách làm cũ nhưng đổi tên thành phương pháp mới.",
+          "Vì nó giúp công ty tự động hóa toàn bộ quy trình phát triển sản phẩm nhờ sự hỗ trợ của robot."
+        ],
+        "answer": 1,
+        "why": "Tư liệu chỉ rõ để không đi theo lối mòn, người làm phải đặt câu hỏi đây có phải cách tốt nhất không và chẻ nhỏ vấn đề để xem thực sự phải giải quyết gì ở bên dưới [T01-064].",
+        "traps": {
+          "3": "Nhầm lẫn việc ứng dụng robot cho trẻ con với việc tự động hóa toàn bộ quy trình công ty.",
+          "0": "Trái ngược hoàn toàn với tinh thần tìm cách làm mới và không đi theo lối mòn được nhắc trong tư liệu.",
+          "2": "Mâu thuẫn với mục đích tìm cách làm mới, sáng tạo và không theo lối mòn cũ."
+        },
+        "span": "[T01-064]",
+        "node": "l_firstprinciple"
+      },
+      {
+        "q": "Điều gì xảy ra khi một người áp dụng cách tư duy first principle để giải quyết vấn đề theo tư liệu?",
+        "options": [
+          "Họ sẽ tìm ra được lời giải cho vấn đề và cách làm sáng tạo không theo lối mòn.",
+          "Họ sẽ ngay lập tức tìm được nhà đầu tư cho các ứng dụng coach tiếng Anh.",
+          "Họ sẽ bỏ qua bước xác định vấn đề mà chỉ tập trung vào việc tạo ra robot.",
+          "Họ sẽ chỉ sử dụng các cách làm cũ của công ty để tiết kiệm thời gian luyện tập."
+        ],
+        "answer": 0,
+        "why": "Tư liệu nêu rõ để tìm được lời giải thì cần cách tư duy first principle giúp tìm ra cách làm mới, sáng tạo không theo lối mòn [T01-064].",
+        "traps": {
+          "1": "Đưa vào yếu tố gọi vốn đầu tư hoàn toàn không có trong tư liệu gốc.",
+          "2": "Nhầm lẫn khi cho rằng phương pháp này cho phép bỏ qua bước xác định vấn đề.",
+          "3": "Trái ngược với việc thoát khỏi lối mòn của các cách làm cũ được đề cập."
+        },
+        "span": "[T01-064]",
+        "node": "l_firstprinciple"
+      },
+      {
+        "q": "Để trở thành một người giải quyết vấn đề đủ tốt dựa trên tư liệu, bạn cần thực hiện những yếu tố cốt lõi nào?",
+        "options": [
+          "Luôn luôn sao chép các mô hình robot dành cho trẻ con.",
+          "Xác định được vấn đề đủ tốt và tìm được lời giải cho nó.",
+          "Chỉ cần rèn luyện cách tư duy first principle trong đúng 2 năm.",
+          "Chỉ tập trung phát triển app coach tiếng Anh cho người lớn."
+        ],
+        "answer": 1,
+        "why": "Tư liệu khẳng định để là người giải quyết vấn đề đủ tốt cần: thứ nhất xác định vấn đề đủ tốt, thứ hai tìm được lời giải cho nó [T01-064].",
+        "traps": {
+          "2": "Nhầm khoảng thời gian luyện tập cá nhân của tác giả thành điều kiện cốt lõi bắt buộc.",
+          "3": "Lấy một ví dụ cụ thể về công ty bạn thân trong tư liệu để gạt bỏ yêu cầu cốt lõi.",
+          "0": "Dùng chi tiết robot cho trẻ con ngoài ngữ cảnh để tạo phương án sai lệch."
+        },
+        "span": "[T01-064]",
+        "node": "l_firstprinciple"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-064]: Bóc vấn đề về nguyên lý gốc"
+    ]
+  },
+  "l_quansat": {
+    "questions": [
+      {
+        "q": "Vì sao khi xây dựng một sản phẩm cho một đối tượng nào đó, việc tìm đến nơi họ hay xuất hiện và ngồi cùng họ lại được đánh giá là kỹ năng quan trọng?",
+        "options": [
+          "Vì đây là phương pháp cốt lõi để quan sát và hiểu rõ đối tượng mà sản phẩm hướng tới.",
+          "Vì giúp giải quyết trực tiếp hiện tượng AI bị ảo giác thông qua dữ liệu do người dùng chọn lọc.",
+          "Vì giúp đội ngũ phát triển sản phẩm giảm bớt số lượng nhân sự full-time cần thiết.",
+          "Vì giúp nhân viên tận dụng được 20% thời gian để phát triển dự án cá nhân theo văn hóa của công ty."
+        ],
+        "answer": 0,
+        "why": "Quan sát được định nghĩa là tìm nơi đối tượng xuất hiện và ngồi cùng họ là tốt nhất, đây là một kỹ năng rất quan trọng khi build sản phẩm cho một đối tượng [T01-072].",
+        "traps": {
+          "3": "Nhầm lẫn với văn hóa 20% thời gian của Google Labs, không phải là mục đích trực tiếp của việc quan sát người dùng.",
+          "2": "Suy diễn sai rằng việc quan sát liên quan đến việc tối ưu hóa số lượng nhân sự full-time của team.",
+          "1": "Nhầm lẫn với cách tiếp cận giải quyết hiện tượng AI bị ảo giác của sản phẩm NotebookLM."
+        },
+        "span": "[T01-072]",
+        "node": "l_quansat"
+      },
+      {
+        "q": "Điều gì khác biệt trong cách tiếp cận của NotebookLM nhằm giải quyết hiện tượng AI bị ảo giác?",
+        "options": [
+          "Định vị sản phẩm ban đầu chỉ dành riêng cho học sinh sinh viên để học bài.",
+          "Để AI tự do tìm kiếm toàn bộ thông tin ở bên ngoài để trả lời câu hỏi của người dùng.",
+          "Yêu cầu người dùng là người chọn lọc dữ liệu thay vì để AI tự tìm thông tin bên ngoài.",
+          "Sử dụng đội ngũ nhân sự gồm một PM, một chuyên gia nghiên cứu tâm lý và một engineer."
+        ],
+        "answer": 2,
+        "why": "Cách tiếp cận của NotebookLM để giải quyết AI ảo giác là thay vì cho AI tìm thông tin bên ngoài, người dùng sẽ chọn lọc dữ liệu và AI giúp khám phá nhanh chóng [T01-072].",
+        "traps": {
+          "1": "Trái ngược hoàn toàn với văn bản, vì văn bản nêu rõ là 'thay vì cho AI tìm những thông tin ở bên ngoài'.",
+          "3": "Nhầm lẫn cơ cấu nhân sự ban đầu của team với giải pháp kỹ thuật xử lý lỗi ảo giác của AI.",
+          "0": "Việc định vị cho học sinh sinh viên là đối tượng sử dụng, không phải là cơ chế kỹ thuật để giải quyết hiện tượng AI ảo giác."
+        },
+        "span": "[T01-072]",
+        "node": "l_quansat"
+      },
+      {
+        "q": "Cơ cấu nhân sự ban đầu của team phát triển dự án NotebookLM tại Google Labs gồm những ai?",
+        "options": [
+          "Một nhóm chuyên gia chuyên nghiên cứu về thiết kế tư duy và học sinh sinh viên.",
+          "Nhiều thành viên xuất phát từ văn hóa dành 20% thời gian phát triển dự án cá nhân.",
+          "Ba người full-time gồm một PM, một chuyên gia nghiên cứu tâm lý và một engineer.",
+          "Ba người gồm một người full-time và hai người part-time với các vai trò PM, chuyên gia nghiên cứu tâm lý và engineer."
+        ],
+        "answer": 3,
+        "why": "Team đầu tiên có ba người, trong đó chỉ có một người làm full-time, hai người part-time gồm một chị PM, một bác chuyên gia nghiên cứu tâm lý và một bạn engineer [T01-072].",
+        "traps": {
+          "2": "Nhầm lẫn số lượng người full-time (văn bản ghi rõ chỉ có một người full-time, hai người part-time).",
+          "1": "Nhầm lẫn văn hóa 20% thời gian của Google với cơ cấu nhân sự cụ thể của team.",
+          "0": "Nhầm lẫn đối tượng sử dụng sản phẩm (học sinh sinh viên) với thành viên trong đội ngũ phát triển."
+        },
+        "span": "[T01-072]",
+        "node": "l_quansat"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-072]: Quan sát người dùng tại nơi họ làm việc"
+    ]
+  },
+  "l_dogfood": {
+    "questions": [
+      {
+        "q": "Tại sao chiến lược dogfooding lại giúp đội ngũ phát triển sản phẩm có thể tối ưu hóa nó liên tục mà không cần phải chờ đợi người dùng bên ngoài?",
+        "options": [
+          "Vì họ trực tiếp thu thập dữ liệu từ hàng triệu người dùng thương mại từ giai đoạn đầu",
+          "Vì họ vừa là người làm ra vừa là người dùng sản phẩm hàng ngày nên tự cảm nhận được nỗi đau và sự bất tiện",
+          "Vì sản phẩm ban đầu được xây dựng hoàn chỉnh và không có lỗi từ những phiên bản đầu tiên",
+          "Vì họ có đội ngũ tester chuyên nghiệp kiểm thử toàn bộ hệ thống từ trước"
+        ],
+        "answer": 1,
+        "why": "Vì bạn là user, dùng chính sản phẩm của mình hàng ngày nên bạn sẽ cảm nhận được cái pain và có thể tối ưu nó liên tục mà không phải chờ có user [T01-042].",
+        "traps": {
+          "3": "Nhầm lẫn với việc sử dụng đội ngũ tester chuyên nghiệp ngoài đời thực, trong khi tư liệu nhấn mạnh chính đội ngũ làm sản phẩm tự xài.",
+          "0": "Hiểu nhầm là sản phẩm đã có lượng lớn người dùng thương mại từ đầu, trái với việc tự xài nội bộ như Jira hay Slack.",
+          "2": "Cho rằng sản phẩm hoàn chỉnh không lỗi, mâu thuẫn với bản chất ban đầu là làm ra sản phẩm khá sơ sài rồi tự xài để tối ưu."
+        },
+        "span": "[T01-042]",
+        "node": "l_dogfood"
+      },
+      {
+        "q": "Khác biệt cốt lõi trong cách Jira và Slack ra đời theo chiến lược dogfooding so với cách làm phần mềm thông thường là gì?",
+        "options": [
+          "Họ xây dựng một sản phẩm ban đầu khá sơ sài hoặc chat nội bộ để phục vụ chính nhu cầu của họ rồi mới phát triển tiếp",
+          "Họ mua lại các công cụ có sẵn trên thị trường rồi thương mại hóa chúng thành sản phẩm lớn",
+          "Họ tập trung ngay từ đầu vào việc thương mại hóa ra toàn cầu để thu hút user",
+          "Họ thuê một bên thứ ba nghiên cứu thị trường trước khi bắt tay vào viết mã nguồn"
+        ],
+        "answer": 0,
+        "why": "Jira xuất phát từ việc xây một sản phẩm ban đầu khá sơ sài để quản lý việc họ build Jira, còn Slack ban đầu chỉ là chat nội bộ họ tự xây để xài [T01-042].",
+        "traps": {
+          "3": "Nhầm lẫn sang việc thuê bên thứ ba nghiên cứu thị trường thay vì tự mình làm user cho sản phẩm.",
+          "1": "Nghĩ rằng họ đi mua lại công cụ có sẵn, trong khi thực tế họ tự xây dựng từ đầu cho nhu cầu nội bộ.",
+          "2": "Cho rằng họ nhắm tới thương mại hóa toàn cầu ngay từ đầu, trái với xuất phát điểm dùng nội bộ hoặc sơ sài."
+        },
+        "span": "[T01-042]",
+        "node": "l_dogfood"
+      },
+      {
+        "q": "Điều gì xảy ra với động lực giải quyết vấn đề của đội ngũ khi họ áp dụng chiến lược dogfooding vào việc xây dựng sản phẩm?",
+        "options": [
+          "Đội ngũ có động lực lớn hơn vì họ tự xài, tự là người dùng và tự hiểu vấn đề của chính mình",
+          "Đội ngũ phụ thuộc hoàn toàn vào phản hồi từ khách hàng thương mại để tìm động lực",
+          "Đội ngũ giảm bớt áp lực vì đã có người dùng bên ngoài gánh vác việc tìm lỗi",
+          "Đội ngũ mất phương hướng vì ranh giới giữa người làm sản phẩm và người dùng bị xóa nhòa"
+        ],
+        "answer": 0,
+        "why": "Bạn nên build những sản phẩm mà bạn tự xài nó, bạn tự là người dùng, bạn tự hiểu — thì bạn sẽ có cái động lực để giải quyết cái việc đấy [T01-042].",
+        "traps": {
+          "2": "Hiểu ngược lại là giảm áp lực nhờ người dùng bên ngoài, trong khi dogfooding biến chính đội ngũ thành người dùng đầu tiên.",
+          "3": "Cho rằng việc xóa nhòa ranh giới gây mất phương hướng, trong khi tư liệu coi đây là lợi thế chiến lược tạo động lực.",
+          "1": "Nhầm lẫn rằng động lực đến từ khách hàng thương mại bên ngoài thay vì sự thấu hiểu từ bản thân người làm."
+        },
+        "span": "[T01-042]",
+        "node": "l_dogfood"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-042]: Dogfooding: tự làm user của sản phẩm mình"
+    ]
+  },
+  "l_trithucan": {
+    "questions": [
+      {
+        "q": "Tại sao chuyên gia lại đưa ra quyết định chọn phương án ngay lập tức mà không cần dừng lại để lý giải?",
+        "options": [
+          "Vì họ dựa trên tri thức ẩn đã được hình thành rất nhiều năm trong đầu và kinh nghiệm tích lũy.",
+          "Vì các phương án B và C có lỗi sai hiển nhiên mà chỉ người có chuyên môn mới thấy.",
+          "Vì họ đã học thuộc sẵn tất cả các đáp án cho từng trường hợp cụ thể.",
+          "Vì quy trình làm việc bắt buộc họ phải chọn nhanh để tiết kiệm thời gian cho người mới."
+        ],
+        "answer": 0,
+        "why": "Chuyên gia tự động đưa ra quyết định bằng trực giác và kinh nghiệm dựa trên tri thức ẩn đã được hình thành rất nhiều năm trong đầu [T01-048].",
+        "traps": {
+          "2": "Nhầm tưởng chuyên gia học thuộc đáp án, trong khi thực tế họ hành động dựa trên tri thức ẩn và kinh nghiệm lâu năm [T01-048].",
+          "3": "Cho rằng việc chọn nhanh là do quy định của quy trình, nhưng tư liệu khẳng định đó là do trực giác và kinh nghiệm [T01-048].",
+          "1": "Nghĩ rằng phương án B và C có lỗi sai hiển nhiên, nhưng tư liệu chỉ nêu chuyên gia chọn A ngay lập tức còn người mới thì không nhìn ra [T01-048]."
+        },
+        "span": "[T01-048]",
+        "node": "l_trithucan"
+      },
+      {
+        "q": "Sự khác biệt cơ bản giữa chuyên gia và người mới khi đối mặt với ba lựa chọn (option) là gì?",
+        "options": [
+          "Chuyên gia luôn luôn chọn phương án C còn người mới luôn luôn chọn phương án A.",
+          "Chuyên gia mất nhiều thời gian để lý giải chi tiết, còn người mới đưa ra quyết định rất nhanh.",
+          "Chuyên gia cần sự trợ giúp của người mới để phân tích các option, còn người mới thì tự làm độc lập.",
+          "Chuyên gia tự động đưa ra quyết định bằng trực giác ngay lập tức, còn người mới sẽ không nhìn ra được nên chọn phương án nào."
+        ],
+        "answer": 3,
+        "why": "Chuyên gia ngay lập tức chọn được phương án ok bằng trực giác trong khi người mới thì không nhìn ra được sự khác biệt giữa các lựa chọn [T01-048].",
+        "traps": {
+          "0": "Gán cố định chuyên gia chọn C và người mới chọn A, trái với ví dụ trong tư liệu là chuyên gia chọn A [T01-048].",
+          "1": "Đảo ngược bản chất thời gian ra quyết định của chuyên gia và người mới so với mô tả trong tư liệu [T01-048].",
+          "2": "Nhầm lẫn về sự tương trợ giữa chuyên gia và người mới, yếu tố này không hề có trong tư liệu [T01-048]."
+        },
+        "span": "[T01-048]",
+        "node": "l_trithucan"
+      },
+      {
+        "q": "Điều gì xảy ra với tri thức ẩn của chuyên gia khi họ đưa ra câu trả lời hoặc giải pháp cho một vấn đề?",
+        "options": [
+          "Họ dừng lại rất lâu để phân tích từng bước logic cho người mới hiểu.",
+          "Họ tự động đưa ra quyết định mà không dừng lại để lý giải tường tận.",
+          "Họ tra cứu lại tài liệu cũ trong đầu trước khi đưa ra câu trả lời.",
+          "Họ phải viết ra một báo cáo dài để giải thích quá trình tư duy của mình."
+        ],
+        "answer": 1,
+        "why": "Tri thức ẩn giúp chuyên gia tự đưa ra câu trả lời và giải pháp mà không dừng lại để lý giải [T01-048].",
+        "traps": {
+          "3": "Cho rằng chuyên gia phải viết báo cáo giải thích, trong khi tư liệu nói họ không dừng lại để lý giải [T01-048].",
+          "0": "Nghĩ rằng chuyên gia dừng lại phân tích cho người mới, trái ngược với việc họ ra quyết định ngay lập tức [T01-048].",
+          "2": "Cho rằng chuyên gia cần tra cứu tài liệu cũ, điều này không được nhắc đến trong định nghĩa về tri thức ẩn [T01-048]."
+        },
+        "span": "[T01-048]",
+        "node": "l_trithucan"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-048]: Tri thức ẩn của chuyên gia"
+    ]
+  },
+  "l_matran": {
+    "questions": [
+      {
+        "q": "Tại sao việc đặt các vấn đề lên ma trận tác động - nỗ lực cần phải được thực hiện sau khi đã gom thành các đầu mục lớn hoặc cụm?",
+        "options": [
+          "Vì nếu không gom nhóm trước thì không thể xác định được tổng số lượng báo cáo hàng tuần.",
+          "Vì làm như vậy giúp ta tính chính xác tuyệt đối mức lương của từng nhân sự trong team.",
+          "Vì việc gom nhóm giúp loại bỏ hoàn toàn các nỗ lực cần bỏ ra trước khi tính tác động.",
+          "Vì các cụm liên quan đến nhau có thể cùng được giải quyết bằng một giải pháp trước khi đem ra đánh giá."
+        ],
+        "answer": 3,
+        "why": "Các cụm liên quan đến nhau có thể cùng giải quyết bằng một giải pháp — lúc đấy bạn mới đặt lên ma trận để đánh giá [T01-078].",
+        "traps": {
+          "1": "Nhầm lẫn rằng việc đánh giá trên ma trận dùng để tính chính xác tuyệt đối mức lương thay vì ước lượng nỗ lực [T01-078].",
+          "0": "Gắn việc gom nhóm với một ví dụ cụ thể về báo cáo hàng tuần thay vì bản chất kết hợp giải pháp [T01-078].",
+          "2": "Cho rằng việc gom nhóm có thể làm mất đi hoàn toàn các nỗ lực cần bỏ ra [T01-078]."
+        },
+        "span": "[T01-078]",
+        "node": "l_matran"
+      },
+      {
+        "q": "Khi đánh giá trục 'tác động' trong ma trận tác động - nỗ lực, yếu tố nào sau đây được xem xét là tác động của việc giải quyết vấn đề?",
+        "options": [
+          "Tổng số lượng các đầu mục lớn và các cụm vấn đề chưa được gom nhóm.",
+          "Số lượng thời gian tiết kiệm được hoặc doanh thu đạt thêm/lợi ích nhận được.",
+          "Số lượng người và số lượng team cần huy động để thực hiện giải pháp.",
+          "Thời gian tính bằng ngày làm việc và mức lương ước lượng cho nhân sự."
+        ],
+        "answer": 1,
+        "why": "Tác động ở đây là: nếu bạn giải được vấn đề đấy thì bạn tiết kiệm được bao nhiêu, hay đạt thêm được doanh thu, nhận được lợi ích gì [T01-078].",
+        "traps": {
+          "2": "Nhầm lẫn giữa trục tác động với trục nỗ lực (số lượng người và team) [T01-078].",
+          "3": "Nhầm lẫn tác động với cách tính chi phí nỗ lực bằng ngày làm việc và mức lương [T01-078].",
+          "0": "Lấy số lượng đầu mục chưa gom làm thước đo tác động [T01-078]."
+        },
+        "span": "[T01-078]",
+        "node": "l_matran"
+      },
+      {
+        "q": "Khi xem xét trục 'nỗ lực' trong việc giải quyết một vấn đề, những yếu tố nào được dùng để ước lượng?",
+        "options": [
+          "Số lượng doanh thu đạt thêm và lợi ích nhận được sau khi giải quyết xong.",
+          "Cần bao nhiêu người, bao nhiêu team, bao lâu và mức lương ước lượng.",
+          "Số lượng thời gian tiết kiệm được mỗi tuần nhân với số tuần trong tháng.",
+          "Cơ sở ưu tiên dựa trên việc làm việc nào mất ít thời gian nhất nhưng impact cao."
+        ],
+        "answer": 1,
+        "why": "Còn nỗ lực để làm việc đấy là: bạn phải cần bao nhiêu người, bao nhiêu team, bao lâu để làm được việc đấy... nhân với mức lương, estimate thôi [T01-078].",
+        "traps": {
+          "0": "Nhầm lẫn nỗ lực với tác động là doanh thu và lợi ích thu về [T01-078].",
+          "2": "Nhầm lẫn nỗ lực với thời gian tiết kiệm được từ việc làm báo cáo [T01-078].",
+          "3": "Nhầm lẫn nỗ lực với kết quả cuối cùng của việc ưu tiên công việc [T01-078]."
+        },
+        "span": "[T01-078]",
+        "node": "l_matran"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-078]: Đặt vấn đề lên hai trục tác động và nỗ lực"
+    ]
+  },
+  "l_quickwin": {
+    "questions": [
+      {
+        "q": "Tại sao việc xác định các hạng mục 'high impact và low effort' lại quan trọng theo tư liệu?",
+        "options": [
+          "Vì chúng giúp loại bỏ ngay lập tức các hạng mục high effort [T01-079]",
+          "Vì chúng là những hạng mục cần phải bỏ đi đầu tiên [T01-079]",
+          "Vì chúng giúp chúng ta mang lại quick win sớm [T01-079]",
+          "Vì chúng tạo ra một ma trận trục ngang và trục dọc phức tạp [T01-079]"
+        ],
+        "answer": 2,
+        "why": "Tư liệu chỉ rõ những cái high impact và low effort sẽ giúp chúng ta mang lại quick win sớm [T01-079].",
+        "traps": {
+          "0": "Nhầm lẫn với nhóm high effort là nhóm cần bỏ, chứ không phải bỏ nhóm high impact và low effort.",
+          "3": "Hiểu nhầm việc vẽ bảng và trục tạo ra sự phức tạp thay vì để xác định ưu tiên.",
+          "1": "Nhầm lẫn giữa nhóm cần giữ lại để lấy quick win với nhóm high effort low impact cần bỏ đi."
+        },
+        "span": "[T01-079]",
+        "node": "l_quickwin"
+      },
+      {
+        "q": "Khác biệt trong cách xử lý giữa hai nhóm 'high impact và low effort' với 'high effort mà low impact' trên ma trận là gì?",
+        "options": [
+          "Nhóm high impact và low effort mang lại quick win sớm, còn nhóm high effort low impact sẽ bị bỏ [T01-079]",
+          "Nhóm high impact và low effort sẽ bị bỏ, còn nhóm high effort low impact mang lại quick win [T01-079]",
+          "Cả hai nhóm đều được sắp xếp vào các cung để mang lại quick win như nhau [T01-079]",
+          "Cả hai nhóm đều bị loại bỏ khỏi ma trận trục ngang và trục dọc [T01-079]"
+        ],
+        "answer": 0,
+        "why": "Tư liệu phân định rõ high impact và low effort giúp mang lại quick win sớm, trong khi mình sẽ bỏ cái high effort mà low impact [T01-079].",
+        "traps": {
+          "1": "Đảo ngược vai trò xử lý giữa hai nhóm công việc.",
+          "2": "Nhầm tưởng mọi hạng mục trong ma trận đều mang lại quick win giống nhau.",
+          "3": "Cho rằng cả hai nhóm đều bị loại bỏ thay vì chỉ bỏ nhóm low impact."
+        },
+        "span": "[T01-079]",
+        "node": "l_quickwin"
+      },
+      {
+        "q": "Điều gì xảy ra khi bạn đưa các yếu tố lên bảng có trục ngang và trục dọc rồi sắp xếp vào các cung?",
+        "options": [
+          "Chúng ta chỉ tìm thấy các hạng mục high effort mà low impact [T01-079]",
+          "Chúng ta làm mất đi các quick win sớm trong công việc [T01-079]",
+          "Chúng ta ngay lập tức thấy ưu tiên luôn nhờ ma trận hiệu quả này [T01-079]",
+          "Chúng ta sẽ phải bỏ tất cả các hạng mục có trên bảng [T01-079]"
+        ],
+        "answer": 2,
+        "why": "Sắp xếp vào các cung trên bảng trục ngang trục dọc giúp chúng ta ngay lập tức thấy ưu tiên luôn [T01-079].",
+        "traps": {
+          "3": "Nhầm lẫn rằng việc dùng bảng là để xóa bỏ mọi thứ thay vì tìm ưu tiên.",
+          "0": "Giới hạn kết quả của bảng chỉ toàn là việc cần bỏ đi.",
+          "1": "Hiểu ngược lại tác dụng của ma trận là làm mất quick win."
+        },
+        "span": "[T01-079]",
+        "node": "l_quickwin"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-079]: High impact – low effort là quick win"
+    ]
+  },
+  "l_dongcam": {
+    "questions": [
+      {
+        "q": "Tại sao bước đồng cảm lại khác biệt so với bước test trong quá trình làm việc với người dùng?",
+        "options": [
+          "Vì test là bước đầu tiên để khảo sát, phỏng vấn và quan sát người dùng.",
+          "Vì đồng cảm chỉ thực hiện thông qua việc đưa sản phẩm hoàn chỉnh cho người dùng trải nghiệm.",
+          "Vì đồng cảm luôn đòi hỏi phải xây dựng sẵn một bản prototype chi tiết trước khi trao đổi.",
+          "Vì đồng cảm là bước đầu để cố gắng hiểu người dùng và xác định vấn đề, trong khi test là bước đưa sản phẩm hoặc ý tưởng cho người dùng."
+        ],
+        "answer": 3,
+        "why": "Đồng cảm là bước đầu cố gắng hiểu người dùng để xác định vấn đề qua survey, phỏng vấn, quan sát, còn test là đưa sản phẩm hoặc ý tưởng cho người dùng [T01-084].",
+        "traps": {
+          "1": "Nhầm lẫn bản chất của bước test với bước đồng cảm [T01-084].",
+          "0": "Gán các hoạt động khảo sát, phỏng vấn của bước đồng cảm sang cho bước test [T01-084].",
+          "2": "Hiểu sai rằng đồng cảm bắt buộc phải có prototype trong khi tư liệu nêu rõ mô tả ý tưởng mà không cần xây dựng hẳn prototype [T01-084]."
+        },
+        "span": "[T01-084]",
+        "node": "l_dongcam"
+      },
+      {
+        "q": "Điều gì xảy ra khi bạn ngồi trao đổi, thấu hiểu người dùng và sau đó mô tả một giải pháp cho họ ngay lúc đó?",
+        "options": [
+          "Đó là việc xây dựng hẳn một bản prototype hoàn chỉnh để người dùng đánh giá.",
+          "Đó là một vòng tròn nhỏ hơn gồm việc đồng cảm, đưa ý tưởng và test diễn ra ngay trong lúc đó.",
+          "Đó là bước test độc lập hoàn toàn không liên quan đến việc đồng cảm với người dùng.",
+          "Đó là giai đoạn khảo sát bằng bảng hỏi (survey) trước khi bắt đầu tạo prototype."
+        ],
+        "answer": 1,
+        "why": "Khi ngồi trao đổi và mô tả giải pháp thì đó là một vòng tròn nhỏ hơn: ngay lập tức đồng cảm, đưa ý tưởng và test trong lúc đấy luôn [T01-084].",
+        "traps": {
+          "2": "Cho rằng việc trao đổi và mô tả giải pháp không liên quan gì đến đồng cảm [T01-084].",
+          "3": "Nhầm tưởng hành động mô tả giải pháp chính là bảng hỏi survey ban đầu [T01-084].",
+          "0": "Hiểu sai rằng việc mô tả giải pháp tương đương với việc xây dựng hẳn prototype [T01-084]."
+        },
+        "span": "[T01-084]",
+        "node": "l_dongcam"
+      },
+      {
+        "q": "Việc mô tả giải pháp trực tiếp cho người dùng trong lúc trao đổi khác với việc xây dựng hẳn prototype ở điểm nào theo tư liệu?",
+        "options": [
+          "Việc xây dựng prototype là bước đầu tiên để đồng cảm thay vì quan sát và phỏng vấn.",
+          "Người dùng không cần bản prototype hoàn chỉnh mà bạn chỉ đang mô tả ý tưởng, nhưng đó vẫn là một bước trong chu trình.",
+          "Việc mô tả giải pháp không phải là một bước test mà là bước khảo sát (survey) bắt buộc.",
+          "Việc mô tả giải pháp chỉ xảy ra sau khi đã hoàn thành xong toàn bộ các bước test sản phẩm."
+        ],
+        "answer": 1,
+        "why": "Người ta bảo không cần prototype — chỉ là bạn không xây dựng hẳn prototype mà đang mô tả thôi, thì nó cũng là một bước đấy [T01-084].",
+        "traps": {
+          "2": "Nhầm lẫn việc mô tả giải pháp với khảo sát dạng survey [T01-084].",
+          "3": "Đảo lộn trình tự thời gian giữa việc mô tả giải pháp và các bước test [T01-084].",
+          "0": "Gán việc xây dựng prototype cho giai đoạn đầu của việc đồng cảm [T01-084]."
+        },
+        "span": "[T01-084]",
+        "node": "l_dongcam"
+      }
+    ],
+    "review": [
+      "Xem lại transcript 01 · [T01-084]: Đồng cảm là bước đầu, khác bước test"
+    ]
   }
 }

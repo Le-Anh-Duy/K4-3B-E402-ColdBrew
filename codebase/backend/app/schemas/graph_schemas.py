@@ -33,6 +33,9 @@ class EvaluateRoundIn(BaseModel):
     # node sâu nhất đã TRƯỢT ở các vòng trước — thiếu nó thì không xác định được
     # chỗ hổng khi vòng hiện tại trả lời đạt (xem docs/data-model.md §9)
     last_failed: Optional[str] = None
+    # Bộ câu do AI sinh nằm trong phiên; thiếu hai khoá này thì chấm theo ngân hàng tĩnh.
+    session_id: Optional[str] = None
+    probe_key: Optional[str] = None
 
 class EvaluateRoundOut(BaseModel):
     decision: str  # locate | escalate | restart
@@ -49,3 +52,17 @@ class EvaluateRoundOut(BaseModel):
     ceiling_label: Optional[str] = None
     scenario: Optional[str] = None      # y_le | muc_nong | muc_duoi_tran | nen_bai | leo
     prompt_key: Optional[str] = None    # system prompt mà luật giao cho AI
+
+class ProbeGenerateIn(BaseModel):
+    session_id: str
+    target_node_id: str
+    round_num: int = 1
+    retry: int = 0
+    purpose: str = "probe"          # probe | retest
+    count: int = 3
+
+class GeneratedProbesOut(ProbesOut):
+    probe_key: str                  # client gửi lại khoá này lúc chấm
+    source: str                     # ai | bank
+    usage: Optional[Dict[str, Any]] = None
+    note: Optional[str] = None

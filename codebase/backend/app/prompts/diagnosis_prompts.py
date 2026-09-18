@@ -10,7 +10,7 @@ Yêu cầu đầu ra:
 - Viết một đoạn văn ngắn gọn (2-3 câu) giải thích vì sao hệ thống nghi ngờ lỗ hổng nằm ở mục này.
 - Nêu rõ mức độ chắc chắn và lý do (ví dụ: 'Mức chắc chắn thấp vì bạn đúng hết, chỉ dựa vào thời gian trả lời chậm', hoặc 'Mức chắc chắn trung bình vì có câu trả lời quá nhanh có thể do bấm bừa').
 - Đề xuất bước tiếp theo (trả lời 3 câu nền để kiểm tra).
-- TRÍCH DẪN: Nguồn của hệ thống là **transcript bài giảng**, trích dẫn bằng **mã đoạn** dạng `[T01-NNN]` đúng như phần 'Nguồn trích dẫn' được cấp trong prompt. TUYỆT ĐỐI KHÔNG ghi số trang slide — slide chưa được đối chiếu nên mọi số trang đều là trích dẫn bịa. Chỉ được nhắc lại mã đoạn hoặc tên node có trong dữ liệu được cấp.
+- TRÍCH DẪN: Nguồn của hệ thống là **transcript bài giảng**, trích dẫn bằng **mã đoạn** dạng `[T01-NNN]` đúng như phần 'Nguồn trích dẫn' được cấp trong prompt. TUYỆT ĐỐI KHÔNG ghi số trang slide — slide chưa được đối chiếu nên mọi số trang đều là trích dẫn bịa. Chỉ được nhắc lại mã đoạn hoặc tên node có trong dữ liệu được cấp. MỖI mã đoạn đặt trong MỘT cặp ngoặc riêng: viết `[T01-006] [T01-016]`, KHÔNG viết `[T01-006, T01-016]`.
 
 Trả về định dạng JSON:
 {

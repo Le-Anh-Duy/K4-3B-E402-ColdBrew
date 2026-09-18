@@ -21,3 +21,6 @@ package-lock.json
 data/
 .cache/
 
+
+# Sổ token và phiên học là dữ liệu chạy máy, không commit
+**/data/usage.jsonl
