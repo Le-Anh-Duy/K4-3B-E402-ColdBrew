@@ -23,7 +23,7 @@ const N = (id, label, parent, spans, conf, extra = {}) => {
 };
 
 const TREE = {
-  root: N('root', 'Day 2 (sáng) · Xác định bài toán kinh doanh cho AI', null, ['T01-001', 'T01-089'], 0.9, {
+  root: N('root', 'Khóa học AI20k · Foundation & AI Product (Day 1 & Day 2)', null, ['T01-001', 'T06-147'], 0.9, {
     compact: [
       'Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]',
       'Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]',
@@ -31,7 +31,7 @@ const TREE = {
     ],
   }),
 
-  // --- DAY 1 (PREREQUISITE TECH FOUNDATION) TỪ transcript-04 & transcript-06 ---
+  // --- DAY 1 (PREREQUISITE TECH FOUNDATION) TỪ transcript-04, transcript-05 & transcript-06 ---
   c0: N('c0', 'Nền tảng Day 1 · Bản chất kỹ thuật của LLM', 'root', ['T04-046', 'T06-136'], 0.9, {
     file: 'transcript-04-clean.md',
   }),
@@ -44,7 +44,7 @@ const TREE = {
   l_hallucination: N('l_hallucination', 'Ảo giác (Hallucination) là tất yếu do bias dữ liệu và autoregressive', 'c0s1', ['T04-048', 'T06-138', 'T06-139'], 0.9, {
     file: 'transcript-06-clean.md',
   }),
-  l_context_rot: N('l_context_rot', 'Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)', 'c0s1', ['T04-051', 'T04-052', 'T06-147'], 0.9, {
+  l_context_rot: N('l_context_rot', 'Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)', 'c0s1', ['T04-051', 'T04-052', 'T05-012', 'T06-147'], 0.9, {
     file: 'transcript-04-clean.md',
   }),
 

@@ -1,15 +1,15 @@
 {
   "root": {
     "id": "root",
-    "label": "Day 2 (sáng) · Xác định bài toán kinh doanh cho AI",
+    "label": "Khóa học AI20k · Foundation & AI Product (Day 1 & Day 2)",
     "parent": null,
     "file": "transcript-01-clean.md",
     "span": [
       "T01-001",
-      "T01-089"
+      "T06-147"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-001] [T01-089]",
+    "page": "transcript-01-clean.md · [T01-001] [T06-147]",
     "compact": [
       "Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]",
       "Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]",
@@ -73,10 +73,11 @@
     "span": [
       "T04-051",
       "T04-052",
+      "T05-012",
       "T06-147"
     ],
     "conf": 0.9,
-    "page": "transcript-04-clean.md · [T04-051] [T04-052] [T06-147]"
+    "page": "transcript-04-clean.md · [T04-051] [T04-052] [T05-012] [T06-147]"
   },
   "c1": {
     "id": "c1",

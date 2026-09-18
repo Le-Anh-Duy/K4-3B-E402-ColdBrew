@@ -70,6 +70,99 @@ function fallbackTarget(records, tree) {
   return { target, hits: hits.map(record => record.node), missed, shaky, candidates, reason: null }
 }
 
+const DAY1_QUESTIONS = [
+  {
+    id: 'd1_q1',
+    node: 'l_probabilistic',
+    q: 'Bản chất quá trình sinh văn bản của các mô hình LLM là gì?',
+    options: [
+      'Dự đoán token tiếp theo theo xác suất thống kê trong không gian toán học, không phải tri thức chắc chắn',
+      'Tra cứu dữ liệu từ một cơ sở dữ liệu bách khoa toàn thư đã lưu sẵn',
+      'Thực thi các luật logic if-else được lập trình sẵn',
+      'Dịch nguyên văn từng từ một từ tiếng Anh sang tiếng Việt',
+    ],
+    answer: 0,
+    why: 'LLM dự đoán token tiếp theo theo xác suất thống kê, không bảo đảm tính đúng đắn tuyệt đối [T04-047] [T06-136].',
+    traps: {
+      '1': 'LLM không tra cứu database tĩnh khi sinh text [T04-047].',
+      '2': 'LLM dựa trên neural network, không phải hệ chuyên gia rule-based.',
+      '3': 'LLM tạo văn bản sinh tự động bằng autoregressive, không chỉ là dịch từ.',
+    },
+  },
+  {
+    id: 'd1_q2',
+    node: 'l_hallucination',
+    q: 'Vì sao hiện tượng ảo giác (hallucination) lại là tất yếu trong các mô hình LLM?',
+    options: [
+      'Do phân phối xác suất và kiến trúc autoregressive, mô hình ưu tiên độ hợp lý ngôn ngữ hơn sự thật tuyệt đối',
+      'Do máy chủ GPU bị quá nhiệt khi tính toán',
+      'Do người dùng đặt câu hỏi quá ngắn',
+      'Do đường truyền mạng không ổn định',
+    ],
+    answer: 0,
+    why: 'Ảo giác sinh ra từ bản chất autoregressive và bias phân phối dữ liệu huấn luyện [T04-048] [T06-138].',
+    traps: {
+      '1': 'Nhiệt độ phần cứng không quyết định bản chất thuật toán.',
+      '2': 'Câu hỏi ngắn có thể thiếu ngữ cảnh nhưng không phải gốc rễ của ảo giác.',
+      '3': 'Đường truyền mạng chỉ ảnh hưởng tới độ trễ, không ảnh hưởng tới trọng số mô hình.',
+    },
+  },
+  {
+    id: 'd1_q3',
+    node: 'l_context_rot',
+    q: 'Vấn đề "Context Rot" và suy giảm chú ý trong cửa sổ ngữ cảnh (Context Window) là gì?',
+    options: [
+      'Khi context quá dài, cơ chế attention bị loãng khiến mô hình dễ bỏ sót hoặc suy diễn sai thông tin ở giữa (lost-in-the-middle)',
+      'File văn bản lưu trữ lâu ngày bị lỗi font',
+      'Mô hình tự động xoá vĩnh viễn dữ liệu sau 24 giờ',
+      'Màn hình hiển thị bị mất chữ do giao diện',
+    ],
+    answer: 0,
+    why: 'Context rot xảy ra khi context quá dài làm suy giảm cơ chế chú ý attention [T04-051] [T06-147].',
+    traps: {
+      '1': 'Không liên quan tới lỗi font file.',
+      '2': 'Không phải chính sách lưu trữ cache.',
+      '3': 'Đây là hiện tượng thuật toán attention, không phải lỗi hiển thị UI.',
+    },
+  },
+  {
+    id: 'd1_q4',
+    node: 'l_probabilistic',
+    q: 'Vì sao câu trả lời trôi chảy, tự tin của LLM vẫn luôn cần được kiểm chứng (Human-in-the-loop)?',
+    options: [
+      'Vì xác suất xuất hiện cao của token không đồng nghĩa với tính đúng đắn của dữ kiện thực tế',
+      'Vì mọi câu trả lời của LLM đều hoàn toàn ngẫu nhiên không theo quy luật',
+      'Vì LLM không thể tạo ra văn bản có nghĩa',
+      'Vì prompt luôn bị mô hình bỏ qua',
+    ],
+    answer: 0,
+    why: 'Mô hình tối ưu hàm loss dự đoán token, không bảo đảm tính đúng của dữ kiện thực tế [T04-047] [T06-136].',
+    traps: {
+      '1': 'LLM tuân theo phân phối có điều kiện, không phải ngẫu nhiên vô nghĩa.',
+      '2': 'LLM tạo văn bản rất tự nhiên, đó chính là lý do con người dễ bị đánh lừa.',
+      '3': 'Prompt là điều kiện đầu vào trực tiếp cho việc dự đoán token.',
+    },
+  },
+  {
+    id: 'd1_q5',
+    node: 'l_context_rot',
+    q: 'Khi tài liệu quá dài vượt quá khả năng xử lý hiệu quả của context window, giải pháp kỹ thuật phù hợp là gì?',
+    options: [
+      'Phân đoạn tài liệu (chunking) và sử dụng truy xuất ngữ nghĩa (RAG) để chỉ đưa đoạn liên quan vào context',
+      'Nhồi toàn bộ tài liệu lặp lại nhiều lần vào prompt',
+      'Chờ mô hình tự đọc trực tiếp từ ổ cứng',
+      'Giảm kích thước font chữ của tài liệu',
+    ],
+    answer: 0,
+    why: 'Chia nhỏ tài liệu và truy xuất đoạn liên quan giúp tận dụng context window hiệu quả và tránh context rot [T04-051] [T05-012].',
+    traps: {
+      '1': 'Nhồi lặp lại làm context rot nặng thêm.',
+      '2': 'Mô hình không thể tự truy cập ổ cứng máy khách.',
+      '3': 'Font chữ không liên quan đến số lượng token.',
+    },
+  },
+]
+
 export const learningService = {
   mode: 'adaptive',
   getConnectionStatus() { return { ...connection } },
@@ -87,16 +180,82 @@ export const learningService = {
     if (graph?.nodes?.root) {
       connection = { state: 'available' }
       const root = graph.nodes.root
-      return [{ id: 'adaptive-backend', title: root.label, label: 'Bài học có cây tri thức', topics: ['Bài ôn chẩn đoán'], chapter: 'AI', source: 'backend' }]
+
+      const allTopics = [
+        'Bài ôn chẩn đoán thích ứng toàn diện (5 câu)',
+        'Chẩn đoán liên môn (Cross-session: Kỹ thuật LLM → Sản phẩm AI)',
+        'Tất cả chủ đề (Toàn bộ 38 node từ transcript 01–06)',
+      ]
+
+      const day1Topics = [
+        'Day 1.1 Cơ chế sinh token xác suất & Ảo giác',
+        'LLM dự đoán next token theo xác suất, không phải tri thức chắc chắn',
+        'Ảo giác (Hallucination) là tất yếu do bias dữ liệu & autoregressive',
+        'Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)',
+      ]
+
+      const day2Topics = [
+        '1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể',
+        '1.2 Product manager và project manager',
+        '2.1 Vì sao làm sản phẩm AI khó hơn',
+        '2.2 Mức độ tự động hoá & Chi phí sai sót (Cost of error)',
+        '3.1 Double Diamond: phân kỳ – hội tụ',
+        '3.2 Làm đúng cái sai vs làm sai cái đúng',
+        '3.3 First principle thinking',
+        '3.4 Kỹ thuật khám phá vấn đề',
+        '4.1 Ma trận tác động – nỗ lực',
+        '4.2 Vòng lặp HCD',
+      ]
+
+      return [
+        {
+          id: 'adaptive-backend',
+          title: root.label || 'Toàn bộ khóa học AI20k · Foundation & AI Product (Day 1 & Day 2 · Transcript 01–06)',
+          label: 'Cây tri thức tổng hợp toàn diện 6 transcript',
+          topics: allTopics,
+          chapter: 'All',
+          source: 'backend',
+        },
+        {
+          id: 'day-01',
+          title: 'Day 01 · Nền tảng kỹ thuật của LLM (Transcript 04, 05, 06)',
+          label: 'Bản chất sinh token xác suất, ảo giác & context window',
+          topics: day1Topics,
+          chapter: 'Day 1',
+          source: 'backend',
+        },
+        {
+          id: 'day-02',
+          title: 'Day 02 · Xác định bài toán kinh doanh cho AI (Transcript 01, 02, 03)',
+          label: 'Double Diamond, bóc tách bài toán, đặc thù sản phẩm & chi phí lỗi',
+          topics: day2Topics,
+          chapter: 'Day 2',
+          source: 'backend',
+        },
+      ]
     }
     connection = { state: 'unavailable' }
     return demoLearningService.getCatalog()
   },
   async startQuiz(config) {
-    if (config.documentId === 'adaptive-backend') {
+    const isBackendDoc = config.documentId === 'adaptive-backend' || config.documentId === 'day-01' || config.documentId === 'day-02'
+    if (isBackendDoc) {
       const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(config.count), apiGetTree(), apiCreateSession()])
-      if (quiz?.length) {
-        const document = { id: config.documentId, title: graph?.nodes?.root?.label || 'Bài ôn chẩn đoán', topics: [config.topic] }
+      const docTitle = config.documentId === 'day-01'
+        ? 'Day 01 · Nền tảng kỹ thuật của LLM (Transcript 04, 05, 06)'
+        : config.documentId === 'day-02'
+        ? 'Day 02 · Xác định bài toán kinh doanh cho AI (Transcript 01, 02, 03)'
+        : (graph?.nodes?.root?.label || 'Toàn bộ khóa học AI20k')
+
+      let rawQuestions = []
+      if (config.documentId === 'day-01') {
+        rawQuestions = DAY1_QUESTIONS.slice(0, config.count || 5)
+      } else if (quiz?.length) {
+        rawQuestions = quiz.slice(0, config.count || 5)
+      }
+
+      if (rawQuestions.length) {
+        const document = { id: config.documentId, title: docTitle, topics: [config.topic] }
         return {
           id: remoteSession?.session_id || `${Date.now()}`,
           remote: !!remoteSession?.session_id,
@@ -104,7 +263,7 @@ export const learningService = {
           topic: config.topic,
           source: 'backend',
           tree: graph?.nodes || {},
-          questions: quiz.slice(0, Number(config.count)).map(question => normalizeQuestion(question, 'backend')),
+          questions: rawQuestions.map(question => normalizeQuestion(question, 'backend')),
         }
       }
     }
@@ -114,8 +273,44 @@ export const learningService = {
   },
   async gradeQuiz(session, picked, times) {
     if (session.source === 'backend') {
-      const result = await apiGradeQuiz(picked, times)
-      if (result?.records) return result.records
+      const isDefaultBackendQuiz = session.questions.length === 5 && session.questions[0].id === 'q1' && session.questions.every(q => q.id.startsWith('q'))
+      if (isDefaultBackendQuiz) {
+        try {
+          const result = await apiGradeQuiz(picked, times)
+          if (result?.records) return result.records
+        } catch (e) {
+          console.warn('apiGradeQuiz fallback to local grading:', e)
+        }
+      }
+
+      return session.questions.map((question, index) => {
+        const answer = picked[index]
+        const sec = times[index] || 0
+        if (answer === null || answer === undefined) {
+          return {
+            node: question.node || question.id,
+            sel: null,
+            correct: false,
+            sec,
+            flag: 'skip',
+            answer: question.answer,
+            why: question.why || '',
+            trap: null,
+          }
+        }
+        const correct = answer === question.answer
+        const trap = (!correct && question.traps) ? question.traps[String(answer)] : null
+        return {
+          node: question.node || question.id,
+          sel: answer,
+          correct,
+          sec,
+          flag: correct ? (sec > 25 ? 'slow' : 'ok') : (sec < 3 ? 'rush' : 'wrong'),
+          answer: question.answer,
+          why: question.why || '',
+          trap,
+        }
+      })
     }
     return Promise.all(session.questions.map(async (question, index) => {
       const answer = picked[index]
