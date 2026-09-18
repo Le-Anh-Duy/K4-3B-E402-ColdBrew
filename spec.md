@@ -40,12 +40,6 @@ Form *"Làm sai rồi học gì tiếp?"*, **n = 31**, học viên trong khoá. 
 - **[T10883]** *"em vẫn chưa hiểu rõ sự khác biệt của agent và llm"*
 - **[T10728]** *"bước 2 là gì tôi đang chưa hiểu, tại sao lại cộng trọng số và cộng vào đâu"*
 
-### Ba kết luận
-
-1. **Công cụ hiện tại giảng mà không đo.** 87% lượt dùng một nước đi duy nhất là giảng lại, hỏi ngược 0,2%; hệ quả là 29% học viên quay lại cùng một mục ở dịp khác. Chỗ trống là bước **đo trước khi giảng**, và đó là lát cắt §4.
-2. **Phải đo chứ không hỏi được.** Hai ô ghi nhận "có hiểu không" đều gần như rỗng (0,3% và 0,2%), trong khi khảo sát Q5 có 54,8% tự nhận vẫn chưa hiểu. Học viên không tự khai.
-3. **Nhấn định vị hơn là lộ trình.** Q2 cho thấy *"Mình đang yếu kiến thức nào"* được 77,4% chọn, còn *"Nên học lại phần nào trước"* chỉ 38,7%. Lát cắt §4 gồm cả hai; nửa định vị có bằng chứng mạnh hơn. Đề C1 vẫn yêu cầu phần gợi ý ôn nên giữ, nhưng demo và slide nên mở bằng phần định vị kèm căn cứ.
-
 ### Hạn chế của bằng chứng
 
 - **"Quay lại cùng một mục" là hành vi, không phải nguyên nhân.** Nó không chứng minh học viên chưa hiểu, càng không chứng minh hổng prerequisite; data không có nhãn nào để đối chiếu. Mining đủ để kết luận **bài toán tồn tại**, không đủ để nói **chỗ hổng nằm ở đâu**, và sản phẩm cũng không dựa vào nó cho việc đó (§4).
@@ -63,7 +57,9 @@ Ba ứng viên cân nhắc trên cùng một bộ data (K4, đã lọc như §1)
 
 - **Loại A, vì thiếu bằng chứng chứ không phải thiếu giá trị.** Cả 13.494 lượt trong pack đều là học viên hỏi tutor, không có dữ liệu nào về giảng viên soạn quiz, nên không định lượng được cả ba cột đầu. Nhóm cũng không phải người dùng thật của nó.
 - **Loại B, vì số mạnh nhưng lệch job.** 33% lớn hơn 29%, nhưng B chỉ sửa cách trình bày câu trả lời, không trả lời được câu [T10291] *"mình nên ôn phần nào trước?"*. Thêm nữa chỉ 0,3% lượt có rating, nên **không có cách đo B có hiệu quả hay không**.
-- **Chọn C, vì mining và khảo sát chỉ vào cùng một chỗ.** Công cụ hiện tại giảng lại ở 87% lượt và hỏi ngược 0,2%, hệ quả đo được là 29% quay lại. C chèn vào đúng chỗ trống đó: đo trước, giảng sau. Khảo sát xác nhận từ phía học viên, thứ họ muốn nhất là *"mình đang yếu kiến thức nào"* (Q2, 77,4%) và thứ cản họ nhiều nhất là *"không biết mình thiếu kiến thức nào"* (Q4, 54,8%). Khác B, C có tiêu chí thành công đo được ngay trong sản phẩm (§7).
+- **Chọn C, vì mining và khảo sát chỉ vào cùng một chỗ.** Tutor hiện tại chỉ có một nước đi là giảng lại và gần như không hỏi ngược (§1), nên C chèn vào đúng chỗ trống: đo trước, giảng sau. Khảo sát xác nhận từ phía học viên, thứ họ muốn nhất là *"mình đang yếu kiến thức nào"* (Q2, 77,4%) và thứ cản họ nhiều nhất chính là Q4. Khác B, C có tiêu chí thành công đo được ngay trong sản phẩm (§7).
+  - **Phải đo chứ không hỏi được.** Hai ô ghi nhận "có hiểu không" trong hệ thống hiện tại đều gần như rỗng, trong khi hơn một nửa số người khảo sát tự nhận vẫn chưa hiểu (Q5). Học viên không tự khai, nên cách duy nhất còn lại là đo bằng quiz.
+  - **C có hai nửa, và chúng không mạnh ngang nhau.** Nhu cầu *định vị* được 77,4% chọn, còn nhu cầu *thứ tự ôn* chỉ 38,7% (Q2). Đề C1 yêu cầu cả hai nên giữ cả hai, nhưng demo và slide nên mở bằng phần định vị kèm căn cứ.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 
@@ -171,7 +167,7 @@ Bốn lớp theo guide §2.5: **lớp 1** nguồn sự thật, **lớp 2** mơ h
 | 3, ngoài phạm vi hoặc thẩm quyền | không có case nào | ✗ **thiếu phép đo** |
 | 4, đặc thù domain | C06, C07, C13, C14, C15, C17, C21, C22 | ✓ |
 
-Lớp 3 là lỗ hổng lớn nhất, nhưng là lỗ hổng **đo lường** chứ không phải hiện thực: luồng chat tồn tại (`/ai/chat/message`) và prompt có cấm dùng kiến thức ngoài tư liệu, song chưa case nào kiểm ràng buộc đó có giữ được khi bị hỏi xoáy hay không. Một dòng trong prompt chưa phải là hành vi đã được chứng minh.
+Lớp 3 là lỗ hổng lớn nhất, nhưng là lỗ hổng **đo lường** chứ không phải hiện thực: một dòng ràng buộc trong prompt chưa phải là hành vi đã được chứng minh.
 
 ## §6. Bốn đường đi của trải nghiệm
 
@@ -181,7 +177,7 @@ Năm đường đầu đã bấm được trong `mockup/`. Đường lớp 3 m�
 - **Low-confidence (lớp 2):** không có câu sai nhưng có câu đúng mà chậm hơn 25s, hệ thống nêu rõ đang lấy thời gian trả lời làm tín hiệu rồi mới hỏi thêm; câu sai dưới 3s bị gắn cờ "có thể bấm bừa" thay vì coi là hổng chắc chắn.
 - **Failure hoặc không căn cứ (lớp 1):** hai tầng chặn. Thứ nhất, luật không gom được tín hiệu về node nào thì màn `Refuse` nêu lý do và không chẩn đoán bừa. Thứ hai, AI trả về nội dung trích sai phạm vi hoặc sai khung thì `validate.py` bắt được; khi API lỗi hoặc bị giới hạn tốc độ, trang hiện thẳng lý do rồi rơi về text mock, không trả nội dung rỗng trong im lặng.
 - **Correction (user sửa):** "↻ Làm lại vòng này" và "Mình tự ôn được" cho phép học viên bác bỏ chẩn đoán. Lựa chọn đó ghi vào dấu vết, và lần làm lại không xoá lịch sử.
-- **Khi bị đòi ngoài phạm vi (lớp 3):** phạm vi nêu ở màn đầu kèm badge nguồn dữ liệu, và `chat_prompts.py` quy tắc 3 cấm dùng kiến thức ngoài tư liệu được cấp. Nhưng chưa có case nào kiểm, và trang mock chưa nối endpoint chat, nên đường này hiện chỉ tồn tại ở backend (§7).
+- **Khi bị đòi ngoài phạm vi (lớp 3):** phạm vi nêu ở màn đầu kèm badge nguồn dữ liệu, còn ràng buộc nội dung nằm trong prompt của backend (§5, kịch bản 8). Đường này chưa nối vào trang và chưa có phép đo, xem §7.
 - **Case đặc thù domain (lớp 4):** nhiều câu sai gom về node cha chung và chỉ chẩn đoán nhánh nhiều tín hiệu nhất; chạm gốc hoặc quá 3 vòng thì chuyển sang "học lại cả bài" kèm compact 3 ý.
 
 ## §7. Kiểm thử
@@ -204,7 +200,7 @@ Bảy ngưỡng dưới đây **chốt tại CP4 và không sửa sau mốc này
 
 Ba ngưỡng đang đặt **cao hơn kết quả đã biết**: ngưỡng 1 đặt 90% khi đang 80%, ngưỡng 4 đặt 70% khi đang 55%, ngưỡng 6 đặt 80% khi chưa có số nào. Nếu đặt cho vừa kết quả thì đã đặt 75% và 50%.
 
-**Một giả định chưa có neo:** `SLOW_SEC = 25` và `RUSH_SEC = 3` là nhóm tự chọn. Data pack có thời gian tutor trả lời, không có thời gian học viên làm quiz. Hai con số này quyết định toàn bộ tín hiệu đầu vào của ngưỡng 2 và 3 nhưng không dựa trên dữ liệu nào.
+**Một giả định chưa có neo:** `SLOW_SEC = 25` và `RUSH_SEC = 3` là nhóm tự chọn, không dựa trên dữ liệu nào, mà lại quyết định toàn bộ tín hiệu đầu vào của ngưỡng 2 và 3.
 
 ### Golden set
 
@@ -250,13 +246,11 @@ Hai ngưỡng trượt là 1 và 4, ba ngưỡng chưa đo là 5, 6, 7. Theo gui
 | R1 | 18/9 | **20/20 = 100%** | Cây dựng lại từ transcript và 2 luật mới |
 | R2 | 18/9 | **22/22 = 100%** | Thêm case, tách 4 case `xfail` ra khỏi tỉ lệ |
 
-R0 để lộ 3 lỗ hổng: C07 thiếu cạnh `prereq`, C09 và C10 chưa biết từ chối chẩn đoán. Cả ba đã sửa, xem §9. Con số 100% là kết quả trên **chính bộ case nhóm tự soạn**, nên nó chứng minh luật khớp đặc tả của nhóm chứ không chứng minh đặc tả đúng. Đó là việc của ngưỡng 6.
+R0 để lộ 3 lỗ hổng: C07 thiếu cạnh `prereq`, C09 và C10 chưa biết từ chối chẩn đoán. Cả ba đã sửa, xem §9. Con số 100% chứng minh luật khớp đặc tả của nhóm chứ không chứng minh đặc tả đúng, và đó là việc của ngưỡng 6.
 
-**Dẫn nguồn, 20 lượt qua endpoint thật** (`gemini-3.5-flash-lite`, `POST /ai/plan/generate`, đóng băng ở `eval/grounding.json`): **16/20 = 80%**, dưới ngưỡng 1.
+**Dẫn nguồn, 20 lượt qua endpoint thật** (`gemini-3.5-flash-lite`, `POST /ai/plan/generate`, đóng băng ở `eval/grounding.json`). Bốn lượt trượt gồm 3 lượt trích mã đoạn ngoài phạm vi tư liệu được cấp, cả ba rơi vào kịch bản "học lại cả bài" nơi tư liệu cấp rộng nhất, và 1 lượt câu tự kiểm sai định dạng. Không lượt nào bịa mã đoạn không tồn tại nên điều kiện cứng vẫn giữ. Lỗi dồn vào một kịch bản chứ không rải đều, tức đây là lỗi **phạm vi tư liệu cấp cho prompt** chứ không phải mô hình bịa. Hướng sửa sau CP4 là thu hẹp tư liệu cấp cho kịch bản `nen_bai`.
 
-Bốn lượt trượt gồm 3 lượt trích mã đoạn ngoài phạm vi tư liệu được cấp, cả ba rơi vào kịch bản "học lại cả bài" nơi tư liệu cấp rộng nhất, và 1 lượt câu tự kiểm sai định dạng. Không lượt nào bịa mã đoạn không tồn tại nên điều kiện cứng vẫn giữ. Lỗi dồn vào một kịch bản chứ không rải đều, tức đây là lỗi **phạm vi tư liệu cấp cho prompt** chứ không phải mô hình bịa. Hướng sửa sau CP4 là thu hẹp tư liệu cấp cho kịch bản `nen_bai`.
-
-**Hữu ích, 11/20 = 55%**, khoảng cách lớn nhất so với ngưỡng. Chấm bằng LLM mạnh hơn, chưa có người chấm. Chín lượt trượt cho thấy ràng buộc chống bịa đang quá chặt: mô hình giữ an toàn bằng cách bám chữ trong tư liệu, nên lúc cần giảng thì chỉ trích dẫn.
+**Hữu ích, 11/20 = 55%**, chấm bằng LLM mạnh hơn và chưa có người chấm. Chín lượt trượt cho thấy ràng buộc chống bịa đang quá chặt: mô hình giữ an toàn bằng cách bám chữ trong tư liệu, nên lúc cần giảng thì chỉ trích dẫn.
 
 | Nhóm lỗi | Số lượt | Ví dụ |
 |---|---|---|
@@ -282,14 +276,14 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 | Chỗ chưa xong | Trạng thái | Ảnh hưởng |
 |---|---|---|
 | **Hai người chấm độc lập** | `eval/review/` có 2 file nhưng cùng một người, và cả hai gắn hash câu trả lời cũ nên bị loại khỏi tổng hợp. Thực chất **0/20 đã chấm hợp lệ** | Ngưỡng 6 chưa đo được, kéo theo 4 và 5 chưa có xác nhận của người |
-| **Trang mock chỉ nối 1 trong 4 route AI** | Chỉ `/ai/plan/generate` là AI thật. `/ai/explain/*`, `/ai/diagnosis/*`, `/ai/chat/*` có ở backend nhưng trang không gọi | Ngưỡng 7 chưa đo được trên đường AI 1, và §4 vì vậy khai mức Mock |
+| **Trang mock chỉ nối 1 trong 4 route AI** | `/ai/explain/*`, `/ai/diagnosis/*`, `/ai/chat/*` có ở backend nhưng trang không gọi | Ngưỡng 7 chưa đo được trên đường AI 1, và §4 vì vậy khai mức Mock |
 | **Quiz chỉ chạm 5 trong 30 node** | 5 câu map vào 5 lá dưới 3 node cha, 25 node còn lại không có đường nào chạm tới | Trần trên của ngưỡng 2 và 3: 100% là 100% *trong phạm vi 5 lá đó*. Đang mở rộng ngân hàng câu hỏi ở backend |
 | **Cây do mô hình sinh, một người chốt** | 30 node, 5 cạnh `prereq`, `conf` (26 node 0,9 và 6 node 0,7) chưa qua người thứ hai đối chiếu với transcript | Provenance chiếm 25% rubric nhưng dựa trên phép ánh xạ node sang mã đoạn chưa kiểm chéo |
-| **`SLOW_SEC=25` và `RUSH_SEC=3`** | Nhóm tự chọn, không có dữ liệu nào đối chiếu vì data pack không ghi thời gian học viên làm quiz | Quyết định toàn bộ tín hiệu đầu vào của ngưỡng 2 và 3. Hai số này sai thì con số 100% mất ý nghĩa |
+| **`SLOW_SEC=25` và `RUSH_SEC=3`** | Data pack có thời gian tutor trả lời nhưng không có thời gian học viên làm quiz, nên không có gì để đối chiếu | Hai số này sai thì con số 100% của ngưỡng 2 mất ý nghĩa |
 | **Log khảo sát** | Đã khảo sát n=31, đạt ngưỡng ít nhất 20 người, nhưng repo mới có bản tổng hợp biểu đồ | Chuẩn A chưa trọn vẹn, cần xuất CSV của Google Form vào `validation/` |
 | **Đường chat ngoài phạm vi (lớp 3)** | Ràng buộc có trong `chat_prompts.py`, nhưng không case nào kiểm và trang mock chưa nối `/ai/chat/message` | Lớp 3 của §5 chưa có phép đo, chưa demo được đường này |
 | **4 case `xfail` C23–C26** | Chưa build: engine không mang lịch sử vòng, trạng thái sau retest chưa vào phần tư vấn, prompt không nhận từng câu nền đã sai, resume chưa có case kiểm | Không tính vào ngưỡng 2, đưa vào backlog §8 |
-| **Sinh câu hỏi nền có điều kiện** | Chưa làm, xem §4. `PROBES` là bộ câu tĩnh chung cho cả node cha | Làm ngưỡng 2 và 3 kém chắc chắn hơn con số 100% thể hiện |
+| **Sinh câu hỏi nền có điều kiện** | Chưa làm, mô tả ở §4 | Làm ngưỡng 2 và 3 kém chắc chắn hơn con số 100% thể hiện |
 | **Case từ chatlog thật** | Guide §2.6 yêu cầu ít nhất 10 trong 20 case lấy hoặc phát triển từ chatlog thật, nhưng cả 26 case hiện tại đều do nhóm tự dựng | Bộ case chưa đạt cơ cấu guide yêu cầu |
 
 ## §8. Phân công & kế hoạch
