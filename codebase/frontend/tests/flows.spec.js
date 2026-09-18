@@ -133,6 +133,7 @@ test('registration validation and mobile layout remain intact', async ({ page })
   await page.getByLabel('Email', { exact: true }).fill('minh@example.com')
   await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
   await page.getByLabel('Xác nhận mật khẩu').fill('wrong123')
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true)
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click()
   await expect(page.getByRole('alert')).toHaveText('Mật khẩu xác nhận chưa khớp.')
   await page.getByLabel('Xác nhận mật khẩu').fill('demo123')
@@ -150,6 +151,9 @@ test('desktop visual shell remains the current ColdBrew UI', async ({ page }) =>
   await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
   await page.getByRole('button', { name: 'Đăng nhập' }).click()
   await expect(page.getByRole('heading', { name: 'Bạn muốn ôn tập nội dung nào?' })).toBeVisible()
+  await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
+  await expect(page.locator('.app-topbar')).toHaveCSS('position', 'sticky')
+  expect(await page.locator('.app-topbar').evaluate(element => element.getBoundingClientRect().top)).toBe(0)
 })
 
 test('quiz wheel exposes 5–20 and updates the selected question count', async ({ page }) => {
