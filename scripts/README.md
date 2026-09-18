@@ -1,5 +1,7 @@
 # scripts/ — bộ đo, chia theo người
 
+> Ý nghĩa dữ liệu mà các script này đọc: **[`docs/data-model.md`](../docs/data-model.md)**
+
 Dữ liệu nằm ở `eval/`. Sửa `mockup/data.js` xong thì chạy lại `node scripts/export_graph.js`.
 
 | Suite | Lệnh | Đo gì | Trạng thái |

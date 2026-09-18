@@ -1,5 +1,7 @@
 # eval/ — DỮ LIỆU của bộ đo
 
+> Ý nghĩa từng trường dữ liệu, tên node, tên cạnh: **[`docs/data-model.md`](../docs/data-model.md)**
+
 Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
 
 | File | Nội dung |

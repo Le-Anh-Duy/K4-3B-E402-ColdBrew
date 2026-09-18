@@ -20,6 +20,8 @@
 
 Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, không sửa code — phòng khi rate-limit lúc demo.
 
+Mô hình dữ liệu (ý nghĩa node · cạnh · provenance · nhãn eval): **`docs/data-model.md`**.
+
 Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, chạy được trên GitHub Pages. Sơ đồ luồng và quy tắc chẩn đoán: `mockup/flow.md`.
 
 **Cây tri thức (nhóm tự dựng, đề không cấp graph mẫu):** 30 node dựng tay từ `data/vlearn-pack/transcript/transcript-01-clean.md` — *Day 2 (sáng) · Xác định bài toán kinh doanh cho AI*, 89 đoạn `[T01-001…089]`. Mỗi node mang `file` · `span` (mã đoạn) · `conf` (0.9 nói thẳng trong đoạn · 0.7 nhóm từ nhiều đoạn) và cạnh `prereq` tách riêng khỏi quan hệ mục lục. Slide d2 **chưa đối chiếu trang nên không ghi số trang** — thà thiếu còn hơn trích sai. Repo **không chứa data pack**, chỉ trích mã đoạn.

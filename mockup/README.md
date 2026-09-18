@@ -1,5 +1,7 @@
 # Mockup CP2 · ColdBrew
 
+> Cây tri thức, tên node, tên cạnh nghĩa là gì: **[`docs/data-model.md`](../docs/data-model.md)**
+
 Bản mock **bấm được**, mock data, chưa gọi AI.
 
 ```
