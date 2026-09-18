@@ -23,7 +23,7 @@ def generate_hypothesis(body: DiagnosisHypothesisIn):
     tree = get_tree()
     node_info = tree.get(body.target_node_id, {})
     node_label = node_info.get("label", body.target_node_id)
-    slide_page = node_info.get("page", "Slide bài giảng")
+    slide_page = node_info.get("page", "(chưa có mã đoạn nguồn)")
 
     hits_desc = [
         f"- {h.label} (cờ: {h.flag}, thời gian: {h.sec}s)"

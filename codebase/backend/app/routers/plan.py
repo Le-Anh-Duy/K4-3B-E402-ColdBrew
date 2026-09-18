@@ -42,7 +42,7 @@ def generate_remediation_plan(body: PlanGenerateIn):
 
     target_info = tree.get(body.target_node_id, {}) if body.target_node_id else {}
     target_label = target_info.get("label", "Tổng quan bài giảng")
-    target_page = target_info.get("page", "Slide bài giảng")
+    target_page = target_info.get("page", "(chưa có mã đoạn nguồn)")
 
     # Mặc định lấy từ review trong probes.json nếu có
     default_reviews = (probes_data.get(body.target_node_id, {})).get("review", [f"Xem lại {target_page}"])
