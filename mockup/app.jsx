@@ -2,7 +2,7 @@ const { useState, useEffect, useRef } = React;
 
 const SAVE_KEY = 'coldbrew-mock-session';
 // luật chẩn đoán nằm ở engine.js — dùng chung với bộ eval trong eval/
-const { SLOW_SEC, RUSH_SEC, MAX_ROUNDS, grade, weakSignals, pickTarget, roundDecision } = ENGINE;
+const { SLOW_SEC, RUSH_SEC, MAX_ROUNDS, grade, weakSignals, pickTarget, roundDecision, retestPassed, adviceLevel } = ENGINE;
 
 const parentOf = (id) => TREE[id].parent;
 const childrenOf = (id) => Object.values(TREE).filter((n) => n.parent === id);
@@ -34,7 +34,9 @@ const BLANK = {
   nextTarget: null,
   trace: [],
   status: {}, // nodeId -> 'ok' | 'shaky' | 'weak' | 'probing'
-  verdict: null, // located | restart | self
+  verdict: null, // located | restart | self | accepted
+  retestRecs: [], // kết quả bài kiểm tra lại sau khi ôn
+  feedback: null, // {stars, reasons[], node} — đánh giá LỜI TƯ VẤN, không phải mastery
 };
 
 const FLAG_TEXT = {
@@ -88,7 +90,9 @@ function App() {
               {s.stage === 'analysis' && <Analysis s={s} go={go} think={think} />}
               {s.stage === 'probe' && <Probe s={s} think={think} />}
               {s.stage === 'review' && <Review s={s} go={go} think={think} />}
-              {s.stage === 'plan' && <Plan s={s} go={go} />}
+              {s.stage === 'plan' && <Plan s={s} go={go} think={think} />}
+              {s.stage === 'retest' && <Retest s={s} think={think} />}
+              {s.stage === 'retestDone' && <RetestDone s={s} go={go} />}
             </>
           )}
         </main>
@@ -174,6 +178,8 @@ const labelOfStage = (st) =>
     probe: 'đang chẩn đoán',
     review: 'đang xem kết quả vòng chẩn đoán',
     plan: 'đã có lộ trình',
+    retest: 'đang kiểm tra lại sau khi ôn',
+    retestDone: 'đã kiểm tra lại',
   }[st] || st);
 
 /* ---------- chạy bộ câu hỏi: mỗi màn một câu, đếm giờ, cho bỏ qua ---------- */
@@ -895,7 +901,7 @@ function RoundFeedback({ s, node, qs, bad, skipped }) {
 
 /* ---------- lộ trình ---------- */
 
-function Plan({ s, go }) {
+function Plan({ s, go, think }) {
   const node = TREE[s.target];
   const restart = s.verdict === 'restart';
   return (
@@ -937,6 +943,42 @@ function Plan({ s, go }) {
         </p>
       )}
 
+      <Advice s={s} go={go} />
+
+      <h3>Ôn xong rồi thì sao?</h3>
+      <div className="row">
+        <button
+          className="primary"
+          onClick={() =>
+            think(
+              [`Lấy ${(PROBES[s.target] || []).length} câu kiểm tra lại của "${node.label}"`, 'Lần này phải đúng hết mới xoá cờ hổng'],
+              {
+                stage: 'retest',
+                trace: [...s.trace, { t: 'Học viên báo', d: `Đã ôn xong "${node.label}" → kiểm tra lại` }],
+              },
+              1200
+            )
+          }
+        >
+          Mình ôn xong rồi — kiểm tra lại →
+        </button>
+        <button
+          className="ghost"
+          onClick={() =>
+            go({
+              stage: 'analysis',
+              trace: [...s.trace, { t: 'Học viên báo', d: 'Ôn xong vẫn chưa ổn — quay lại hỏi thêm' }],
+            })
+          }
+        >
+          Chưa ổn — cần thêm
+        </button>
+      </div>
+      <p className="hint">
+        Hệ thống không xoá cờ hổng chỉ vì bạn nói đã ổn — phải qua bài kiểm tra lại. Người tự thấy ổn
+        mà vẫn hổng chính là tình huống sản phẩm này sinh ra để bắt.
+      </p>
+
       <div className="card">
         <h3>Vì sao bạn nhận lộ trình này</h3>
         <ol className="trace">
@@ -961,6 +1003,274 @@ function Plan({ s, go }) {
   );
 }
 
+/* ---------- tư vấn ôn tập: rule chốt MỨC, nội dung sẽ do Gemini sinh ---------- */
+
+const LEVEL_META = {
+  muc: { ten: 'Ôn một mục', phut: '~5 phút' },
+  chuong: { ten: 'Ôn cả chương', phut: '~15 phút' },
+  bai: { ten: 'Học lại cả bài', phut: '~45 phút' },
+};
+
+function Advice({ s }) {
+  const [state, setState] = useState(null); // null | 'loading' | 'shown'
+  const node = TREE[s.target];
+  const level = adviceLevel(s.target, s.verdict, TREE);
+  const meta = LEVEL_META[level];
+
+  const run = () => {
+    setState('loading');
+    setTimeout(() => setState('shown'), 1500);
+  };
+
+  if (state === null)
+    return (
+      <div className="card">
+        <h3>Ôn thế nào?</h3>
+        <p className="muted">
+          Mức đã chốt: <b>{meta.ten}</b> ({meta.phut}) — do vị trí chỗ hổng trên cây quyết định, không
+          phải do AI chọn.
+        </p>
+        <button className="primary" onClick={run}>
+          ✨ Tư vấn cách ôn
+        </button>
+      </div>
+    );
+
+  if (state === 'loading')
+    return (
+      <p className="inline-load">
+        <span className="spinner sm" /> Đang soạn cách ôn mức "{meta.ten.toLowerCase()}"…
+      </p>
+    );
+
+  return (
+    <div className="card shaky">
+      <h3>
+        {meta.ten} · {meta.phut}
+      </h3>
+      <AdviceBody level={level} node={node} />
+      <p className="hint">
+        Nội dung mock. Khi nối Gemini, phần chữ này do model viết nhưng khung vẫn cố định theo mức, và
+        mỗi ý bắt buộc gắn một trang slide — model không được nhắc khái niệm ngoài cây.
+      </p>
+    </div>
+  );
+}
+
+function AdviceBody({ level, node }) {
+  const probeQ = (id) => (PROBES[id] || [])[0];
+
+  if (level === 'muc')
+    return (
+      <>
+        <p>
+          <b>1 · Đọc lại {node.page}</b> — tập trung vào ý "{node.label}".
+        </p>
+        <p>
+          <b>2 · Nói lại bằng lời của bạn</b> trong một câu, không nhìn slide.
+        </p>
+        <p>
+          <b>3 · Tự kiểm:</b> {probeQ(node.id) ? probeQ(node.id).q : 'trả lời lại câu bạn đã sai'}
+        </p>
+        <Source node={node} />
+      </>
+    );
+
+  if (level === 'chuong') {
+    const kids = childrenOf(node.id);
+    return (
+      <>
+        <p>
+          Đi theo đúng thứ tự này, vì mục sau dựa trên mục trước — nhảy cóc là lặp lại đúng chỗ vừa
+          sai:
+        </p>
+        <ol>
+          {kids.map((k) => (
+            <li key={k.id}>
+              <b>{k.label}</b> — {k.page}
+              {probeQ(k.id) && (
+                <>
+                  <br />
+                  <span className="muted">Tự kiểm: {probeQ(k.id).q}</span>
+                </>
+              )}
+            </li>
+          ))}
+        </ol>
+        <Source node={node} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p>
+        <b>Ba ý phải nắm trước đã:</b>
+      </p>
+      <ul>
+        {TREE.root.compact.map((c, i) => (
+          <li key={i}>{c}</li>
+        ))}
+      </ul>
+      <p>
+        <b>Rồi đi lại theo thứ tự chương:</b>
+      </p>
+      <ol>
+        {childrenOf('root').map((c) => (
+          <li key={c.id}>
+            {c.label} — {c.page}
+          </li>
+        ))}
+      </ol>
+      <p>
+        <b>Xong thì làm lại toàn bộ quiz 5 câu</b> để xem còn hổng chỗ nào.
+      </p>
+      <Source node={TREE.root} />
+    </>
+  );
+}
+
+/* ---------- kiểm tra lại sau khi ôn + đánh giá lời tư vấn ---------- */
+
+function Retest({ s, think }) {
+  const node = TREE[s.target];
+  const qs = PROBES[s.target] || [];
+
+  const done = (picked, times) => {
+    const recs = grade(qs, picked, times);
+    const passed = retestPassed(recs);
+    const bad = recs.filter((r) => !r.correct).length;
+    think(
+      [`Chấm ${qs.length} câu kiểm tra lại`, passed ? 'Đúng hết → xoá cờ hổng' : `Còn sai ${bad} câu → giữ cờ hổng`],
+      {
+        stage: 'retestDone',
+        retestRecs: recs,
+        status: { ...s.status, [s.target]: passed ? 'ok' : 'weak' },
+        trace: [
+          ...s.trace,
+          {
+            t: 'Kiểm tra lại',
+            d: passed
+              ? `Đúng ${qs.length}/${qs.length} → xác nhận đã nắm "${node.label}", xoá cờ hổng`
+              : `Còn sai ${bad}/${qs.length} → học viên tưởng đã ổn nhưng chưa`,
+          },
+        ],
+      },
+      1400
+    );
+  };
+
+  return (
+    <section key={'rt' + s.target}>
+      <h2>Kiểm tra lại · {node.label}</h2>
+      <p className="muted">
+        Lần này phải đúng cả {qs.length} câu mới xoá được cờ hổng — chặt hơn vòng chẩn đoán.
+      </p>
+      <Runner items={qs} name={'rt' + s.target} source={node} onDone={done} submitLabel="Nộp" />
+    </section>
+  );
+}
+
+function RetestDone({ s, go }) {
+  const node = TREE[s.target];
+  const passed = retestPassed(s.retestRecs);
+  const wrongNodes = s.retestRecs.filter((r) => !r.correct);
+
+  return (
+    <section>
+      <h2>{passed ? `Đã nắm: ${node.label}` : 'Bạn thấy ổn rồi, nhưng chưa'}</h2>
+
+      <div className={'card ' + (passed ? 'ok' : 'bad')}>
+        {passed ? (
+          <p>
+            Đúng cả {s.retestRecs.length} câu sau khi ôn. Cờ hổng ở "{node.label}" đã được xoá, node
+            chuyển xanh trên cây bên phải.
+          </p>
+        ) : (
+          <p>
+            Còn sai {wrongNodes.length}/{s.retestRecs.length} câu ở phần nền của "{node.label}". Cờ
+            hổng giữ nguyên — đây đúng là tình huống tự đánh giá không khớp với thực tế.
+          </p>
+        )}
+        <Source node={node} />
+      </div>
+
+      <Answers items={PROBES[s.target] || []} recs={s.retestRecs} />
+
+      <Rating s={s} go={go} />
+
+      <div className="row">
+        {!passed && (
+          <button
+            className="primary"
+            onClick={() => go({ stage: 'plan', trace: [...s.trace, { t: 'Quay lại', d: 'Ôn tiếp theo lộ trình cũ' }] })}
+          >
+            Xem lại lộ trình ôn
+          </button>
+        )}
+        <button className="ghost" onClick={() => go({ stage: 'home' })}>
+          Về đầu
+        </button>
+      </div>
+    </section>
+  );
+}
+
+const REASONS = ['chung chung', 'khó hiểu', 'không đúng chỗ mình hổng', 'vừa đủ, dùng được'];
+
+function Rating({ s, go }) {
+  const [stars, setStars] = useState(s.feedback ? s.feedback.stars : 0);
+  const [reasons, setReasons] = useState(s.feedback ? s.feedback.reasons : []);
+  const sent = !!s.feedback;
+
+  const toggle = (r) =>
+    setReasons(reasons.includes(r) ? reasons.filter((x) => x !== r) : [...reasons, r]);
+
+  const send = () =>
+    go({
+      feedback: { stars, reasons, node: s.target },
+      trace: [
+        ...s.trace,
+        { t: 'Học viên chấm lời tư vấn', d: `${stars}/5${reasons.length ? ' · ' + reasons.join(', ') : ''}` },
+      ],
+    });
+
+  if (sent)
+    return (
+      <div className="card">
+        <h3>Cảm ơn</h3>
+        <p className="muted">
+          Bạn chấm lời tư vấn {s.feedback.stars}/5
+          {s.feedback.reasons.length ? ` · ${s.feedback.reasons.join(', ')}` : ''}. Điểm này đo **lời
+          tư vấn**, không đổi trạng thái đã nắm hay chưa của bạn.
+        </p>
+      </div>
+    );
+
+  return (
+    <div className="card">
+      <h3>Lời tư vấn ôn tập lúc nãy có dùng được không?</h3>
+      <div className="stars">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button key={n} className={'star' + (n <= stars ? ' on' : '')} onClick={() => setStars(n)}>
+            ★
+          </button>
+        ))}
+      </div>
+      <div className="row">
+        {REASONS.map((r) => (
+          <button key={r} className={'chip' + (reasons.includes(r) ? ' on' : '')} onClick={() => toggle(r)}>
+            {r}
+          </button>
+        ))}
+      </div>
+      <button className="primary" disabled={!stars} onClick={send}>
+        Gửi đánh giá
+      </button>
+    </div>
+  );
+}
+
 /* ---------- xuất phiên thành case cho bộ eval ---------- */
 
 function ExportCase({ s, blind }) {
@@ -977,6 +1287,9 @@ function ExportCase({ s, blind }) {
       why: 'ĐIỀN: theo bạn hệ thống PHẢI chỉ ra chỗ nào, vì sao?',
     };
     if (!blind && Object.keys(s.probeLog || {}).length) c.probes = s.probeLog;
+    if (!blind && s.retestRecs.length)
+      c.retest = { node: s.target, passed: retestPassed(s.retestRecs), answers: s.retestRecs.map((r) => [r.sel, r.sec]) };
+    if (!blind && s.feedback) c.feedback = s.feedback;
     const json = JSON.stringify(c, null, 2);
     setText(json);
     const a = document.createElement('a');

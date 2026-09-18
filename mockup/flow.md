@@ -28,6 +28,14 @@ flowchart TD
   H -->|không| J[Chưa nắm bài · học lại từ đầu + compact cả bài]
   G --> K[Lộ trình ôn + trang slide nguồn]
   J --> K
+  K --> AD["✨ Tư vấn cách ôn — mức do rule chốt<br/>(mục ~5' / chương ~15' / cả bài ~45')"]
+  AD --> Q{Ôn xong rồi thì sao?}
+  Q -->|chưa ổn — cần thêm| P
+  Q -->|mình ôn xong rồi| RT[Kiểm tra lại: phải đúng HẾT mới xoá cờ]
+  RT -->|đúng hết| OK[Xoá cờ hổng · node xanh trên cây]
+  RT -->|còn sai| NO["Bạn thấy ổn rồi, nhưng chưa" --> quay lại lộ trình]
+  OK --> ST[Chấm sao lời tư vấn + chip lý do]
+  NO --> ST
   K --> L["Panel: vì sao bạn nhận lộ trình này"]
 ```
 
@@ -124,6 +132,29 @@ Quyết định chọn nhánh do rule quyết; LLM (giai đoạn sau) chỉ **di
 Học viên chọn một trong hai sau khi nộp bài; xem giải thích xong vẫn đi chẩn đoán được.
 
 **AI #1 có mặt ở ba mức:** nút *"✨ AI phân tích câu này"* ngay trên **từng thẻ đáp án** (cả ở màn kết quả quiz lẫn màn kết quả mỗi vòng chẩn đoán); nút *"✨ Nhận xét & giải thích đáp án vòng này"* cho **cả vòng** (nhận xét gộp: sai mấy câu, bỏ trống, bấm quá nhanh, đúng mà chậm, nên ôn hẹp hay ôn rộng); và màn *"Giải thích đáp án"* cho **cả bài quiz**. Mọi lựa chọn đều được ghi vào dấu vết quyết định.
+
+## Đóng vòng học — không tin lời tự khai
+
+Học viên bấm "mình ôn xong rồi" **không** làm hệ thống xoá cờ hổng. Nó mở bài **kiểm tra lại** trên đúng node đó, và lần này chặt hơn vòng chẩn đoán: **phải đúng hết** (`retestPassed` trong `engine.js`) mới xoá cờ. Lý do: cả bài toán đặt ra là học viên không biết mình hổng chỗ nào, nên tự khai là bằng chứng yếu nhất.
+
+Hai tín hiệu tách bạch, đừng trộn:
+
+| Tín hiệu | Trả lời câu hỏi | Ảnh hưởng |
+|---|---|---|
+| Qua / không qua bài kiểm tra lại | *Học viên đã nắm chưa?* | cập nhật mastery, xoá cờ, đổi màu node |
+| Số sao + chip lý do | *Lời tư vấn có dùng được không?* | đo chất lượng AI, không đụng mastery |
+
+Ba con số rút ra được khi có nhiều phiên: **% lời tư vấn ≥4 sao** · **% người tự báo "đã ổn" nhưng trượt bài kiểm tra lại** (con số chứng minh thẳng problem statement) · **% bị chê "không đúng chỗ mình hổng"** (chấm vào chất lượng chẩn đoán).
+
+## Tư vấn ôn tập — rule chốt mức, LLM viết nội dung
+
+| Mức | Khi nào | Khung bắt buộc | Ngân sách |
+|---|---|---|---|
+| Ôn một mục | chốt ở mục con | đọc lại trang X · nói lại bằng lời mình · 1 câu tự kiểm | ~5 phút |
+| Ôn cả chương | chốt ở mức chương | thứ tự đi qua các mục con + vì sao thứ tự đó + tự kiểm mỗi mục | ~15 phút |
+| Học lại cả bài | `restart` | 3 ý cốt lõi + lộ trình theo chương + làm lại toàn bộ quiz | ~45 phút |
+
+`adviceLevel()` trong `engine.js` quyết định mức theo **vị trí node trên cây**, không để LLM chọn. LLM chỉ viết chữ trong khung, và mỗi ý phải gắn một trang slide.
 
 ## Chưa có trong bản mock
 

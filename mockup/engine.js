@@ -67,7 +67,21 @@ const ENGINE = (() => {
     return { decision: 'escalate', nextTarget: up, bad, slow };
   }
 
-  return { SLOW_SEC, RUSH_SEC, MAX_ROUNDS, grade, weakSignals, pickTarget, roundDecision };
+  // kiểm tra lại sau khi ôn: chặt hơn vòng chẩn đoán — phải đúng hết mới xoá cờ hổng
+  function retestPassed(recs) {
+    return recs.every((r) => r.correct);
+  }
+
+  // mức ôn suy ra từ vị trí node trên cây, KHÔNG do LLM quyết
+  function adviceLevel(nodeId, verdict, tree) {
+    if (verdict === 'restart' || nodeId === 'root') return 'bai';
+    return tree[nodeId].parent === 'root' ? 'chuong' : 'muc';
+  }
+
+  return {
+    SLOW_SEC, RUSH_SEC, MAX_ROUNDS,
+    grade, weakSignals, pickTarget, roundDecision, retestPassed, adviceLevel,
+  };
 })();
 
 if (typeof module !== 'undefined') module.exports = ENGINE;
