@@ -1,10 +1,10 @@
-# Kết quả chạy golden set
+# S1 · Kết quả chạy golden set
 
-Sinh tự động bằng `node eval/run.js --write` · 2026-09-18
+Sinh tự động bằng `python scripts/run.py --write`
 
-**20/20 case đạt (100%)** — luật chẩn đoán trong `mockup/engine.js`, không gọi AI.
+**22/22 case đạt (100%)** — luật chẩn đoán `scripts/engine.py`, không gọi AI.
 
-20 case nhóm soạn + 0 case do thành viên chạy thật (👤).
+22 case nhóm soạn + 0 case do thành viên chạy thật (👤).
 
 | Case | Tình huống | Kỳ vọng | Hệ thống trả về | |
 |---|---|---|---|---|
@@ -16,18 +16,20 @@ Sinh tự động bằng `node eval/run.js --write` · 2026-09-18
 | C06 | Hoà 1-1: sai 1 câu ở mục 1.1 (chương 1) và 1 câu ở mục 3.1 (chương 3) | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | ✅ |
 | C07 | Hai tín hiệu ở mục 3.1 + một tín hiệu ở mục 1.1 (tiền đề của 3.1) | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | ✅ |
 | C08 | Đúng hết, nhưng 2 câu của mục 3.1 mất hơn 25s | 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
-| C09 | Đúng hết, chậm rải rác ở ba mục khác nhau | (không chẩn đoán) | (không chẩn đoán) | ✅ |
-| C10 | Sai đúng 1 câu và bấm trong 2 giây | (không chẩn đoán) | (không chẩn đoán) | ✅ |
-| C11 | Đúng hết, nhanh, dứt khoát | (không chẩn đoán) | (không chẩn đoán) | ✅ |
+| C09 | Đúng hết, chậm rải rác ở ba mục khác nhau | (ý trong quiz) | (ý trong quiz) | ✅ |
+| C10 | Sai đúng 1 câu và bấm trong 2 giây | (ý trong quiz) | (ý trong quiz) | ✅ |
+| C11 | Đúng hết, nhanh, dứt khoát | (ý trong quiz) | (ý trong quiz) | ✅ |
 | C12 | Bỏ trống toàn bộ 5 câu | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | ✅ |
-| C13 | Mục 3.1: sai 2 câu quiz, vòng nền trả lời đúng cả 3 | 3.1 Double Diamond: phân kỳ – hội tụ → located @ 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → located @ 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
-| C14 | Mục 3.1: sai 2 câu nền, lên chương 3 thì trả lời đúng | 3.1 Double Diamond: phân kỳ – hội tụ → located @ Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → located @ Chương 3 · Tìm đúng vấn đề | ✅ |
-| C15 | Mục 3.1: sai cả vòng mục lẫn vòng chương | 3.1 Double Diamond: phân kỳ – hội tụ → restart @ Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → restart @ Chương 3 · Tìm đúng vấn đề | ✅ |
-| C16 | Mục 1.1: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → located @ Chương 1 · Vì sao phải tìm đúng bài toán | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → located @ Chương 1 · Vì sao phải tìm đúng bài toán | ✅ |
-| C17 | Mục 3.2: sai quiz, sai cả vòng mục lẫn vòng chương 3 | 3.2 Làm đúng cái sai vs làm sai cái đúng → restart @ Chương 3 · Tìm đúng vấn đề | 3.2 Làm đúng cái sai vs làm sai cái đúng → restart @ Chương 3 · Tìm đúng vấn đề | ✅ |
-| C18 | Vòng chẩn đoán bỏ trống 2/3 câu | 3.1 Double Diamond: phân kỳ – hội tụ → located @ Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → located @ Chương 3 · Tìm đúng vấn đề | ✅ |
-| C19 | Vòng chẩn đoán đúng cả 3 nhưng câu nào cũng trên 25s | 3.1 Double Diamond: phân kỳ – hội tụ → located @ 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → located @ 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
-| C20 | Mục 1.1: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → restart @ Chương 1 · Vì sao phải tìm đúng bài toán | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → restart @ Chương 1 · Vì sao phải tìm đúng bài toán | ✅ |
+| C13 | Mục 3.1: sai 2 câu quiz, vòng nền trả lời đúng cả 3 | 3.1 Double Diamond: phân kỳ – hội tụ → y_le · hổng: (ý trong quiz) · trần: 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → y_le · hổng: (ý trong quiz) · trần: 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
+| C14 | Mục 3.1: sai 2 câu nền, lên chương 3 thì trả lời đúng | 3.1 Double Diamond: phân kỳ – hội tụ → muc_duoi_tran · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → muc_duoi_tran · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: Chương 3 · Tìm đúng vấn đề | ✅ |
+| C15 | Mục 3.1: sai cả vòng mục lẫn vòng chương | 3.1 Double Diamond: phân kỳ – hội tụ → nen_bai · hổng: Chương 3 · Tìm đúng vấn đề · trần: Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → nen_bai · hổng: Chương 3 · Tìm đúng vấn đề · trần: Chương 3 · Tìm đúng vấn đề | ✅ |
+| C16 | Mục 1.1: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_duoi_tran · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: Chương 1 · Vì sao phải tìm đúng bài toán | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_duoi_tran · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: Chương 1 · Vì sao phải tìm đúng bài toán | ✅ |
+| C17 | Mục 3.2: sai quiz, sai cả vòng mục lẫn vòng chương 3 | 3.2 Làm đúng cái sai vs làm sai cái đúng → nen_bai · hổng: Chương 3 · Tìm đúng vấn đề · trần: Chương 3 · Tìm đúng vấn đề | 3.2 Làm đúng cái sai vs làm sai cái đúng → nen_bai · hổng: Chương 3 · Tìm đúng vấn đề · trần: Chương 3 · Tìm đúng vấn đề | ✅ |
+| C18 | Vòng chẩn đoán bỏ trống 2/3 câu | 3.1 Double Diamond: phân kỳ – hội tụ → muc_duoi_tran · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: Chương 3 · Tìm đúng vấn đề | 3.1 Double Diamond: phân kỳ – hội tụ → muc_duoi_tran · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: Chương 3 · Tìm đúng vấn đề | ✅ |
+| C19 | Vòng chẩn đoán đúng cả 3 nhưng câu nào cũng trên 25s | 3.1 Double Diamond: phân kỳ – hội tụ → y_le · hổng: (ý trong quiz) · trần: 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → y_le · hổng: (ý trong quiz) · trần: 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
+| C20 | Mục 1.1: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → nen_bai · hổng: Chương 1 · Vì sao phải tìm đúng bài toán · trần: Chương 1 · Vì sao phải tìm đúng bài toán | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → nen_bai · hổng: Chương 1 · Vì sao phải tìm đúng bài toán · trần: Chương 1 · Vì sao phải tìm đúng bài toán | ✅ |
+| C21 | Mục 3.1: sai 2 câu quiz, vòng nền chỉ sai 1/3 | 3.1 Double Diamond: phân kỳ – hội tụ → muc_nong · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → muc_nong · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
+| C22 | Mục 1.1: sai 2 câu quiz, vòng nền chỉ sai 1/3 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_nong · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_nong · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | ✅ |
 
 ## Case chưa đạt
 

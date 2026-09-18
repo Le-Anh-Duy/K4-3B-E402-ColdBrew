@@ -1,21 +1,32 @@
-# eval/ — golden set & kết quả đo
+# eval/ — DỮ LIỆU của bộ đo
+
+Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
 
 | File | Nội dung |
 |---|---|
-| `cases.json` | 20 case gán nhãn tay. Hồ sơ trả lời **giả**, không dùng dữ liệu học viên thật |
-| `run.js` | Chạy cả bộ qua đúng bộ luật của trang mock (`mockup/engine.js`) |
+| `graph.json` | Cây tri thức, quiz, câu chẩn đoán — **sinh tự động** từ `mockup/data.js` bằng `node scripts/export_graph.js` |
+| `cases.json` | 22 case gán nhãn tay. Hồ sơ trả lời **giả**, không dùng dữ liệu học viên thật |
+| `human/` | Case do thành viên tự chạy trên trang mock rồi tự gán nhãn |
 | `results.md` | Bảng kết quả lượt chạy gần nhất (sinh tự động) |
-| `smoke.js` | Dựng trang y như browser rồi render một lần — bắt lỗi trắng trang. **Chạy trước khi quay demo** |
-| `calibrate.js` | Hiệu chỉnh ngưỡng thời gian từ các phiên thật trong `human/` |
-| `human/` | Case do thành viên tự chạy, tự gán nhãn |
 
+## Nhãn kỳ vọng gồm gì
+
+```json
+"expect": {
+  "target": "c3s1",              // node được chọn để chẩn đoán (null = phải từ chối chẩn đoán)
+  "final": {
+    "scenario": "muc_duoi_tran", // kịch bản kết luận
+    "gap": "c3s1",               // chỗ hổng (null = hổng ở chính ý trong quiz)
+    "ceiling": "c3",             // node đã xác nhận ổn — trần của vùng hổng
+    "prompt": "on_muc_co_tran"   // system prompt được giao cho AI ở kịch bản này
+  }
+}
 ```
-node eval/smoke.js          # trang có dựng được không (chạy trước khi demo)
-node eval/run.js            # in bảng
-node eval/run.js --write    # ghi thêm results.md
-node eval/calibrate.js      # đề xuất SLOW_SEC/RUSH_SEC từ phiên thật
-```
 
-**Đo cái gì:** với mỗi hồ sơ trả lời, hệ thống có chọn đúng node cần chẩn đoán không, và sau khi leo cây có ra đúng kết luận cuối không. Nhãn kỳ vọng do nhóm gán theo cây tri thức **trước khi chạy code**, không lấy từ output của code.
+**Bốn kịch bản:** `y_le` (nền tầng trên đúng hết → hổng ở chính ý) · `muc_nong` (sai 1/3 câu nền) · `muc_duoi_tran` (mục trượt, tầng trên đạt) · `nen_bai` (trượt tới nền, học lại cả bài).
 
-**Vì sao chạy bằng `node` chứ không chép luật sang Python:** trang mock và bộ eval dùng **chung một file luật** `mockup/engine.js`, nên số đo luôn là số của đúng cái đang chạy trong demo.
+Nguyên tắc gán nhãn: **chỗ hổng là node sâu nhất bị trượt**, node đạt là **trần** — không phải "hổng ở node vừa hỏi".
+
+## Chưa phủ
+
+Kịch bản "câu quiz gây nhiễu" (hổng-ở-ý nhưng hỏi thêm câu bám sát ý đó vẫn đúng) · retry vòng chẩn đoán · học viên chọn tự ôn · thời gian đúng bằng ngưỡng 25s/3s · nội dung do LLM sinh (suite S2).

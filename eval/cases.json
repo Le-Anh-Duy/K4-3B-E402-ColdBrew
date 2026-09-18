@@ -4,156 +4,978 @@
     "quiz": "5 câu theo thứ tự QUIZ: [phương án đã chọn (null = bỏ trống), số giây]",
     "probes": "đáp án cho từng vòng chẩn đoán, khoá là node: [[chọn, giây] x3]. Đáp án đúng của mọi câu probe là 0",
     "expect.target": "node cha mà hệ thống PHẢI chọn để chẩn đoán; null = đáng lẽ phải nói 'chưa đủ căn cứ' thay vì chẩn đoán",
-    "expect.final": "kết luận cuối sau khi leo cây (nếu case có probes)"
+    "expect.final": "kết luận cuối: {scenario, gap (node hổng; null = hổng ở chính ý trong quiz), ceiling (node đã xác nhận ổn), prompt}",
+    "kich_ban": {
+      "y_le": "probe tầng trên đúng hết -> nền ổn, hổng ở chính ý trong quiz",
+      "muc_nong": "sai 1/3 câu nền -> hổng nông ngay tại mục",
+      "muc_duoi_tran": "mục trượt, tầng trên đạt -> hổng ở mục, tầng trên là trần",
+      "nen_bai": "trượt tới tận nền, hết đường leo -> học lại cả bài"
+    }
   },
   "cases": [
     {
       "id": "C01",
       "desc": "Sai 2 câu, cả hai đều thuộc 3.1 Double Diamond",
-      "quiz": [[1, 9], [0, 8], [1, 11], [2, 14], [3, 12]],
-      "expect": { "target": "c3s1" },
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          11
+        ],
+        [
+          2,
+          14
+        ],
+        [
+          3,
+          12
+        ]
+      ],
+      "expect": {
+        "target": "c3s1"
+      },
       "why": "Hai tín hiệu duy nhất đều nằm dưới mục 3.1, không có tín hiệu ở chỗ khác"
     },
     {
       "id": "C02",
       "desc": "Sai 2 câu, cả hai đều thuộc 1.1 Yêu cầu mơ hồ",
-      "quiz": [[0, 10], [2, 9], [1, 7], [0, 8], [0, 9]],
-      "expect": { "target": "c1s1" },
+      "quiz": [
+        [
+          0,
+          10
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "expect": {
+        "target": "c1s1"
+      },
       "why": "Hai câu sai cùng thuộc mục 1.1, phần còn lại đúng và nhanh"
     },
     {
       "id": "C03",
       "desc": "Sai đúng 1 câu ở 3.2 Làm đúng cái sai",
-      "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
-      "expect": { "target": "c3s2" },
+      "quiz": [
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          3,
+          13
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "expect": {
+        "target": "c3s2"
+      },
       "why": "Chỉ một tín hiệu, nằm ở mục 3.2"
     },
     {
       "id": "C04",
       "desc": "Bỏ trống 2 câu của 3.1 Double Diamond",
-      "quiz": [[1, 6], [0, 7], [1, 9], [null, 4], [null, 3]],
-      "expect": { "target": "c3s1" },
+      "quiz": [
+        [
+          1,
+          6
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          null,
+          4
+        ],
+        [
+          null,
+          3
+        ]
+      ],
+      "expect": {
+        "target": "c3s1"
+      },
       "why": "Bỏ trống tính như chưa nắm; cả hai đều thuộc mục 3.1"
     },
     {
       "id": "C05",
       "desc": "Sai 1 câu + bỏ trống 1 câu, cùng mục 1.1",
-      "quiz": [[0, 11], [null, 5], [1, 8], [0, 10], [0, 9]],
-      "expect": { "target": "c1s1" },
+      "quiz": [
+        [
+          0,
+          11
+        ],
+        [
+          null,
+          5
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          10
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "expect": {
+        "target": "c1s1"
+      },
       "why": "Hai tín hiệu cùng mục, một sai một bỏ trống"
     },
     {
       "id": "C06",
       "desc": "Hoà 1-1: sai 1 câu ở mục 1.1 (chương 1) và 1 câu ở mục 3.1 (chương 3)",
-      "quiz": [[0, 12], [0, 9], [1, 8], [2, 11], [0, 10]],
-      "expect": { "target": "c1s1" },
+      "quiz": [
+        [
+          0,
+          12
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          2,
+          11
+        ],
+        [
+          0,
+          10
+        ]
+      ],
+      "expect": {
+        "target": "c1s1"
+      },
       "why": "Hoà thì ưu tiên phần nền học trước trong bài — mục 1.1 là tiền đề của mục 3.1"
     },
     {
       "id": "C07",
       "desc": "Hai tín hiệu ở mục 3.1 + một tín hiệu ở mục 1.1 (tiền đề của 3.1)",
-      "quiz": [[0, 13], [0, 8], [1, 9], [2, 12], [3, 10]],
-      "expect": { "target": "c1s1" },
+      "quiz": [
+        [
+          0,
+          13
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          10
+        ]
+      ],
+      "expect": {
+        "target": "c1s1"
+      },
       "why": "Cây có cạnh prereq: c3s1 <- c1s1. Có tín hiệu ở cả tiền đề lẫn node phụ thuộc thì phải xử tiền đề trước, dù node phụ thuộc nhiều câu sai hơn"
     },
     {
       "id": "C08",
       "desc": "Đúng hết, nhưng 2 câu của mục 3.1 mất hơn 25s",
-      "quiz": [[1, 9], [0, 8], [1, 10], [0, 31], [0, 28]],
-      "expect": { "target": "c3s1" },
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          0,
+          31
+        ],
+        [
+          0,
+          28
+        ]
+      ],
+      "expect": {
+        "target": "c3s1"
+      },
       "why": "Không sai câu nào nhưng chậm bất thường ở cùng một mục — đủ để hỏi thêm, chưa đủ để kết luận"
     },
     {
       "id": "C09",
       "desc": "Đúng hết, chậm rải rác ở ba mục khác nhau",
-      "quiz": [[1, 30], [0, 9], [1, 29], [0, 8], [0, 27]],
-      "expect": { "target": null },
+      "quiz": [
+        [
+          1,
+          30
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          1,
+          29
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          27
+        ]
+      ],
+      "expect": {
+        "target": null
+      },
       "why": "Tín hiệu tản mát, không chụm vào mục nào — hệ thống nên nói chưa đủ căn cứ thay vì chọn đại một mục"
     },
     {
       "id": "C10",
       "desc": "Sai đúng 1 câu và bấm trong 2 giây",
-      "quiz": [[1, 8], [0, 9], [1, 7], [3, 2], [0, 8]],
-      "expect": { "target": null },
+      "quiz": [
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "expect": {
+        "target": null
+      },
       "why": "Bấm nhanh hơn thời gian đọc hết đề thì nhiều khả năng là bấm bừa, không phải không biết — nên hỏi lại câu đó trước khi chẩn đoán"
     },
     {
       "id": "C11",
       "desc": "Đúng hết, nhanh, dứt khoát",
-      "quiz": [[1, 7], [0, 6], [1, 8], [0, 7], [0, 9]],
-      "expect": { "target": null },
+      "quiz": [
+        [
+          1,
+          7
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "expect": {
+        "target": null
+      },
       "why": "Không có tín hiệu yếu nào, không cần chẩn đoán"
     },
     {
       "id": "C12",
       "desc": "Bỏ trống toàn bộ 5 câu",
-      "quiz": [[null, 3], [null, 2], [null, 3], [null, 2], [null, 3]],
-      "expect": { "target": "c1s1" },
+      "quiz": [
+        [
+          null,
+          3
+        ],
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          3
+        ],
+        [
+          null,
+          2
+        ],
+        [
+          null,
+          3
+        ]
+      ],
+      "expect": {
+        "target": "c1s1"
+      },
       "why": "Bỏ trống hết thì tín hiệu trải khắp bài, bắt đầu từ mục nền đầu tiên là hợp lý"
     },
     {
       "id": "C13",
       "desc": "Mục 3.1: sai 2 câu quiz, vòng nền trả lời đúng cả 3",
-      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
-      "probes": { "c3s1": [[0, 8], [0, 7], [0, 9]] },
-      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3s1" } },
-      "why": "Nắm được nền của mục 3.1 thì chỗ hổng đúng là ở mục này, không cần leo lên"
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            7
+          ],
+          [
+            0,
+            9
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "y_le",
+          "gap": null,
+          "ceiling": "c3s1",
+          "prompt": "giai_thich_y"
+        }
+      },
+      "why": "Ba câu nền của mục đúng hết -> nền mục vững, chỗ hổng nằm ở CHÍNH Ý trong quiz chứ không phải cả mục. (Lưu ý: bộ câu nền tĩnh nên kết luận này còn phụ thuộc câu hỏi có bám đúng ý hay không)"
     },
     {
       "id": "C14",
       "desc": "Mục 3.1: sai 2 câu nền, lên chương 3 thì trả lời đúng",
-      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
-      "probes": { "c3s1": [[1, 9], [2, 8], [0, 10]], "c3": [[0, 9], [0, 8], [0, 11]] },
-      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3" } },
-      "why": "Sai nền của mục con nhưng nắm được chương thì chỗ hổng nằm ở mức chương, dừng tại đó"
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "c3": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            11
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "muc_duoi_tran",
+          "gap": "c3s1",
+          "ceiling": "c3",
+          "prompt": "on_muc_co_tran"
+        }
+      },
+      "why": "Mục trượt, lên chương thì đúng hết -> chương là TRẦN đã xác nhận ổn; chỗ hổng là mục, không phải chương"
     },
     {
       "id": "C15",
       "desc": "Mục 3.1: sai cả vòng mục lẫn vòng chương",
-      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
-      "probes": { "c3s1": [[1, 9], [2, 8], [1, 10]], "c3": [[1, 9], [2, 8], [3, 11]] },
-      "expect": { "target": "c3s1", "final": { "verdict": "restart", "node": "c3" } },
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            1,
+            10
+          ]
+        ],
+        "c3": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            3,
+            11
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "nen_bai",
+          "gap": "c3",
+          "ceiling": "c3",
+          "prompt": "hoc_lai_bai"
+        }
+      },
       "why": "Sai tới tận mức chương, trên nữa là gốc bài — kết luận chưa nắm bài, học lại từ đầu"
     },
     {
       "id": "C16",
       "desc": "Mục 1.1: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1",
-      "quiz": [[0, 10], [2, 9], [1, 8], [0, 9], [0, 8]],
-      "probes": { "c1s1": [[1, 9], [2, 10], [0, 8]], "c1": [[0, 9], [1, 10], [0, 8]] },
-      "expect": { "target": "c1s1", "final": { "verdict": "located", "node": "c1" } },
-      "why": "Sai 1/3 ở chương 1 nghĩa là còn nắm được mức chương, chốt chỗ hổng ở đó"
+      "quiz": [
+        [
+          0,
+          10
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "probes": {
+        "c1s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            0,
+            8
+          ]
+        ],
+        "c1": [
+          [
+            0,
+            9
+          ],
+          [
+            1,
+            10
+          ],
+          [
+            0,
+            8
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c1s1",
+        "final": {
+          "scenario": "muc_duoi_tran",
+          "gap": "c1s1",
+          "ceiling": "c1",
+          "prompt": "on_muc_co_tran"
+        }
+      },
+      "why": "Mục trượt, chương chỉ sai 1/3 -> chương gần đạt, chỗ hổng vẫn là mục"
     },
     {
       "id": "C17",
       "desc": "Mục 3.2: sai quiz, sai cả vòng mục lẫn vòng chương 3",
-      "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
-      "probes": { "c3s2": [[1, 9], [2, 8], [3, 10]], "c3": [[1, 9], [2, 10], [3, 8]] },
-      "expect": { "target": "c3s2", "final": { "verdict": "restart", "node": "c3" } },
+      "quiz": [
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          7
+        ],
+        [
+          3,
+          13
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "probes": {
+        "c3s2": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            3,
+            10
+          ]
+        ],
+        "c3": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            3,
+            8
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s2",
+        "final": {
+          "scenario": "nen_bai",
+          "gap": "c3",
+          "ceiling": "c3",
+          "prompt": "hoc_lai_bai"
+        }
+      },
       "why": "Hổng tới mức chương 3, trên nữa là gốc — học lại cả bài"
     },
     {
       "id": "C18",
       "desc": "Vòng chẩn đoán bỏ trống 2/3 câu",
-      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
-      "probes": { "c3s1": [[null, 4], [null, 3], [0, 9]], "c3": [[0, 9], [0, 10], [0, 8]] },
-      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3" } },
-      "why": "Bỏ trống ở vòng nền cũng là chưa nắm, phải leo lên như khi trả lời sai"
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            null,
+            4
+          ],
+          [
+            null,
+            3
+          ],
+          [
+            0,
+            9
+          ]
+        ],
+        "c3": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            10
+          ],
+          [
+            0,
+            8
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "muc_duoi_tran",
+          "gap": "c3s1",
+          "ceiling": "c3",
+          "prompt": "on_muc_co_tran"
+        }
+      },
+      "why": "Bỏ trống ở vòng nền tính như trượt -> leo lên; chương đúng hết nên chốt hổng ở mục"
     },
     {
       "id": "C19",
       "desc": "Vòng chẩn đoán đúng cả 3 nhưng câu nào cũng trên 25s",
-      "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
-      "probes": { "c3s1": [[0, 30], [0, 28], [0, 33]] },
-      "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3s1" } },
-      "why": "Đúng hết thì không leo lên, nhưng chậm toàn vòng nên vẫn chốt hổng ở mục này để ôn lại"
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            0,
+            30
+          ],
+          [
+            0,
+            28
+          ],
+          [
+            0,
+            33
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "y_le",
+          "gap": null,
+          "ceiling": "c3s1",
+          "prompt": "giai_thich_y"
+        }
+      },
+      "why": "Đúng hết dù chậm -> không leo, và cũng không kết luận hổng cả mục; hổng ở ý trong quiz"
     },
     {
       "id": "C20",
       "desc": "Mục 1.1: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3",
-      "quiz": [[null, 4], [null, 3], [1, 9], [0, 8], [0, 9]],
-      "probes": { "c1s1": [[1, 8], [2, 9], [3, 7]], "c1": [[1, 9], [2, 8], [3, 10]] },
-      "expect": { "target": "c1s1", "final": { "verdict": "restart", "node": "c1" } },
+      "quiz": [
+        [
+          null,
+          4
+        ],
+        [
+          null,
+          3
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          0,
+          9
+        ]
+      ],
+      "probes": {
+        "c1s1": [
+          [
+            1,
+            8
+          ],
+          [
+            2,
+            9
+          ],
+          [
+            3,
+            7
+          ]
+        ],
+        "c1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            3,
+            10
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c1s1",
+        "final": {
+          "scenario": "nen_bai",
+          "gap": "c1",
+          "ceiling": "c1",
+          "prompt": "hoc_lai_bai"
+        }
+      },
       "why": "Hổng ngay từ mục nền đầu tiên của bài, leo hết mức cho phép vẫn sai"
+    },
+    {
+      "id": "C21",
+      "desc": "Mục 3.1: sai 2 câu quiz, vòng nền chỉ sai 1/3",
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            0,
+            9
+          ],
+          [
+            1,
+            8
+          ],
+          [
+            0,
+            10
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "muc_nong",
+          "gap": "c3s1",
+          "ceiling": "c3s1",
+          "prompt": "on_muc_nong"
+        }
+      },
+      "why": "Sai 1/3 câu nền là hổng nông, khu trú ngay tại mục — không leo lên, cũng không đổ về ý lẻ"
+    },
+    {
+      "id": "C22",
+      "desc": "Mục 1.1: sai 2 câu quiz, vòng nền chỉ sai 1/3",
+      "quiz": [
+        [
+          0,
+          10
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "probes": {
+        "c1s1": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            8
+          ],
+          [
+            2,
+            10
+          ]
+        ]
+      },
+      "expect": {
+        "target": "c1s1",
+        "final": {
+          "scenario": "muc_nong",
+          "gap": "c1s1",
+          "ceiling": "c1s1",
+          "prompt": "on_muc_nong"
+        }
+      },
+      "why": "Cùng kịch bản muc_nong nhưng ở nhánh khác, chặn kiểu hard-code một nhánh"
     }
   ]
 }
