@@ -9,6 +9,7 @@ Dữ liệu nằm ở `eval/`. Sửa `mockup/data.js` xong thì chạy lại `no
 | **S1 · Chẩn đoán** | `python scripts/run.py --write` | gap · trần · kịch bản · prompt được giao, trên 22 case | ✅ 22/22 |
 | **S2 · AI-response check** | `python scripts/grounding.py [--api]` | 20 hồ sơ qua Gemini thật: mã đoạn có thật · không trích lạc · đủ khung (+ ④ nối vòng, báo riêng) | ✅ 20/20 |
 | **S3 · Người chấm AI-response** | `python scripts/review_ui.py` → `python scripts/review_summary.py` | 3 câu người phải trả lời + mức đồng thuận giữa các người chấm | ⏳ chờ nhóm chấm |
+| **S5 · Chuỗi nhiều vòng** | `python scripts/multiround.py` → `python scripts/review_rounds_ui.py` | chạy trọn 5 phiên 2 vòng: AI nhận xét TỪNG vòng rồi kết luận; đo sự nối kết giữa các vòng | ✅ 5/5 máy · ⏳ chờ người |
 | **S4 · Không gãy & độ phủ** | `node scripts/smoke.js` · `python scripts/coverage.py` | trang có dựng được · % câu hỏi thật map được vào cây | ✅ smoke · ❌ coverage |
 
 Chạy chung mỗi khi sửa luật:
@@ -39,6 +40,13 @@ soi nội dung là việc của bộ đo. Không gọi LLM, chạy tức thì. N
 
 `grounding.py` gọi chính hàm này cho từng lượt (tiêu chí ⑤), nên số đo một câu lẻ và số đo cả
 lượt luôn khớp định nghĩa.
+
+## Hai trang chấm tay, đừng lẫn
+
+| Cổng | Trang | Chấm gì |
+|---|---|---|
+| **5599** | `review_ui.py` | **một câu trả lời lẻ**: nhận xét ổn không · luật chọn đúng chỗ hổng không |
+| **5600** | `review_rounds_ui.py` | **cả chuỗi nhiều vòng**: từng vòng bám đúng không · vòng sau nối tiếp vòng trước không · kết luận khớp cả chuỗi không |
 
 ## Chấm tay — mỗi người một bản
 

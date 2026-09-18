@@ -13,7 +13,9 @@ Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
 | `cp3_inputs.json` | 20 hồ sơ trả lời giả, đầu vào cho **AI-response check** |
 | `grounding.json` · `grounding.md` | Câu trả lời AI **đã đóng băng** của lượt chạy MỚI NHẤT + kết quả chấm máy |
 | `runs/<run_id>.json` | Bản lưu trữ từng lượt chạy — đổi prompt rồi chạy lại vẫn giữ được bản cũ để so |
-| `review/<id>.json` | Bản chấm tay của từng người (sinh từ `scripts/review_ui.py`) |
+| `review/<id>.json` | Bản chấm tay câu lẻ (từ `scripts/review_ui.py`, cổng 5599) |
+| `multiround.json` | 5 phiên nhiều vòng: nhận xét AI từng vòng + kết luận + 4 phép kiểm chuỗi |
+| `review_rounds/<id>.json` | Bản chấm tay chuỗi nhiều vòng (từ `scripts/review_rounds_ui.py`, cổng 5600) |
 
 **Nhận xét của người gắn theo PHIÊN BẢN câu trả lời, không theo mã case.** Mỗi câu trả lời có
 `hash` riêng; bản chấm lưu kèm `hash` + `run_id`. Chạy lại AI ra chữ khác thì hash đổi → nhận xét

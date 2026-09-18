@@ -1,0 +1,315 @@
+{
+  "run_id": "20260918-1500",
+  "rows": [
+    {
+      "id": "M01",
+      "desc": "Mục 3.1 trượt → chương 3 ĐẠT (2 vòng)",
+      "ky_vong": "vòng 2 phải ghi nhận chương ĐÃ ĐẠT, không được nói hổng ở chương",
+      "run_id": "20260918-1500",
+      "so_vong": 2,
+      "vong": [
+        {
+          "vong": 1,
+          "node": "c3s1",
+          "node_label": "3.1 Double Diamond: phân kỳ – hội tụ",
+          "decision": "escalate",
+          "bad": 2,
+          "ai_summary": "Học viên trả lời đúng 1/3 câu và sai 2 câu, không có câu nào bỏ trống. Tốc độ làm bài đều đặn ở mức 9 giây cho mỗi câu.",
+          "ai_advice": "Phần kiến thức nền tảng về Double Diamond chưa vững do học viên còn sai sót ở các khái niệm cốt lõi (số pha và mục đích của từng kim cương). Hệ thống đề xuất tiếp tục leo lên tầng trên hoặc đào sâu thêm để kiểm tra gốc rễ lỗ hổng kiến thức này."
+        },
+        {
+          "vong": 2,
+          "node": "c3",
+          "node_label": "Chương 3 · Tìm đúng vấn đề",
+          "decision": "locate",
+          "bad": 0,
+          "ai_summary": "Học viên hoàn thành xuất sắc vòng chẩn đoán số 2 với tỉ lệ đúng tuyệt đối: 3/3 câu đúng, không có câu nào sai hoặc bỏ trống. Tốc độ làm bài của học viên rất đều đặn và hợp lý (đều ở mức 9 giây cho mỗi câu).",
+          "ai_advice": "Phần nền tảng của học viên rất vững chắc và nắm rất rõ bản chất của chương 'Tìm đúng vấn đề'. Học viên chỉ cần ôn tập lại mục này và có thể tiếp tục tiến lên các tầng cao hơn của hệ thống."
+        }
+      ],
+      "scenario": "muc_duoi_tran",
+      "gap": "c3s1",
+      "gap_label": "3.1 Double Diamond: phân kỳ – hội tụ",
+      "ceiling": "c3",
+      "ceiling_label": "Chương 3 · Tìm đúng vấn đề",
+      "ket_luan": "Nền tảng ở Chương 3 · Tìm đúng vấn đề đã được xác nhận ổn [T01-030], [T01-073], giúp bạn không phải lo lắng về phần xác định vấn đề nữa. \n\nTuy nhiên, bạn đang hổng ở phần 3.1 Double Diamond: phân kỳ – hội tụ [T01-049], [T01-069], [T01-071], [T01-074]. Bạn đã chọn nhầm kỹ thuật của phân kỳ thành mở rộng góc nhìn để thu insight, nhưng thực chất mở rộng góc nhìn để thu insight mới là bản chất của phân kỳ chứ không phải vẽ ma trận tác động – nỗ lực [T01-071]. Đồng thời, bạn chọn nhầm pha hội tụ là mở rộng góc nhìn để thu insight, trong khi hội tụ đúng phải dùng các kỹ thuật gom nhóm, Five Whys và lọc trùng [T01-074]. \n\nThứ tự bạn nên ôn lại là xem lại định nghĩa của 3.1 Double Diamond [T01-049], [T01-069], sau đó phân biệt rõ kỹ thuật của phân kỳ [T01-071] và hội tụ [T01-074].\n\nTự kiểm: Phân kỳ và hội tụ trong Double Diamond khác nhau ở những điểm nào? Cách dùng: trả lời trôi trong 30 giây thì coi như đã nắm.",
+      "hash": "d41181a1",
+      "kiem": {
+        "moi_vong_bam_dung_node": true,
+        "khong_lap_lai_vong_truoc": true,
+        "do_trung_lap": 0.4,
+        "khong_mau_thuan_tran": true,
+        "ket_luan_nhac_dung_cho_hong": true,
+        "bien_ban_ket_luan": {
+          "dat": true,
+          "thieu": [],
+          "so_trich_dan": 12,
+          "so_ma_doan_khac_nhau": 6,
+          "ma_doan_hop_le": [
+            "T01-030",
+            "T01-049",
+            "T01-069",
+            "T01-071",
+            "T01-073",
+            "T01-074"
+          ],
+          "ma_doan_bia": [],
+          "ma_doan_lac": [],
+          "co_tu_kiem": true,
+          "so_dong_tu_kiem": 1,
+          "so_tu": 190,
+          "can_it_nhat": 2
+        }
+      },
+      "dat": true
+    },
+    {
+      "id": "M02",
+      "desc": "Mục 3.1 trượt → chương 3 cũng trượt → học lại bài",
+      "ky_vong": "vòng 2 phải leo giọng lên mức cả bài, không lặp lại y nguyên vòng 1",
+      "run_id": "20260918-1500",
+      "so_vong": 2,
+      "vong": [
+        {
+          "vong": 1,
+          "node": "c3s1",
+          "node_label": "3.1 Double Diamond: phân kỳ – hội tụ",
+          "decision": "escalate",
+          "bad": 3,
+          "ai_summary": "Học viên đã trả lời sai toàn bộ 3 câu hỏi trong vòng chẩn đoán này (sai 3, đúng 0, không bỏ trống câu nào). Thời gian làm bài cho mỗi câu đều ở mức bình thường (9 giây), không có hiện tượng quá nhanh hay quá chậm.",
+          "ai_advice": "Do học viên đã sai toàn bộ các câu hỏi ở phần nền tảng Double Diamond, hệ thống đề xuất nên tiếp tục đi lên tầng trên hoặc đào sâu hơn để kiểm tra và củng cố lại gốc rễ kiến thức cốt lõi này trước khi chuyển sang nội dung khác."
+        },
+        {
+          "vong": 2,
+          "node": "c3",
+          "node_label": "Chương 3 · Tìm đúng vấn đề",
+          "decision": "restart",
+          "bad": 3,
+          "ai_summary": "Học viên đã hoàn thành vòng chẩn đoán với kết quả chưa tốt: trả lời sai toàn bộ 3 câu (đúng 0 câu, sai 3 câu, không có câu nào bỏ trống). Thời gian trả lời các câu đều ở mức bình thường (9 giây/câu).",
+          "ai_advice": "Do học viên sai toàn bộ các câu hỏi ở phần nền tảng, hệ thống quyết định restart. Lời khuyên sư phạm là không nên chỉ ôn hẹp mục này mà cần đi tiếp lên tầng trên hoặc đào sâu lại từ gốc rễ để xây dựng lại khái niệm cơ bản về cách tìm đúng vấn đề."
+        }
+      ],
+      "scenario": "nen_bai",
+      "gap": "c3",
+      "gap_label": "Chương 3 · Tìm đúng vấn đề",
+      "ceiling": "c3",
+      "ceiling_label": "Chương 3 · Tìm đúng vấn đề",
+      "ket_luan": "Vì bạn sai tới tận phần nền, mình đề nghị bạn học lại cả bài theo thứ tự các chương, bắt đầu từ Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], sang Chương 2 · Đặc thù của sản phẩm AI [T01-018], tiếp tục với Chương 3 · Tìm đúng vấn đề [T01-030], và kết thúc ở Chương 4 · Chọn bài toán để làm [T01-074].\n\n- Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004].\n- Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049].\n- Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079].\n\nTự kiểm: Bạn đã nắm chắc nội dung các chương trên chưa, kèm cách dùng: trả lời trôi trong 30 giây thì coi như đã nắm, hãy làm lại quiz sau khi ôn.",
+      "hash": "8f3586ee",
+      "kiem": {
+        "moi_vong_bam_dung_node": true,
+        "khong_lap_lai_vong_truoc": true,
+        "do_trung_lap": 0.45,
+        "khong_mau_thuan_tran": true,
+        "ket_luan_nhac_dung_cho_hong": true,
+        "bien_ban_ket_luan": {
+          "dat": true,
+          "thieu": [],
+          "so_trich_dan": 7,
+          "so_ma_doan_khac_nhau": 7,
+          "ma_doan_hop_le": [
+            "T01-001",
+            "T01-004",
+            "T01-018",
+            "T01-030",
+            "T01-049",
+            "T01-074",
+            "T01-079"
+          ],
+          "ma_doan_bia": [],
+          "ma_doan_lac": [],
+          "co_tu_kiem": true,
+          "so_dong_tu_kiem": 1,
+          "so_tu": 157,
+          "can_it_nhat": 3
+        }
+      },
+      "dat": true
+    },
+    {
+      "id": "M03",
+      "desc": "Mục 1.1 trượt → chương 1 chỉ sai 1/3",
+      "ky_vong": "chương gần đạt: phải phân biệt được 'gần đạt' với 'đạt hẳn'",
+      "run_id": "20260918-1500",
+      "so_vong": 2,
+      "vong": [
+        {
+          "vong": 1,
+          "node": "c1s1",
+          "node_label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+          "decision": "escalate",
+          "bad": 2,
+          "ai_summary": "Học viên trả lời đúng 1 câu và sai 2 câu trong tổng số 3 câu của vòng chẩn đoán nền này, không có câu nào bỏ trống. Thời gian làm bài cho tất cả các câu đều ở mức bình thường (9 giây).",
+          "ai_advice": "Do học viên đã sai ở phần nền tảng cốt lõi (xác định vấn đề và bản chất tư duy khi nhận yêu cầu mơ hồ), hệ thống khuyến nghị nên đi tiếp lên tầng trên hoặc đào sâu thêm các câu hỏi gốc rễ để kiểm tra lại toàn diện kiến thức."
+        },
+        {
+          "vong": 2,
+          "node": "c1",
+          "node_label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+          "decision": "locate",
+          "bad": 1,
+          "ai_summary": "Trong vòng chẩn đoán số 2 của Chương 1, học viên đã trả lời đúng 2/3 câu và sai 1 câu, không có câu nào bỏ trống. Thời gian làm bài cho các câu đều nằm trong khoảng hợp lý (9 giây), không có hiện tượng làm quá nhanh dưới 3 giây hay quá chậm trên 25 giây.",
+          "ai_advice": "Phần nền tảng của học viên cơ bản đã ổn định với 2/3 câu trả lời chính xác, tuy nhiên vẫn còn một điểm hổng nhỏ ở câu 1 liên quan đến yếu tố nhân sự và vận hành khi đưa AI vào doanh nghiệp. Học viên nên ôn tập lại mục này để nắm chắc gốc rễ trước khi chuyển sang các tầng kiến thức cao hơn."
+        }
+      ],
+      "scenario": "muc_duoi_tran",
+      "gap": "c1s1",
+      "gap_label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+      "ceiling": "c1",
+      "ceiling_label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+      "ket_luan": "Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán đã xác nhận ổn [T01-001] [T01-017], giúp bạn nhẹ gánh rất nhiều khi xử lý phần tiếp theo. \n\nMục đang hổng là 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể [T01-004] [T01-006] [T01-016], nơi bạn chọn sai vì quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016] và chưa nắm rõ cách bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. \n\nThứ tự nên ôn lại là Quán tính nhảy thẳng vào giải pháp [T01-004] [T01-016], sau đó đến Bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-006]. Việc chọn giải pháp tốn nhiều tiền là sai nội dung vì vấn đề cốt lõi của quán tính nhảy thẳng vào giải pháp không nằm ở việc tốn tiền mà là làm sai ngay từ xuất phát điểm. Việc chọn giải pháp phổ biến nhất cũng sai nội dung vì sếp đưa yêu cầu chung chung thì phải bóc tách yêu cầu đó chứ không phải áp dụng ngay giải pháp phổ biến.\n\nTự kiểm: Tại sao việc nhảy thẳng vào giải pháp khi nhận yêu cầu chung chung lại dẫn đến việc làm sai bài toán? (trả lời trôi trong 30 giây thì coi như đã nắm).",
+      "hash": "4fba103a",
+      "kiem": {
+        "moi_vong_bam_dung_node": true,
+        "khong_lap_lai_vong_truoc": true,
+        "do_trung_lap": 0.37,
+        "khong_mau_thuan_tran": true,
+        "ket_luan_nhac_dung_cho_hong": true,
+        "bien_ban_ket_luan": {
+          "dat": true,
+          "thieu": [],
+          "so_trich_dan": 11,
+          "so_ma_doan_khac_nhau": 5,
+          "ma_doan_hop_le": [
+            "T01-001",
+            "T01-004",
+            "T01-006",
+            "T01-016",
+            "T01-017"
+          ],
+          "ma_doan_bia": [],
+          "ma_doan_lac": [],
+          "co_tu_kiem": true,
+          "so_dong_tu_kiem": 1,
+          "so_tu": 217,
+          "can_it_nhat": 2
+        }
+      },
+      "dat": true
+    },
+    {
+      "id": "M04",
+      "desc": "Tiền đề: sai cả 1.1 và 3.1 → chẩn đoán xuống 1.1 → chương 1 đạt",
+      "ky_vong": "phải nói rõ vì sao đi vào 1.1 chứ không phải 3.1 (tiền đề)",
+      "run_id": "20260918-1500",
+      "so_vong": 2,
+      "vong": [
+        {
+          "vong": 1,
+          "node": "c1s1",
+          "node_label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+          "decision": "escalate",
+          "bad": 2,
+          "ai_summary": "Học viên hoàn thành 3 câu hỏi với kết quả 1 câu đúng và 2 câu sai. Không có câu nào bỏ trống. Tốc độ làm bài đều đặn (9 giây mỗi câu) và nằm trong khoảng thời gian hợp lý.",
+          "ai_advice": "Do học viên đã sai ở phần kiến thức nền tảng cơ bản về tư duy xử lý yêu cầu, hệ thống khuyến nghị nên đi tiếp lên tầng trên để kiểm tra gốc rễ và củng cố lại toàn diện."
+        },
+        {
+          "vong": 2,
+          "node": "c1",
+          "node_label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+          "decision": "locate",
+          "bad": 0,
+          "ai_summary": "Học viên hoàn thành xuất sắc vòng chẩn đoán với tỉ lệ đúng tuyệt đối (đúng cả 3/3 câu, không có câu nào sai hay bỏ trống). Thời gian làm bài cho mỗi câu đều nằm ở mức tối ưu (9 giây), thể hiện sự tập trung và nắm chắc kiến thức nền tảng.",
+          "ai_advice": "Phần nền tảng của học viên tại chương này rất vững chắc và ổn định. Học viên chỉ cần ôn tập lại mục này để củng cố thêm kiến thức mà chưa cần phải leo lên các tầng trên để kiểm tra gốc rễ."
+        }
+      ],
+      "scenario": "muc_duoi_tran",
+      "gap": "c1s1",
+      "gap_label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+      "ceiling": "c1",
+      "ceiling_label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+      "ket_luan": "Nền tảng ở Chương 1 · Vì sao phải tìm đúng bài toán của bạn đã được xác nhận ổn [T01-001] [T01-017]. Mục 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể đang nói về việc quán tính nhảy thẳng vào giải pháp và bóc tách yêu cầu mơ hồ rồi verify với stakeholder [T01-004] [T01-006] [T01-016]. Bạn cần ôn lại quán tính nhảy thẳng vào giải pháp trước, sau đó đến cách bóc tách yêu cầu mơ hồ. Giải pháp ở Câu 1 sai vì tư liệu chỉ nói đó là quán tính nhảy thẳng vào giải pháp, không liên quan đến việc tốn nhiều tiền [T01-004] [T01-016].\n\nTự kiểm: Quán tính nhảy thẳng vào giải pháp là gì và vì sao cần bóc tách yêu cầu mơ hồ rồi verify với stakeholder? (trả lời trôi trong 30 giây thì coi như đã nắm).",
+      "hash": "c7fc6e76",
+      "kiem": {
+        "moi_vong_bam_dung_node": true,
+        "khong_lap_lai_vong_truoc": true,
+        "do_trung_lap": 0.37,
+        "khong_mau_thuan_tran": true,
+        "ket_luan_nhac_dung_cho_hong": true,
+        "bien_ban_ket_luan": {
+          "dat": true,
+          "thieu": [],
+          "so_trich_dan": 7,
+          "so_ma_doan_khac_nhau": 5,
+          "ma_doan_hop_le": [
+            "T01-001",
+            "T01-004",
+            "T01-006",
+            "T01-016",
+            "T01-017"
+          ],
+          "ma_doan_bia": [],
+          "ma_doan_lac": [],
+          "co_tu_kiem": true,
+          "so_dong_tu_kiem": 1,
+          "so_tu": 147,
+          "can_it_nhat": 2
+        }
+      },
+      "dat": true
+    },
+    {
+      "id": "M05",
+      "desc": "Mục 3.2 trượt → chương 3 trượt (nhánh khác)",
+      "ky_vong": "chuỗi ở nhánh khác vẫn phải mạch lạc, không lẫn sang nhánh RAG",
+      "run_id": "20260918-1500",
+      "so_vong": 2,
+      "vong": [
+        {
+          "vong": 1,
+          "node": "c3s2",
+          "node_label": "3.2 Làm đúng cái sai vs làm sai cái đúng",
+          "decision": "escalate",
+          "bad": 3,
+          "ai_summary": "Trong vòng chẩn đoán nền này, học viên đã trả lời sai cả 3 câu hỏi (đúng 0 câu, sai 3 câu, không có câu nào bỏ trống). Thời gian làm bài cho mỗi câu đều là 9 giây, không có câu nào quá nhanh dưới 3s hay quá chậm trên 25s.",
+          "ai_advice": "Do học viên trả lời sai toàn bộ các câu hỏi ở phần nền (tỉ lệ 0/3), nền tảng tư duy ở mục này đang hổng rõ rệt. Lời khuyên sư phạm là không nên chỉ ôn hẹp tại đây mà cần tiếp tục leo lên tầng trên để kiểm tra gốc rễ và củng cố lại toàn bộ hệ thống khái niệm cốt lõi."
+        },
+        {
+          "vong": 2,
+          "node": "c3",
+          "node_label": "Chương 3 · Tìm đúng vấn đề",
+          "decision": "restart",
+          "bad": 2,
+          "ai_summary": "Học viên hoàn thành vòng chẩn đoán với kết quả 1 câu đúng và 2 câu sai, không có câu nào bỏ trống hoặc làm quá nhanh/chậm bất thường.",
+          "ai_advice": "Do học viên đã sai sót ở các khái niệm nền tảng cốt lõi của phần Tìm đúng vấn đề (câu 1 và câu 2), hệ thống quyết định restart. Học viên cần ôn tập lại kỹ lưỡng các kiến thức nền này trước khi tiếp tục chuyển lên các tầng trên."
+        }
+      ],
+      "scenario": "nen_bai",
+      "gap": "c3",
+      "gap_label": "Chương 3 · Tìm đúng vấn đề",
+      "ceiling": "c3",
+      "ceiling_label": "Chương 3 · Tìm đúng vấn đề",
+      "ket_luan": "- Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]\n- Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]\n- Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]\nThứ tự các chương nên đi lại: Chương 1 · Vì sao phải tìm đúng bài toán [T01-001], Chương 2 · Đặc thù của sản phẩm AI [T01-018], Chương 3 · Tìm đúng vấn đề [T01-030], Chương 4 · Chọn bài toán để làm [T01-074].\nTự kiểm: Nhắc làm lại quiz sau khi ôn? Cách dùng: trả lời trôi trong 30 giây thì coi như đã nắm.",
+      "hash": "cade40e9",
+      "kiem": {
+        "moi_vong_bam_dung_node": true,
+        "khong_lap_lai_vong_truoc": true,
+        "do_trung_lap": 0.35,
+        "khong_mau_thuan_tran": true,
+        "ket_luan_nhac_dung_cho_hong": true,
+        "bien_ban_ket_luan": {
+          "dat": true,
+          "thieu": [],
+          "so_trich_dan": 7,
+          "so_ma_doan_khac_nhau": 7,
+          "ma_doan_hop_le": [
+            "T01-001",
+            "T01-004",
+            "T01-018",
+            "T01-030",
+            "T01-049",
+            "T01-074",
+            "T01-079"
+          ],
+          "ma_doan_bia": [],
+          "ma_doan_lac": [],
+          "co_tu_kiem": true,
+          "so_dong_tu_kiem": 1,
+          "so_tu": 122,
+          "can_it_nhat": 3
+        }
+      },
+      "dat": true
+    }
+  ]
+}
