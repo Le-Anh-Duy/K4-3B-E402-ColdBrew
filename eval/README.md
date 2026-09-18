@@ -10,6 +10,10 @@ Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
 | `cases.json` | 22 case gán nhãn tay. Hồ sơ trả lời **giả**, không dùng dữ liệu học viên thật |
 | `human/` | Case do thành viên tự chạy trên trang mock rồi tự gán nhãn |
 | `results.md` | Bảng kết quả lượt chạy gần nhất (sinh tự động) |
+| `cp3_inputs.json` | 20 hồ sơ trả lời giả, đầu vào cho **AI-response check** |
+| `grounding.json` · `grounding.md` | Câu trả lời AI **đã đóng băng** + kết quả chấm máy. Người chấm sau trên đúng bản này |
+| `review/<id>.json` | Bản chấm tay của từng người (sinh từ `scripts/review_ui.py`) |
+| `human_review.md` | Gộp các bản chấm + mức đồng thuận (sinh từ `scripts/review_summary.py`) |
 
 ## Nhãn kỳ vọng gồm gì
 

@@ -7,8 +7,8 @@ Dữ liệu nằm ở `eval/`. Sửa `mockup/data.js` xong thì chạy lại `no
 | Suite | Lệnh | Đo gì | Trạng thái |
 |---|---|---|---|
 | **S1 · Chẩn đoán** | `python scripts/run.py --write` | gap · trần · kịch bản · prompt được giao, trên 22 case | ✅ 22/22 |
-| **S2 · Nội dung AI** | `python scripts/grounding.py` | 20 hồ sơ qua Gemini thật: mã đoạn có thật · không trích lạc · đủ khung (+ ④ nối vòng, báo riêng) | ✅ 20/20 |
-| **S3 · Người chấm** | `python scripts/review_ui.py` → `python scripts/review_summary.py` | 3 câu người phải trả lời + mức đồng thuận giữa các người chấm | ⏳ chờ nhóm chấm |
+| **S2 · AI-response check** | `python scripts/grounding.py` | 20 hồ sơ qua Gemini thật: mã đoạn có thật · không trích lạc · đủ khung (+ ④ nối vòng, báo riêng) | ✅ 20/20 |
+| **S3 · Người chấm AI-response** | `python scripts/review_ui.py` → `python scripts/review_summary.py` | 3 câu người phải trả lời + mức đồng thuận giữa các người chấm | ⏳ chờ nhóm chấm |
 | **S4 · Không gãy & độ phủ** | `node scripts/smoke.js` · `python scripts/coverage.py` | trang có dựng được · % câu hỏi thật map được vào cây | ✅ smoke · ❌ coverage |
 
 Chạy chung mỗi khi sửa luật:
