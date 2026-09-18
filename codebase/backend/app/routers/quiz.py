@@ -17,9 +17,14 @@ def load_quiz_data():
         return json.load(f)
 
 @router.get("", response_model=List[QuizQuestionOut])
-def get_quiz(count: int = Query(default=5, ge=5, le=20)):
+def get_quiz(count: int = Query(default=5, ge=5, le=20),
+             doc: str | None = Query(default=None, description="Lọc theo buổi: day-01 hoặc day-02")):
     """Lấy danh sách câu hỏi quiz ôn tập. Đáp án đúng được ẩn phía server trong lúc làm bài."""
     quiz_items = load_quiz_data()
+    if doc:
+        loc = [q for q in quiz_items if q.get("doc") == doc]
+        if loc:
+            quiz_items = loc
     return [
         QuizQuestionOut(
             id=q.get("id", f"q{i}"),

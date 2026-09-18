@@ -6,10 +6,16 @@
 // Slide d2 chưa đối chiếu trang -> KHÔNG ghi số trang, để tránh trích dẫn sai.
 
 const SRC = 'transcript-01-clean.md';
-const cite = (spans, file = SRC) => `${file} · ${spans.map((s) => `[${s}]`).join(' ')}`;
+
+// Mã đoạn tự mang tên file: T04-051 nằm ở transcript-04-clean.md.
+// Suy ra từ span thay vì gán tay, vì một node có thể trích từ nhiều buổi
+// (l_context_rot dùng cả T04, T05, T06) mà trường file chỉ ghi được một tên.
+const filesOf = (spans) => [...new Set(spans.map((s) => `transcript-${s.slice(1, 3)}-clean.md`))];
+const short = (spans) => filesOf(spans).map((f) => f.replace('transcript-', '').replace('-clean.md', '')).join('+');
+const cite = (spans) => `transcript ${short(spans)} · ${spans.map((s) => `[${s}]`).join(' ')}`;
 
 const N = (id, label, parent, spans, conf, extra = {}) => {
-  const file = extra.file || SRC;
+  const file = filesOf(spans).join(', ');
   return {
     id,
     label,
@@ -17,7 +23,7 @@ const N = (id, label, parent, spans, conf, extra = {}) => {
     file,
     span: spans,
     conf,
-    page: cite(spans, file), // chuỗi hiển thị trong UI
+    page: cite(spans), // chuỗi hiển thị trong UI
     ...extra,
   };
 };
@@ -33,19 +39,14 @@ const TREE = {
 
   // --- DAY 1 (PREREQUISITE TECH FOUNDATION) TỪ transcript-04, transcript-05 & transcript-06 ---
   c0: N('c0', 'Nền tảng Day 1 · Bản chất kỹ thuật của LLM', 'root', ['T04-046', 'T06-136'], 0.9, {
-    file: 'transcript-04-clean.md',
   }),
   c0s1: N('c0s1', 'Day 1.1 Cơ chế sinh token xác suất & Ảo giác', 'c0', ['T06-136', 'T06-138'], 0.9, {
-    file: 'transcript-06-clean.md',
   }),
   l_probabilistic: N('l_probabilistic', 'LLM dự đoán next token theo xác suất, không phải tri thức chắc chắn', 'c0s1', ['T04-047', 'T06-136'], 0.9, {
-    file: 'transcript-04-clean.md',
   }),
   l_hallucination: N('l_hallucination', 'Ảo giác (Hallucination) là tất yếu do bias dữ liệu và autoregressive', 'c0s1', ['T04-048', 'T06-138', 'T06-139'], 0.9, {
-    file: 'transcript-06-clean.md',
   }),
   l_context_rot: N('l_context_rot', 'Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)', 'c0s1', ['T04-051', 'T04-052', 'T05-012', 'T06-147'], 0.9, {
-    file: 'transcript-04-clean.md',
   }),
 
   // --- DAY 2 CHƯƠNG 1 ---
@@ -59,15 +60,12 @@ const TREE = {
     prereq: ['c0s1'], // Cạnh tiên quyết: sản phẩm AI khó hơn vì bản chất xác suất của Day 1
   }),
   c2s2: N('c2s2', '2.2 Mức độ tự động hoá & Chi phí sai sót (Cost of error)', 'c2', ['T02-032', 'T03-088', 'T03-090'], 0.9, {
-    file: 'transcript-02-clean.md',
     prereq: ['c0s1'], // Cạnh tiên quyết mục: muốn hiểu mức tự động hoá phải hiểu giới hạn kỹ thuật Day 1
   }),
   l_cost_of_error: N('l_cost_of_error', 'Chi phí lỗi cao thì phải giữ Human-in-the-loop (Augmentation)', 'c2s2', ['T02-032', 'T03-088'], 0.9, {
-    file: 'transcript-02-clean.md',
     prereq: ['l_hallucination'], // Cạnh tiên quyết lá: chi phí lỗi bắt nguồn từ ảo giác tất yếu
   }),
   l_guardrail_odd: N('l_guardrail_odd', 'Ràng buộc phạm vi ODD và guardrail chặn rủi ro', 'c2s2', ['T03-090', 'T03-097'], 0.9, {
-    file: 'transcript-03-clean.md',
     prereq: ['l_context_rot'], // Cạnh tiên quyết lá: guardrail và giới hạn ngữ cảnh
   }),
 

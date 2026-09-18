@@ -3,13 +3,13 @@
     "id": "root",
     "label": "Khóa học AI20k · Foundation & AI Product (Day 1 & Day 2)",
     "parent": null,
-    "file": "transcript-01-clean.md",
+    "file": "transcript-01-clean.md, transcript-06-clean.md",
     "span": [
       "T01-001",
       "T06-147"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-001] [T06-147]",
+    "page": "transcript 01+06 · [T01-001] [T06-147]",
     "compact": [
       "Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]",
       "Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]",
@@ -20,13 +20,13 @@
     "id": "c0",
     "label": "Nền tảng Day 1 · Bản chất kỹ thuật của LLM",
     "parent": "root",
-    "file": "transcript-04-clean.md",
+    "file": "transcript-04-clean.md, transcript-06-clean.md",
     "span": [
       "T04-046",
       "T06-136"
     ],
     "conf": 0.9,
-    "page": "transcript-04-clean.md · [T04-046] [T06-136]"
+    "page": "transcript 04+06 · [T04-046] [T06-136]"
   },
   "c0s1": {
     "id": "c0s1",
@@ -38,38 +38,38 @@
       "T06-138"
     ],
     "conf": 0.9,
-    "page": "transcript-06-clean.md · [T06-136] [T06-138]"
+    "page": "transcript 06 · [T06-136] [T06-138]"
   },
   "l_probabilistic": {
     "id": "l_probabilistic",
     "label": "LLM dự đoán next token theo xác suất, không phải tri thức chắc chắn",
     "parent": "c0s1",
-    "file": "transcript-04-clean.md",
+    "file": "transcript-04-clean.md, transcript-06-clean.md",
     "span": [
       "T04-047",
       "T06-136"
     ],
     "conf": 0.9,
-    "page": "transcript-04-clean.md · [T04-047] [T06-136]"
+    "page": "transcript 04+06 · [T04-047] [T06-136]"
   },
   "l_hallucination": {
     "id": "l_hallucination",
     "label": "Ảo giác (Hallucination) là tất yếu do bias dữ liệu và autoregressive",
     "parent": "c0s1",
-    "file": "transcript-06-clean.md",
+    "file": "transcript-04-clean.md, transcript-06-clean.md",
     "span": [
       "T04-048",
       "T06-138",
       "T06-139"
     ],
     "conf": 0.9,
-    "page": "transcript-06-clean.md · [T04-048] [T06-138] [T06-139]"
+    "page": "transcript 04+06 · [T04-048] [T06-138] [T06-139]"
   },
   "l_context_rot": {
     "id": "l_context_rot",
     "label": "Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)",
     "parent": "c0s1",
-    "file": "transcript-04-clean.md",
+    "file": "transcript-04-clean.md, transcript-05-clean.md, transcript-06-clean.md",
     "span": [
       "T04-051",
       "T04-052",
@@ -77,7 +77,7 @@
       "T06-147"
     ],
     "conf": 0.9,
-    "page": "transcript-04-clean.md · [T04-051] [T04-052] [T05-012] [T06-147]"
+    "page": "transcript 04+05+06 · [T04-051] [T04-052] [T05-012] [T06-147]"
   },
   "c1": {
     "id": "c1",
@@ -89,7 +89,7 @@
       "T01-017"
     ],
     "conf": 0.7,
-    "page": "transcript-01-clean.md · [T01-001] [T01-017]"
+    "page": "transcript 01 · [T01-001] [T01-017]"
   },
   "c1s1": {
     "id": "c1s1",
@@ -102,7 +102,7 @@
       "T01-016"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-004] [T01-006] [T01-016]"
+    "page": "transcript 01 · [T01-004] [T01-006] [T01-016]"
   },
   "c1s2": {
     "id": "c1s2",
@@ -114,7 +114,7 @@
       "T01-011"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-008] [T01-011]"
+    "page": "transcript 01 · [T01-008] [T01-011]"
   },
   "c2": {
     "id": "c2",
@@ -126,7 +126,7 @@
       "T01-029"
     ],
     "conf": 0.7,
-    "page": "transcript-01-clean.md · [T01-018] [T01-029]"
+    "page": "transcript 01 · [T01-018] [T01-029]"
   },
   "c2s1": {
     "id": "c2s1",
@@ -139,7 +139,7 @@
       "T01-025"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-019] [T01-021] [T01-025]",
+    "page": "transcript 01 · [T01-019] [T01-021] [T01-025]",
     "prereq": [
       "c0s1"
     ]
@@ -148,14 +148,14 @@
     "id": "c2s2",
     "label": "2.2 Mức độ tự động hoá & Chi phí sai sót (Cost of error)",
     "parent": "c2",
-    "file": "transcript-02-clean.md",
+    "file": "transcript-02-clean.md, transcript-03-clean.md",
     "span": [
       "T02-032",
       "T03-088",
       "T03-090"
     ],
     "conf": 0.9,
-    "page": "transcript-02-clean.md · [T02-032] [T03-088] [T03-090]",
+    "page": "transcript 02+03 · [T02-032] [T03-088] [T03-090]",
     "prereq": [
       "c0s1"
     ]
@@ -164,13 +164,13 @@
     "id": "l_cost_of_error",
     "label": "Chi phí lỗi cao thì phải giữ Human-in-the-loop (Augmentation)",
     "parent": "c2s2",
-    "file": "transcript-02-clean.md",
+    "file": "transcript-02-clean.md, transcript-03-clean.md",
     "span": [
       "T02-032",
       "T03-088"
     ],
     "conf": 0.9,
-    "page": "transcript-02-clean.md · [T02-032] [T03-088]",
+    "page": "transcript 02+03 · [T02-032] [T03-088]",
     "prereq": [
       "l_hallucination"
     ]
@@ -185,7 +185,7 @@
       "T03-097"
     ],
     "conf": 0.9,
-    "page": "transcript-03-clean.md · [T03-090] [T03-097]",
+    "page": "transcript 03 · [T03-090] [T03-097]",
     "prereq": [
       "l_context_rot"
     ]
@@ -200,7 +200,7 @@
       "T01-073"
     ],
     "conf": 0.7,
-    "page": "transcript-01-clean.md · [T01-030] [T01-073]"
+    "page": "transcript 01 · [T01-030] [T01-073]"
   },
   "c3s1": {
     "id": "c3s1",
@@ -214,7 +214,7 @@
       "T01-074"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-049] [T01-069] [T01-071] [T01-074]",
+    "page": "transcript 01 · [T01-049] [T01-069] [T01-071] [T01-074]",
     "prereq": [
       "c1s1"
     ]
@@ -231,7 +231,7 @@
       "T01-061"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-050] [T01-059] [T01-060] [T01-061]",
+    "page": "transcript 01 · [T01-050] [T01-059] [T01-060] [T01-061]",
     "prereq": [
       "c1s1"
     ]
@@ -247,7 +247,7 @@
       "T01-068"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-062] [T01-064] [T01-068]"
+    "page": "transcript 01 · [T01-062] [T01-064] [T01-068]"
   },
   "c3s4": {
     "id": "c3s4",
@@ -261,7 +261,7 @@
       "T01-072"
     ],
     "conf": 0.7,
-    "page": "transcript-01-clean.md · [T01-042] [T01-045] [T01-048] [T01-072]"
+    "page": "transcript 01 · [T01-042] [T01-045] [T01-048] [T01-072]"
   },
   "c4": {
     "id": "c4",
@@ -273,7 +273,7 @@
       "T01-086"
     ],
     "conf": 0.7,
-    "page": "transcript-01-clean.md · [T01-074] [T01-086]"
+    "page": "transcript 01 · [T01-074] [T01-086]"
   },
   "c4s1": {
     "id": "c4s1",
@@ -286,7 +286,7 @@
       "T01-079"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-074] [T01-078] [T01-079]",
+    "page": "transcript 01 · [T01-074] [T01-078] [T01-079]",
     "prereq": [
       "c3s1"
     ]
@@ -301,7 +301,7 @@
       "T01-084"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-081] [T01-084]",
+    "page": "transcript 01 · [T01-081] [T01-084]",
     "prereq": [
       "c3s4"
     ]
@@ -316,7 +316,7 @@
       "T01-016"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-004] [T01-016]"
+    "page": "transcript 01 · [T01-004] [T01-016]"
   },
   "l_boctach": {
     "id": "l_boctach",
@@ -327,7 +327,7 @@
       "T01-006"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-006]"
+    "page": "transcript 01 · [T01-006]"
   },
   "l_pm": {
     "id": "l_pm",
@@ -339,7 +339,7 @@
       "T01-011"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-010] [T01-011]"
+    "page": "transcript 01 · [T01-010] [T01-011]"
   },
   "l_po": {
     "id": "l_po",
@@ -350,7 +350,7 @@
       "T01-011"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-011]"
+    "page": "transcript 01 · [T01-011]"
   },
   "l_kyvong": {
     "id": "l_kyvong",
@@ -361,7 +361,7 @@
       "T01-020"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-020]"
+    "page": "transcript 01 · [T01-020]"
   },
   "l_chuyendoi": {
     "id": "l_chuyendoi",
@@ -372,7 +372,7 @@
       "T01-021"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-021]"
+    "page": "transcript 01 · [T01-021]"
   },
   "l_phanky": {
     "id": "l_phanky",
@@ -383,7 +383,7 @@
       "T01-071"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-071]"
+    "page": "transcript 01 · [T01-071]"
   },
   "l_hoitu": {
     "id": "l_hoitu",
@@ -394,7 +394,7 @@
       "T01-074"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-074]",
+    "page": "transcript 01 · [T01-074]",
     "prereq": [
       "l_phanky"
     ]
@@ -409,7 +409,7 @@
       "T01-061"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-060] [T01-061]"
+    "page": "transcript 01 · [T01-060] [T01-061]"
   },
   "l_firstprinciple": {
     "id": "l_firstprinciple",
@@ -420,7 +420,7 @@
       "T01-064"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-064]"
+    "page": "transcript 01 · [T01-064]"
   },
   "l_quansat": {
     "id": "l_quansat",
@@ -431,7 +431,7 @@
       "T01-072"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-072]"
+    "page": "transcript 01 · [T01-072]"
   },
   "l_dogfood": {
     "id": "l_dogfood",
@@ -442,7 +442,7 @@
       "T01-042"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-042]"
+    "page": "transcript 01 · [T01-042]"
   },
   "l_trithucan": {
     "id": "l_trithucan",
@@ -453,7 +453,7 @@
       "T01-048"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-048]"
+    "page": "transcript 01 · [T01-048]"
   },
   "l_matran": {
     "id": "l_matran",
@@ -464,7 +464,7 @@
       "T01-078"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-078]"
+    "page": "transcript 01 · [T01-078]"
   },
   "l_quickwin": {
     "id": "l_quickwin",
@@ -475,7 +475,7 @@
       "T01-079"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-079]"
+    "page": "transcript 01 · [T01-079]"
   },
   "l_dongcam": {
     "id": "l_dongcam",
@@ -486,6 +486,6 @@
       "T01-084"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-084]"
+    "page": "transcript 01 · [T01-084]"
   }
 }

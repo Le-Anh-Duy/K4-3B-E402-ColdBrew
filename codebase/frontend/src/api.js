@@ -32,8 +32,11 @@ export async function apiGetTree() {
 }
 
 // 3. Quiz & Chấm điểm
-export async function apiGetQuiz(count) {
-  const query = Number.isFinite(Number(count)) ? `?count=${Number(count)}` : '';
+export async function apiGetQuiz(count, doc) {
+  const params = new URLSearchParams();
+  if (Number.isFinite(Number(count))) params.set('count', String(Number(count)));
+  if (doc === 'day-01' || doc === 'day-02') params.set('doc', doc);
+  const query = params.toString() ? `?${params}` : '';
   return await fetchJson(`${API_BASE}/quiz${query}`);
 }
 

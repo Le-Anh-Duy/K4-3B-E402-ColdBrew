@@ -70,98 +70,6 @@ function fallbackTarget(records, tree) {
   return { target, hits: hits.map(record => record.node), missed, shaky, candidates, reason: null }
 }
 
-const DAY1_QUESTIONS = [
-  {
-    id: 'd1_q1',
-    node: 'l_probabilistic',
-    q: 'Bản chất quá trình sinh văn bản của các mô hình LLM là gì?',
-    options: [
-      'Dự đoán token tiếp theo theo xác suất thống kê trong không gian toán học, không phải tri thức chắc chắn',
-      'Tra cứu dữ liệu từ một cơ sở dữ liệu bách khoa toàn thư đã lưu sẵn',
-      'Thực thi các luật logic if-else được lập trình sẵn',
-      'Dịch nguyên văn từng từ một từ tiếng Anh sang tiếng Việt',
-    ],
-    answer: 0,
-    why: 'LLM dự đoán token tiếp theo theo xác suất thống kê, không bảo đảm tính đúng đắn tuyệt đối [T04-047] [T06-136].',
-    traps: {
-      '1': 'LLM không tra cứu database tĩnh khi sinh text [T04-047].',
-      '2': 'LLM dựa trên neural network, không phải hệ chuyên gia rule-based.',
-      '3': 'LLM tạo văn bản sinh tự động bằng autoregressive, không chỉ là dịch từ.',
-    },
-  },
-  {
-    id: 'd1_q2',
-    node: 'l_hallucination',
-    q: 'Vì sao hiện tượng ảo giác (hallucination) lại là tất yếu trong các mô hình LLM?',
-    options: [
-      'Do phân phối xác suất và kiến trúc autoregressive, mô hình ưu tiên độ hợp lý ngôn ngữ hơn sự thật tuyệt đối',
-      'Do máy chủ GPU bị quá nhiệt khi tính toán',
-      'Do người dùng đặt câu hỏi quá ngắn',
-      'Do đường truyền mạng không ổn định',
-    ],
-    answer: 0,
-    why: 'Ảo giác sinh ra từ bản chất autoregressive và bias phân phối dữ liệu huấn luyện [T04-048] [T06-138].',
-    traps: {
-      '1': 'Nhiệt độ phần cứng không quyết định bản chất thuật toán.',
-      '2': 'Câu hỏi ngắn có thể thiếu ngữ cảnh nhưng không phải gốc rễ của ảo giác.',
-      '3': 'Đường truyền mạng chỉ ảnh hưởng tới độ trễ, không ảnh hưởng tới trọng số mô hình.',
-    },
-  },
-  {
-    id: 'd1_q3',
-    node: 'l_context_rot',
-    q: 'Vấn đề "Context Rot" và suy giảm chú ý trong cửa sổ ngữ cảnh (Context Window) là gì?',
-    options: [
-      'Khi context quá dài, cơ chế attention bị loãng khiến mô hình dễ bỏ sót hoặc suy diễn sai thông tin ở giữa (lost-in-the-middle)',
-      'File văn bản lưu trữ lâu ngày bị lỗi font',
-      'Mô hình tự động xoá vĩnh viễn dữ liệu sau 24 giờ',
-      'Màn hình hiển thị bị mất chữ do giao diện',
-    ],
-    answer: 0,
-    why: 'Context rot xảy ra khi context quá dài làm suy giảm cơ chế chú ý attention [T04-051] [T06-147].',
-    traps: {
-      '1': 'Không liên quan tới lỗi font file.',
-      '2': 'Không phải chính sách lưu trữ cache.',
-      '3': 'Đây là hiện tượng thuật toán attention, không phải lỗi hiển thị UI.',
-    },
-  },
-  {
-    id: 'd1_q4',
-    node: 'l_probabilistic',
-    q: 'Vì sao câu trả lời trôi chảy, tự tin của LLM vẫn luôn cần được kiểm chứng (Human-in-the-loop)?',
-    options: [
-      'Vì xác suất xuất hiện cao của token không đồng nghĩa với tính đúng đắn của dữ kiện thực tế',
-      'Vì mọi câu trả lời của LLM đều hoàn toàn ngẫu nhiên không theo quy luật',
-      'Vì LLM không thể tạo ra văn bản có nghĩa',
-      'Vì prompt luôn bị mô hình bỏ qua',
-    ],
-    answer: 0,
-    why: 'Mô hình tối ưu hàm loss dự đoán token, không bảo đảm tính đúng của dữ kiện thực tế [T04-047] [T06-136].',
-    traps: {
-      '1': 'LLM tuân theo phân phối có điều kiện, không phải ngẫu nhiên vô nghĩa.',
-      '2': 'LLM tạo văn bản rất tự nhiên, đó chính là lý do con người dễ bị đánh lừa.',
-      '3': 'Prompt là điều kiện đầu vào trực tiếp cho việc dự đoán token.',
-    },
-  },
-  {
-    id: 'd1_q5',
-    node: 'l_context_rot',
-    q: 'Khi tài liệu quá dài vượt quá khả năng xử lý hiệu quả của context window, giải pháp kỹ thuật phù hợp là gì?',
-    options: [
-      'Phân đoạn tài liệu (chunking) và sử dụng truy xuất ngữ nghĩa (RAG) để chỉ đưa đoạn liên quan vào context',
-      'Nhồi toàn bộ tài liệu lặp lại nhiều lần vào prompt',
-      'Chờ mô hình tự đọc trực tiếp từ ổ cứng',
-      'Giảm kích thước font chữ của tài liệu',
-    ],
-    answer: 0,
-    why: 'Chia nhỏ tài liệu và truy xuất đoạn liên quan giúp tận dụng context window hiệu quả và tránh context rot [T04-051] [T05-012].',
-    traps: {
-      '1': 'Nhồi lặp lại làm context rot nặng thêm.',
-      '2': 'Mô hình không thể tự truy cập ổ cứng máy khách.',
-      '3': 'Font chữ không liên quan đến số lượng token.',
-    },
-  },
-]
 
 export const learningService = {
   mode: 'adaptive',
@@ -240,19 +148,14 @@ export const learningService = {
   async startQuiz(config) {
     const isBackendDoc = config.documentId === 'adaptive-backend' || config.documentId === 'day-01' || config.documentId === 'day-02'
     if (isBackendDoc) {
-      const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(config.count), apiGetTree(), apiCreateSession()])
+      const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(config.count, config.documentId), apiGetTree(), apiCreateSession()])
       const docTitle = config.documentId === 'day-01'
         ? 'Day 01 · Nền tảng kỹ thuật của LLM (Transcript 04, 05, 06)'
         : config.documentId === 'day-02'
         ? 'Day 02 · Xác định bài toán kinh doanh cho AI (Transcript 01, 02, 03)'
         : (graph?.nodes?.root?.label || 'Toàn bộ khóa học AI20k')
 
-      let rawQuestions = []
-      if (config.documentId === 'day-01') {
-        rawQuestions = DAY1_QUESTIONS.slice(0, config.count || 5)
-      } else if (quiz?.length) {
-        rawQuestions = quiz.slice(0, config.count || 5)
-      }
+      const rawQuestions = quiz?.length ? quiz.slice(0, config.count || 5) : []
 
       if (rawQuestions.length) {
         const document = { id: config.documentId, title: docTitle, topics: [config.topic] }
