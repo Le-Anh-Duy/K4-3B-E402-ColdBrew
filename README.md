@@ -29,6 +29,19 @@
 - **Chia cụm theo bàn**, không cần chung đề tài. Chủ đề tự chọn trong khuôn khổ đề bài
 - Nhóm nhỏ thì **chọn lát cắt nhỏ**, và phải có **khảo sát nỗi đau thật** — đây là chỗ ăn điểm nặng nhất
 
+## ⚠️ Về dữ liệu trong repo này
+
+**Repo không chứa data pack của khoá.** Toàn bộ dữ liệu trong `eval/`, `mockup/data.js` và
+`codebase/backend/app/data/` là **dữ liệu mock do nhóm tự dựng để kiểm thử** — hồ sơ trả lời
+quiz là hồ sơ giả, không có học viên thật nào; cây tri thức là nhãn khái niệm nhóm tự đặt kèm
+**mã đoạn** `[T01-xxx]` để truy nguồn, không phải bản sao tài liệu.
+
+Chi tiết từng file và cam kết bảo mật: **[`DATA_NOTICE.md`](DATA_NOTICE.md)**
+
+```
+git ls-files | grep -iE "vlearn|transcript-|tutor_turns"   # rỗng = không có data pack
+```
+
 ## Bắt đầu từ đâu?
 
 1. Đọc **`01-challenge-brief.md`** để hiểu khung chung và 5 tiêu chí, rồi **`tracks/README.md`** để chọn track và đề.

@@ -1,5 +1,8 @@
 # eval/ — DỮ LIỆU của bộ đo
 
+> **Dữ liệu ở đây là mock để kiểm thử** — hồ sơ trả lời do nhóm tự dựng, không có học viên thật; cây tri thức là nhãn tự đặt kèm mã đoạn để truy nguồn. Repo không chứa data pack. Xem [`DATA_NOTICE.md`](../DATA_NOTICE.md).
+
+
 > Ý nghĩa từng trường dữ liệu, tên node, tên cạnh: **[`docs/data-model.md`](../docs/data-model.md)**
 
 Chỉ chứa dữ liệu. Script nằm ở `scripts/`.
