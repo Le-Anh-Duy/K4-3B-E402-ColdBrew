@@ -31,6 +31,9 @@ const BLANK = {
   roundRecs: [], // kết quả vòng chẩn đoán vừa xong
   probeLog: {}, // node -> [[chọn, giây]] của lần trả lời gần nhất, dùng để xuất case eval
   decision: null, // escalate | locate | restart
+  scenario: null, // y_le | muc_nong | muc_duoi_tran | nen_bai
+  gap: null, // chỗ hổng (null = hổng ở chính ý trong quiz)
+  ceilingNode: null, // node đã xác nhận ổn
   nextTarget: null,
   trace: [],
   status: {}, // nodeId -> 'ok' | 'shaky' | 'weak' | 'probing'
@@ -697,6 +700,9 @@ function Probe({ s, think }) {
     think([`Chấm ${qs.length} câu nền của "${node.label}"`, 'Đối chiếu với cây tri thức', conclusion], {
       stage: 'review',
       roundRecs: recs,
+      scenario: d.scenario,
+      gap: d.gap,
+      ceilingNode: d.ceiling,
       probeLog: { ...s.probeLog, [s.target]: recs.map((r) => [r.sel, r.sec]) },
       decision,
       nextTarget,
@@ -1011,15 +1017,49 @@ const LEVEL_META = {
   bai: { ten: 'Học lại cả bài', phut: '~45 phút' },
 };
 
+// Địa chỉ backend. Đổi được ngay trong trình duyệt:
+//   localStorage.setItem('coldbrew-api', 'http://localhost:8001')
+const API = (typeof localStorage !== 'undefined' && localStorage.getItem('coldbrew-api')) ||
+  'http://localhost:8001';
+
 function Advice({ s }) {
   const [state, setState] = useState(null); // null | 'loading' | 'shown'
+  const [aiText, setAiText] = useState(null); // chữ do Gemini viết thật
+  const [loi, setLoi] = useState(null);
   const node = TREE[s.target];
-  const level = adviceLevel(s.target, s.verdict, TREE);
+  const level = adviceLevel(s.gap || s.target, s.verdict, TREE);
   const meta = LEVEL_META[level];
 
   const run = () => {
     setState('loading');
-    setTimeout(() => setState('shown'), 1500);
+    fetch(API + '/api/v0/ai/plan/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        verdict: s.verdict === 'restart' ? 'restart' : 'located',
+        scenario: s.scenario || (s.verdict === 'restart' ? 'nen_bai' : 'muc_duoi_tran'),
+        gap_node_id: s.gap || null,
+        ceiling_node_id: s.ceilingNode || s.target,
+        target_node_id: s.gap || s.target,
+        records: s.records.map((r) => ({
+          node: r.node, sel: r.sel, correct: r.correct, sec: r.sec, flag: r.flag,
+        })),
+        trace: s.trace.map((t) => ({ t: t.t, d: t.d })),
+      }),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+      .then((d) => {
+        const t = (d.advice_text || '').trim();
+        // backend trả 200 nhưng rỗng = Gemini chặn vì rate limit (free tier 15 lượt/phút)
+        if (!t) setLoi('Gemini đang chặn vì vượt 15 lượt/phút — chờ ~30 giây rồi bấm lại');
+        setAiText(t || null);
+        setState('shown');
+      })
+      .catch((e) => {
+        // backend chưa chạy -> vẫn demo được bằng nội dung mock, nhưng nói rõ ra
+        setLoi(e.message);
+        setState('shown');
+      });
   };
 
   if (state === null)
@@ -1048,11 +1088,22 @@ function Advice({ s }) {
       <h3>
         {meta.ten} · {meta.phut}
       </h3>
-      <AdviceBody level={level} node={node} />
-      <p className="hint">
-        Nội dung mock. Khi nối Gemini, phần chữ này do model viết nhưng khung vẫn cố định theo mức, và
-        mỗi ý bắt buộc gắn một trang slide — model không được nhắc khái niệm ngoài cây.
-      </p>
+      {aiText ? (
+        <>
+          <p className="ai-badge">✨ Gemini viết, khung do luật chốt · kịch bản {s.scenario || '—'}</p>
+          <p style={{ whiteSpace: 'pre-wrap' }}>{aiText}</p>
+          <Source node={TREE[s.gap || s.target]} />
+        </>
+      ) : (
+        <>
+          <AdviceBody level={level} node={node} />
+          <p className="hint">
+            {loi
+              ? `Đang hiện nội dung mock — ${loi}.`
+              : 'Nội dung mock.'}
+          </p>
+        </>
+      )}
     </div>
   );
 }
