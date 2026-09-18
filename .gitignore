@@ -1,8 +1,20 @@
 .env
+*.env
 __pycache__/
 *.pyc
 .venv/
 node_modules/
 dist/
-data/
+package-lock.json
 .cache/
+
+# Data pack của khoá (KHÔNG commit) + metadata/log phiên
+/data/
+**/data/metadata/
+**/data/sessions/
+*.pdf
+
+# Giữ lại JSON định nghĩa cây tri thức & đề — teammate pull về chạy được ngay
+!codebase/backend/app/data/tree.json
+!codebase/backend/app/data/quiz.json
+!codebase/backend/app/data/probes.json
