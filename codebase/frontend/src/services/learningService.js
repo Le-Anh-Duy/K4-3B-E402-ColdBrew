@@ -94,7 +94,7 @@ export const learningService = {
   },
   async startQuiz(config) {
     if (config.documentId === 'adaptive-backend') {
-      const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(), apiGetTree(), apiCreateSession()])
+      const [quiz, graph, remoteSession] = await Promise.all([apiGetQuiz(config.count), apiGetTree(), apiCreateSession()])
       if (quiz?.length) {
         const document = { id: config.documentId, title: graph?.nodes?.root?.label || 'Bài ôn chẩn đoán', topics: [config.topic] }
         return {
@@ -104,7 +104,7 @@ export const learningService = {
           topic: config.topic,
           source: 'backend',
           tree: graph?.nodes || {},
-          questions: quiz.map(question => normalizeQuestion(question, 'backend')),
+          questions: quiz.slice(0, Number(config.count)).map(question => normalizeQuestion(question, 'backend')),
         }
       }
     }

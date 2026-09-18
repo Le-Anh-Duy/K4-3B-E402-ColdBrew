@@ -1,7 +1,7 @@
 from typing import List
 from pathlib import Path
 import json
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 
 from ..schemas.quiz_schemas import QuizQuestionOut, QuizGradeIn, QuizGradeOut, QuestionRecord
 from ..core import engine
@@ -17,7 +17,7 @@ def load_quiz_data():
         return json.load(f)
 
 @router.get("", response_model=List[QuizQuestionOut])
-def get_quiz():
+def get_quiz(count: int = Query(default=5, ge=5, le=20)):
     """Lấy danh sách câu hỏi quiz ôn tập. Đáp án đúng được ẩn phía server trong lúc làm bài."""
     quiz_items = load_quiz_data()
     return [
@@ -27,7 +27,7 @@ def get_quiz():
             q=q["q"],
             options=q["options"]
         )
-        for i, q in enumerate(quiz_items)
+        for i, q in enumerate(quiz_items[:count])
     ]
 
 @router.post("/grade", response_model=QuizGradeOut)
@@ -37,7 +37,7 @@ def grade_quiz(body: QuizGradeIn):
     - Gắn nhãn: ok, slow (>25s), wrong, rush (<3s), skip.
     - Trả về đáp án đúng, giải thích why và bẫy trap cho từng câu.
     """
-    quiz_items = load_quiz_data()
+    quiz_items = load_quiz_data()[:len(body.picked)]
     records_raw = engine.grade(quiz_items, body.picked, body.times)
     records = []
 
