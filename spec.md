@@ -301,7 +301,16 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 | Nguyễn Thị Phương Duyên | 2A202603001 | `TODO` |
 | Đào Trọng Khang | 2A202602974 | `TODO` |
 
-- Willing users (≥2 tên) và kế hoạch vòng validation: `TODO`, khai từ CP1.
+- **Willing users: 2 người** đã nhận lời, đều là học viên trong khoá và ngoài nhóm. Danh tính giữ kín theo luật bảo mật dữ liệu của khoá; nhóm lưu tên và MSHV ngoài repo, đối chiếu được khi ban tổ chức yêu cầu.
+
+  | Mã | Vì sao sẵn sàng thử (nguyên văn rút gọn) |
+  |---|---|
+  | **Willing user A** | Muốn hệ thống nhanh hơn và chính xác hơn |
+  | **Willing user B** | Hay phải mở lại slide, mà slide load rất lâu và tìm thì mất thời gian |
+
+  Lý do của B là pain về **tìm lại đúng chỗ trong tài liệu**, gần với job nhưng không trùng: sản phẩm này trả về mã đoạn transcript thay vì bắt mở lại slide, nên có chạm tới, song nó không phải nhu cầu chẩn đoán prerequisite. Ghi đúng như vậy để không tính nhầm thành xác nhận cho lát cắt.
+
+- **Kế hoạch vòng validation** (bonus theo guide §4.2, làm trước CP5): mỗi người một phiên 10 phút theo 5 nhịp comfort, context, task theo outcome, quan sát im lặng, hỏi sau khi dùng. Giao task bằng kết quả cần đạt chứ không chỉ nút bấm. Log từng người một dòng trong `validation/`, kèm quote nguyên văn và mức nghiêm trọng. Nếu kịp thì mời thêm một người từ nhóm khác trong phòng.
 - Multi-prototype: không làm.
 - Backlog, trỏ về §3, §5 và §7: gán misconception cho distractor, sinh câu hỏi nền có điều kiện, thêm case cho lớp 3, mở rộng ngân hàng câu hỏi ra ngoài 5 node lá.
 
