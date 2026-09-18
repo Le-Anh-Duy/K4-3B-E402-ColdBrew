@@ -74,15 +74,19 @@ Tự lưu vào <code>eval/human_review.json</code>.</p>
 <div class="bar"><span id="tally"></span><span id="status">—</span></div>
 <script>
 const ROWS = __ROWS__;
-let NAME = localStorage.getItem('coldbrew-rater') || '';
-while (!NAME) { NAME = (prompt('Tên bạn (để lưu bản chấm riêng):') || '').trim(); }
-localStorage.setItem('coldbrew-rater', NAME);
+// mỗi trình duyệt tự có một id, không hỏi gì cả; điền tên thì file dễ đọc hơn
+let RID = localStorage.getItem('coldbrew-rid');
+if (!RID) { RID = 'r' + Date.now().toString(36).slice(-5); localStorage.setItem('coldbrew-rid', RID); }
+let TEN = localStorage.getItem('coldbrew-ten') || '';
+const NAME = () => (TEN ? TEN + '-' + RID : RID);
 document.getElementById('who').innerHTML =
-  `Người chấm: <b>${NAME}</b> — bản chấm lưu riêng ở <code>eval/review/</code>, ` +
-  `không đè lên bản của người khác. <a href="#" onclick="localStorage.removeItem('coldbrew-rater');location.reload()">đổi người</a>`;
+  `Bản chấm của bạn lưu ở <code>eval/review/<span id="fn">${NAME()}</span>.json</code> — ` +
+  `mỗi máy một file, không đè lên nhau. Tên (tuỳ chọn): ` +
+  `<input id="ten" type="text" style="width:160px;display:inline-block;margin:0" value="${TEN}" placeholder="vd: duy">`;
 let SAVED = {};
-try { SAVED = JSON.parse(localStorage.getItem('coldbrew-review-' + NAME) || '{}'); } catch (e) {}
+try { SAVED = JSON.parse(localStorage.getItem('coldbrew-review-' + RID) || '{}'); } catch (e) {}
 const el = document.getElementById('list');
+try {
 ROWS.forEach(r => {
   const s = SAVED[r.id] || {};
   const d = document.createElement('div');
@@ -92,7 +96,7 @@ ROWS.forEach(r => {
    <div class="head"><b>${r.id} · ${r.desc}</b>
      <span class="tag">${r.scenario}</span></div>
    <div class="blk">KHỐI A · BÀI LÀM CỦA HỌC VIÊN</div>
-   <div class="ans">${r.bai_lam.join('\n')}</div>
+   <div class="ans">${r.bai_lam.join('\\n')}</div>
    <div class="blk">KHỐI B · LUẬT CHẨN ĐOÁN KẾT LUẬN <span class="tag">${r.scenario}</span>
      <span style="font-weight:400;text-transform:none;letter-spacing:0">— do code sinh, không phải AI</span></div>
    <div class="ans">Chỗ hổng: <b>${r.gap_label || '(một ý trong quiz)'}</b>${
@@ -121,10 +125,13 @@ ROWS.forEach(r => {
   });
   d.querySelector('input').onchange = e => save(e.target.dataset.i, 'ghi_chu', e.target.value);
 });
+} catch (err) {
+  el.innerHTML = '<div class="card"><b>Lỗi dựng trang:</b><pre>' + err.message + '</pre></div>';
+}
 function save(id, k, v) {
   SAVED[id] = SAVED[id] || {}; SAVED[id][k] = v;
-  localStorage.setItem('coldbrew-review-' + NAME, JSON.stringify(SAVED));
-  fetch('/save', {method:'POST', body: JSON.stringify({rater: NAME, data: SAVED})})
+  localStorage.setItem('coldbrew-review-' + RID, JSON.stringify(SAVED));
+  fetch('/save', {method:'POST', body: JSON.stringify({rater: NAME(), data: SAVED})})
     .then(() => { document.getElementById('status').textContent = 'đã lưu'; tally(); })
     .catch(() => document.getElementById('status').textContent = 'lỗi lưu');
   const c = document.getElementById('c_' + id);
@@ -138,6 +145,11 @@ function tally() {
   document.getElementById('tally').textContent =
     `Đã chấm ${done}/${ROWS.length} · nhận xét ổn: ${nx} · chọn nhánh đúng: ${nh} · không mâu thuẫn: ${nv}`;
 }
+document.getElementById('ten').oninput = e => {
+  TEN = e.target.value.trim();
+  localStorage.setItem('coldbrew-ten', TEN);
+  document.getElementById('fn').textContent = NAME();
+};
 tally();
 </script></body></html>"""
 
