@@ -18,14 +18,19 @@ except Exception:
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "eval", "grounding.json")
-OUT = os.path.join(ROOT, "eval", "human_review.json")
+REVIEW_DIR = os.path.join(ROOT, "eval", "review")
+os.makedirs(REVIEW_DIR, exist_ok=True)
 PORT = 5599
 
 if not os.path.exists(DATA):
     sys.exit("Chưa có eval/grounding.json — chạy trước: python scripts/grounding.py")
 
 rows = json.load(open(DATA, encoding="utf-8"))["rows"]
-saved = json.load(open(OUT, encoding="utf-8")) if os.path.exists(OUT) else {}
+
+
+def path_for(name):
+    safe = "".join(c for c in name.lower().replace(" ", "-") if c.isalnum() or c in "-_")[:30]
+    return os.path.join(REVIEW_DIR, f"{safe or 'khuyet-danh'}.json")
 
 PAGE = """<!doctype html><html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>ColdBrew · Chấm tay</title>
@@ -56,13 +61,22 @@ padding:10px 16px;font-size:14px;display:flex;justify-content:space-between}
 .done{opacity:.55}
 </style></head><body><div class="wrap">
 <h1>Chấm tay — nhận xét AI</h1>
+<p class="sub" id="who"></p>
 <p class="sub">Mỗi thẻ có ba khối: <b>A</b> bài làm của học viên · <b>B</b> kết luận của LUẬT (code, không phải AI)
 · <b>C</b> nhận xét do AI viết. Ba câu hỏi bên dưới chấm ba thứ khác nhau — mỗi câu ghi rõ nhìn vào khối nào.
 Tự lưu vào <code>eval/human_review.json</code>.</p>
 <div id="list"></div></div>
 <div class="bar"><span id="tally"></span><span id="status">—</span></div>
 <script>
-const ROWS = __ROWS__, SAVED = __SAVED__;
+const ROWS = __ROWS__;
+let NAME = localStorage.getItem('coldbrew-rater') || '';
+while (!NAME) { NAME = (prompt('Tên bạn (để lưu bản chấm riêng):') || '').trim(); }
+localStorage.setItem('coldbrew-rater', NAME);
+document.getElementById('who').innerHTML =
+  `Người chấm: <b>${NAME}</b> — bản chấm lưu riêng ở <code>eval/review/</code>, ` +
+  `không đè lên bản của người khác. <a href="#" onclick="localStorage.removeItem('coldbrew-rater');location.reload()">đổi người</a>`;
+let SAVED = {};
+try { SAVED = JSON.parse(localStorage.getItem('coldbrew-review-' + NAME) || '{}'); } catch (e) {}
 const el = document.getElementById('list');
 ROWS.forEach(r => {
   const s = SAVED[r.id] || {};
@@ -99,7 +113,8 @@ ROWS.forEach(r => {
 });
 function save(id, k, v) {
   SAVED[id] = SAVED[id] || {}; SAVED[id][k] = v;
-  fetch('/save', {method:'POST', body: JSON.stringify(SAVED)})
+  localStorage.setItem('coldbrew-review-' + NAME, JSON.stringify(SAVED));
+  fetch('/save', {method:'POST', body: JSON.stringify({rater: NAME, data: SAVED})})
     .then(() => { document.getElementById('status').textContent = 'đã lưu'; tally(); })
     .catch(() => document.getElementById('status').textContent = 'lỗi lưu');
   const c = document.getElementById('c_' + id);
@@ -122,8 +137,7 @@ class H(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
-        html = (PAGE.replace("__ROWS__", json.dumps(rows, ensure_ascii=False))
-                    .replace("__SAVED__", json.dumps(saved, ensure_ascii=False)))
+        html = PAGE.replace("__ROWS__", json.dumps(rows, ensure_ascii=False))
         body = html.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -133,12 +147,14 @@ class H(BaseHTTPRequestHandler):
 
     def do_POST(self):
         n = int(self.headers.get("Content-Length", 0))
-        data = json.loads(self.rfile.read(n) or b"{}")
-        json.dump(data, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        body = json.loads(self.rfile.read(n) or b"{}")
+        rater, data = body.get("rater", "khuyet-danh"), body.get("data", {})
+        json.dump({"rater": rater, "cham": data}, open(path_for(rater), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=2)
         done = sum(1 for v in data.values() if v.get("nhan_xet") and v.get("nhanh"))
         nx = sum(1 for v in data.values() if v.get("nhan_xet") == "ok")
         nh = sum(1 for v in data.values() if v.get("nhanh") == "ok")
-        print(f"  đã chấm {done}/{len(rows)} · nhận xét ổn {nx} · chọn nhánh đúng {nh}")
+        print(f"  [{rater}] đã chấm {done}/{len(rows)} · nhận xét ổn {nx} · chọn nhánh đúng {nh}")
         self.send_response(204)
         self.end_headers()
 
