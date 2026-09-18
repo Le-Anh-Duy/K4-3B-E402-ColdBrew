@@ -1,0 +1,92 @@
+[
+  {
+    "id": "q1",
+    "node": "l_token",
+    "q": "Câu nào đúng về token?",
+    "options": [
+      "Mỗi token luôn là một từ",
+      "Một từ dài có thể bị tách thành nhiều token",
+      "Token là một câu hoàn chỉnh",
+      "Token chỉ dùng cho tiếng Anh"
+    ],
+    "answer": 1,
+    "why": "Tokenizer cắt theo mẫu ký tự hay gặp, nên một từ dài có thể thành nhiều token, còn từ ngắn thông dụng chỉ một token. Tiếng Việt có dấu thường tốn nhiều token hơn tiếng Anh.",
+    "traps": {
+      "0": "Nhầm 'token = từ' là nhầm lẫn phổ biến nhất, dẫn đến tính sai context window.",
+      "2": "Câu là đơn vị ngữ pháp lớn hơn token rất nhiều.",
+      "3": "Tokenizer làm việc với mọi ngôn ngữ, chỉ khác nhau ở số token sinh ra cho mỗi từ."
+    }
+  },
+  {
+    "id": "q2",
+    "node": "l_ctx",
+    "q": "Context window của mô hình đếm bằng gì?",
+    "options": [
+      "Số token",
+      "Số câu",
+      "Số ký tự hiển thị trên màn hình",
+      "Số lần gọi API"
+    ],
+    "answer": 0,
+    "why": "Context window là giới hạn tính bằng token cho cả phần người dùng nhập lẫn phần mô hình sinh ra — vượt giới hạn thì phải cắt bớt hoặc chia nhỏ.",
+    "traps": {
+      "1": "Câu không phải đơn vị mô hình làm việc; một câu có thể là vài chục token.",
+      "2": "Ký tự khác token — tiếng Việt có dấu thường tốn nhiều token hơn cùng số ký tự tiếng Anh.",
+      "3": "Số lần gọi API là hạn mức dịch vụ, không liên quan context window."
+    }
+  },
+  {
+    "id": "q3",
+    "node": "l_shot",
+    "q": "Few-shot prompting nghĩa là gì?",
+    "options": [
+      "Hỏi thật ngắn",
+      "Đưa vài ví dụ mẫu vào prompt",
+      "Chạy mô hình vài lần rồi lấy trung bình",
+      "Giảm số token đầu ra"
+    ],
+    "answer": 1,
+    "why": "Few-shot là đặt sẵn vài cặp ví dụ vào trong prompt để mô hình bắt chước định dạng và cách trả lời mà không cần huấn luyện lại.",
+    "traps": {
+      "0": "Độ dài prompt không phải điểm mấu chốt của few-shot.",
+      "2": "Chạy nhiều lần lấy kết quả phổ biến nhất là kỹ thuật self-consistency, khác few-shot.",
+      "3": "Thêm ví dụ làm prompt dài ra, không làm giảm token đầu vào."
+    }
+  },
+  {
+    "id": "q4",
+    "node": "l_cos",
+    "q": "Hai đoạn văn có nghĩa gần nhau thì vector của chúng?",
+    "options": [
+      "Có cosine similarity cao",
+      "Có độ dài bằng nhau",
+      "Có cùng số chiều nhưng ngược dấu",
+      "Không liên quan gì"
+    ],
+    "answer": 0,
+    "why": "Embedding đặt các đoạn gần nghĩa vào vùng gần nhau trong không gian vector; mức độ gần đó đo bằng góc cosine similarity.",
+    "traps": {
+      "1": "Mọi vector từ cùng một model đều cùng số chiều cố định, không liên quan đến độ dài văn bản.",
+      "2": "Ngược dấu là ngữ nghĩa đối nghịch, không phải gần nhau.",
+      "3": "Cosine similarity chính là cơ chế để tìm kiếm các đoạn văn bản liên quan trong RAG."
+    }
+  },
+  {
+    "id": "q5",
+    "node": "l_vec",
+    "q": "Để máy so được nghĩa của hai đoạn văn, bước đầu tiên là?",
+    "options": [
+      "Vector hoá (embedding) hai đoạn",
+      "Dịch cả hai sang tiếng Anh",
+      "Tóm tắt lại cho ngắn",
+      "Đếm số từ trùng nhau"
+    ],
+    "answer": 0,
+    "why": "Máy tính không so sánh ngữ nghĩa trực tiếp trên ký tự chữ: phải đưa văn bản qua model embedding thành các vector số rồi mới đo được khoảng cách.",
+    "traps": {
+      "1": "Không cần dịch — model embedding đa ngôn ngữ có thể so sánh trực tiếp văn bản tiếng Việt.",
+      "2": "Tóm tắt làm mất thông tin chi tiết và không phải bước chuẩn của retrieval.",
+      "3": "Đếm từ trùng chỉ là tìm kiếm từ khóa (keyword search), bỏ sót các từ đồng nghĩa khác chữ."
+    }
+  }
+]

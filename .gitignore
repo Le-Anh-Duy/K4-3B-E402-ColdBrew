@@ -1,7 +1,19 @@
 .env
+*.env
 __pycache__/
 *.pyc
 .venv/
 node_modules/
 dist/
-data/
+package-lock.json
+
+# Data & Metadata files (Slide PDFs, raw hackathon packs, session logs)
+/data/
+**/data/metadata/
+**/data/sessions/
+*.pdf
+
+# Giữ lại các file JSON định nghĩa Cây tri thức & Đề thi để teammates pull về chạy được
+!codebase/backend/app/data/tree.json
+!codebase/backend/app/data/quiz.json
+!codebase/backend/app/data/probes.json

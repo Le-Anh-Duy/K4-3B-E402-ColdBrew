@@ -1,0 +1,130 @@
+{
+  "root": {
+    "id": "root",
+    "label": "Day 1 · AI & LLM Foundation",
+    "page": "Slide d1 · trang 1–29",
+    "parent": null,
+    "compact": [
+      "LLM sinh văn bản bằng cách đoán token kế tiếp, không tra cứu dữ liệu (trang 4–9)",
+      "Prompt là cách ta đặt ràng buộc cho phần sinh đó (trang 12–18)",
+      "RAG gắn thêm nguồn ngoài để câu trả lời có căn cứ (trang 20–27)"
+    ]
+  },
+  "c1": {
+    "id": "c1",
+    "label": "Chương 1 · LLM hoạt động thế nào",
+    "page": "Slide d1 · trang 4–11",
+    "parent": "root"
+  },
+  "c1s1": {
+    "id": "c1s1",
+    "label": "1.1 Token & tokenization",
+    "page": "Slide d1 · trang 5–6",
+    "parent": "c1"
+  },
+  "c1s2": {
+    "id": "c1s2",
+    "label": "1.2 Sinh văn bản tự hồi quy",
+    "page": "Slide d1 · trang 8–9",
+    "parent": "c1"
+  },
+  "c2": {
+    "id": "c2",
+    "label": "Chương 2 · Prompting",
+    "page": "Slide d1 · trang 12–18",
+    "parent": "root"
+  },
+  "c2s1": {
+    "id": "c2s1",
+    "label": "2.1 Cấu trúc một prompt",
+    "page": "Slide d1 · trang 13",
+    "parent": "c2"
+  },
+  "c2s2": {
+    "id": "c2s2",
+    "label": "2.2 Few-shot",
+    "page": "Slide d1 · trang 16–17",
+    "parent": "c2"
+  },
+  "c3": {
+    "id": "c3",
+    "label": "Chương 3 · RAG",
+    "page": "Slide d1 · trang 20–27",
+    "parent": "root"
+  },
+  "c3s1": {
+    "id": "c3s1",
+    "label": "3.1 Embedding",
+    "page": "Slide d1 · trang 21–22",
+    "parent": "c3"
+  },
+  "c3s2": {
+    "id": "c3s2",
+    "label": "3.2 Retrieval top-k",
+    "page": "Slide d1 · trang 25",
+    "parent": "c3"
+  },
+  "l_token": {
+    "id": "l_token",
+    "label": "Token không phải là từ",
+    "page": "Slide d1 · trang 5",
+    "parent": "c1s1",
+    "content_summary": "Tokenizer chia nhỏ văn bản thành các đơn vị rời rạc (subwords). Một từ dài có thể là nhiều token, từ ngắn là một token."
+  },
+  "l_ctx": {
+    "id": "l_ctx",
+    "label": "Context window đếm bằng token",
+    "page": "Slide d1 · trang 6",
+    "parent": "c1s1",
+    "content_summary": "Context window giới hạn dung lượng token tối đa mô hình có thể đọc và sinh trong một lượt."
+  },
+  "l_next": {
+    "id": "l_next",
+    "label": "Mô hình đoán token kế tiếp",
+    "page": "Slide d1 · trang 8",
+    "parent": "c1s2",
+    "content_summary": "Quá trình sinh văn bản là vòng lặp tự hồi quy đoán xác suất của token tiếp theo."
+  },
+  "l_temp": {
+    "id": "l_temp",
+    "label": "Temperature đổi độ ngẫu nhiên",
+    "page": "Slide d1 · trang 9",
+    "parent": "c1s2",
+    "content_summary": "Temperature cao làm phẳng phân phối xác suất tăng độ sáng tạo, thấp thì đầu ra gần như cố định."
+  },
+  "l_role": {
+    "id": "l_role",
+    "label": "Role · Context · Task",
+    "page": "Slide d1 · trang 13",
+    "parent": "c2s1",
+    "content_summary": "Ba thành phần cốt lõi của một prompt tốt: Vai trò (Role), Ngữ cảnh (Context), Yêu cầu thực thi (Task)."
+  },
+  "l_shot": {
+    "id": "l_shot",
+    "label": "Ví dụ mẫu định hình đầu ra",
+    "page": "Slide d1 · trang 16",
+    "parent": "c2s2",
+    "content_summary": "Few-shot là đưa các cặp ví dụ mẫu vào prompt để mô hình học theo phong cách và định dạng mong muốn."
+  },
+  "l_vec": {
+    "id": "l_vec",
+    "label": "Văn bản được vector hoá",
+    "page": "Slide d1 · trang 21",
+    "parent": "c3s1",
+    "content_summary": "Embedding chuyển hóa văn bản thành vector số nhiều chiều để máy tính tính toán được mức độ tương đồng ngữ nghĩa."
+  },
+  "l_cos": {
+    "id": "l_cos",
+    "label": "Gần nhau về ngữ nghĩa = cosine cao",
+    "page": "Slide d1 · trang 22",
+    "parent": "c3s1",
+    "content_summary": "Cosine similarity giữa 2 vector càng cao thì hai đoạn văn bản càng gần nhau về mặt ý nghĩa."
+  },
+  "l_topk": {
+    "id": "l_topk",
+    "label": "Lấy top-k đoạn liên quan nhất",
+    "page": "Slide d1 · trang 25",
+    "parent": "c3s2",
+    "content_summary": "Top-k retrieval tìm và chọn k đoạn tài liệu có điểm tương đồng cao nhất gắn vào bối cảnh trả lời của LLM."
+  }
+}
