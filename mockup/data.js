@@ -1,237 +1,384 @@
-// MOCK DATA — dựng tay, chưa trích tự động từ slide. Dùng cho CP2 (luồng hoạt động).
-// Cây tri thức: gốc = bài giảng -> chương -> mục -> lá = một ý.
+// CÂY TRI THỨC — dựng TAY từ tài liệu thật của khoá (nhóm tự dựng, đề không cấp graph mẫu).
+// Nguồn: data/vlearn-pack/transcript/transcript-01-clean.md
+//        "Day 2 (sáng) — Xác định bài toán kinh doanh cho AI", 89 đoạn [T01-001..089]
+// Provenance mỗi node: file + span (mã đoạn) + confidence.
+//   conf 0.9 = ý được nói thẳng trong đoạn · 0.7 = nhóm lại từ nhiều đoạn
+// Slide d2 chưa đối chiếu trang -> KHÔNG ghi số trang, để tránh trích dẫn sai.
+
+const SRC = 'transcript-01-clean.md';
+const cite = (spans) => `${SRC} · ${spans.map((s) => `[${s}]`).join(' ')}`;
+
+const N = (id, label, parent, spans, conf, extra = {}) => ({
+  id,
+  label,
+  parent,
+  file: SRC,
+  span: spans,
+  conf,
+  page: cite(spans), // chuỗi hiển thị trong UI
+  ...extra,
+});
 
 const TREE = {
-  root: {
-    id: 'root',
-    label: 'Day 1 · AI & LLM Foundation',
-    page: 'Slide d1 · trang 1–29',
-    parent: null,
+  root: N('root', 'Day 2 (sáng) · Xác định bài toán kinh doanh cho AI', null, ['T01-001', 'T01-089'], 0.9, {
     compact: [
-      'LLM sinh văn bản bằng cách đoán token kế tiếp, không tra cứu dữ liệu (trang 4–9)',
-      'Prompt là cách ta đặt ràng buộc cho phần sinh đó (trang 12–18)',
-      'RAG gắn thêm nguồn ngoài để câu trả lời có căn cứ (trang 20–27)',
+      'Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]',
+      'Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]',
+      'Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]',
     ],
-  },
-  c1: { id: 'c1', label: 'Chương 1 · LLM hoạt động thế nào', page: 'Slide d1 · trang 4–11', parent: 'root' },
-  c1s1: { id: 'c1s1', label: '1.1 Token & tokenization', page: 'Slide d1 · trang 5–6', parent: 'c1' },
-  c1s2: { id: 'c1s2', label: '1.2 Sinh văn bản tự hồi quy', page: 'Slide d1 · trang 8–9', parent: 'c1' },
-  c2: { id: 'c2', label: 'Chương 2 · Prompting', page: 'Slide d1 · trang 12–18', parent: 'root' },
-  c2s1: { id: 'c2s1', label: '2.1 Cấu trúc một prompt', page: 'Slide d1 · trang 13', parent: 'c2' },
-  c2s2: { id: 'c2s2', label: '2.2 Few-shot', page: 'Slide d1 · trang 16–17', parent: 'c2' },
-  c3: { id: 'c3', label: 'Chương 3 · RAG', page: 'Slide d1 · trang 20–27', parent: 'root' },
-  c3s1: { id: 'c3s1', label: '3.1 Embedding', page: 'Slide d1 · trang 21–22', parent: 'c3' },
-  c3s2: { id: 'c3s2', label: '3.2 Retrieval top-k', page: 'Slide d1 · trang 25', parent: 'c3' },
+  }),
+
+  c1: N('c1', 'Chương 1 · Vì sao phải tìm đúng bài toán', 'root', ['T01-001', 'T01-017'], 0.7),
+  c1s1: N('c1s1', '1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể', 'c1', ['T01-004', 'T01-006', 'T01-016'], 0.9),
+  c1s2: N('c1s2', '1.2 Product manager và project manager', 'c1', ['T01-008', 'T01-011'], 0.9),
+
+  c2: N('c2', 'Chương 2 · Đặc thù của sản phẩm AI', 'root', ['T01-018', 'T01-029'], 0.7),
+  c2s1: N('c2s1', '2.1 Vì sao làm sản phẩm AI khó hơn', 'c2', ['T01-019', 'T01-021', 'T01-025'], 0.9),
+
+  c3: N('c3', 'Chương 3 · Tìm đúng vấn đề', 'root', ['T01-030', 'T01-073'], 0.7),
+  c3s1: N('c3s1', '3.1 Double Diamond: phân kỳ – hội tụ', 'c3', ['T01-049', 'T01-069', 'T01-071', 'T01-074'], 0.9, {
+    prereq: ['c1s1'], // phải phân biệt được vấn đề với giải pháp trước đã
+  }),
+  c3s2: N('c3s2', '3.2 Làm đúng cái sai vs làm sai cái đúng', 'c3', ['T01-050', 'T01-059', 'T01-060', 'T01-061'], 0.9, {
+    prereq: ['c1s1'],
+  }),
+  c3s3: N('c3s3', '3.3 First principle thinking', 'c3', ['T01-062', 'T01-064', 'T01-068'], 0.9),
+  c3s4: N('c3s4', '3.4 Kỹ thuật khám phá vấn đề', 'c3', ['T01-042', 'T01-045', 'T01-048', 'T01-072'], 0.7),
+
+  c4: N('c4', 'Chương 4 · Chọn bài toán để làm', 'root', ['T01-074', 'T01-086'], 0.7),
+  c4s1: N('c4s1', '4.1 Ma trận tác động – nỗ lực', 'c4', ['T01-074', 'T01-078', 'T01-079'], 0.9, {
+    prereq: ['c3s1'], // ma trận chỉ dùng được sau khi đã phân kỳ rồi gom nhóm
+  }),
+  c4s2: N('c4s2', '4.2 Vòng lặp HCD', 'c4', ['T01-081', 'T01-084'], 0.9, { prereq: ['c3s4'] }),
 
   // lá — mỗi lá là một ý trong mục
-  l_token: { id: 'l_token', label: 'Token không phải là từ', page: 'Slide d1 · trang 5', parent: 'c1s1' },
-  l_ctx: { id: 'l_ctx', label: 'Context window đếm bằng token', page: 'Slide d1 · trang 6', parent: 'c1s1' },
-  l_next: { id: 'l_next', label: 'Mô hình đoán token kế tiếp', page: 'Slide d1 · trang 8', parent: 'c1s2' },
-  l_temp: { id: 'l_temp', label: 'Temperature đổi độ ngẫu nhiên', page: 'Slide d1 · trang 9', parent: 'c1s2' },
-  l_role: { id: 'l_role', label: 'Role · Context · Task', page: 'Slide d1 · trang 13', parent: 'c2s1' },
-  l_shot: { id: 'l_shot', label: 'Ví dụ mẫu định hình đầu ra', page: 'Slide d1 · trang 16', parent: 'c2s2' },
-  l_vec: { id: 'l_vec', label: 'Văn bản được vector hoá', page: 'Slide d1 · trang 21', parent: 'c3s1' },
-  l_cos: { id: 'l_cos', label: 'Gần nhau về ngữ nghĩa = cosine cao', page: 'Slide d1 · trang 22', parent: 'c3s1' },
-  l_topk: { id: 'l_topk', label: 'Lấy top-k đoạn liên quan nhất', page: 'Slide d1 · trang 25', parent: 'c3s2' },
+  l_quantinh: N('l_quantinh', 'Quán tính nhảy thẳng vào giải pháp', 'c1s1', ['T01-004', 'T01-016'], 0.9),
+  l_boctach: N('l_boctach', 'Bóc tách yêu cầu mơ hồ rồi verify với stakeholder', 'c1s1', ['T01-006'], 0.9),
+  l_pm: N('l_pm', 'PM tự đi tìm bài toán; project manager lo tiến độ', 'c1s2', ['T01-010', 'T01-011'], 0.9),
+  l_po: N('l_po', 'Product owner đào sâu user khi bài toán đã rõ', 'c1s2', ['T01-011'], 0.9),
+  l_kyvong: N('l_kyvong', 'Kỳ vọng người dùng thay đổi rất nhanh', 'c2s1', ['T01-020'], 0.9),
+  l_chuyendoi: N('l_chuyendoi', 'Chi phí chuyển đổi sản phẩm rẻ đi', 'c2s1', ['T01-021'], 0.9),
+  l_phanky: N('l_phanky', 'Phân kỳ: mở rộng góc nhìn để thu insight', 'c3s1', ['T01-071'], 0.9),
+  l_hoitu: N('l_hoitu', 'Hội tụ: gom nhóm, Five Whys, lọc trùng', 'c3s1', ['T01-074'], 0.9, {
+    prereq: ['l_phanky'],
+  }),
+  l_dungcaisai: N('l_dungcaisai', 'Làm đúng cái sai nguy hiểm hơn', 'c3s2', ['T01-060', 'T01-061'], 0.9),
+  l_firstprinciple: N('l_firstprinciple', 'Bóc vấn đề về nguyên lý gốc', 'c3s3', ['T01-064'], 0.9),
+  l_quansat: N('l_quansat', 'Quan sát người dùng tại nơi họ làm việc', 'c3s4', ['T01-072'], 0.9),
+  l_dogfood: N('l_dogfood', 'Dogfooding: tự làm user của sản phẩm mình', 'c3s4', ['T01-042'], 0.9),
+  l_trithucan: N('l_trithucan', 'Tri thức ẩn của chuyên gia', 'c3s4', ['T01-048'], 0.9),
+  l_matran: N('l_matran', 'Đặt vấn đề lên hai trục tác động và nỗ lực', 'c4s1', ['T01-078'], 0.9),
+  l_quickwin: N('l_quickwin', 'High impact – low effort là quick win', 'c4s1', ['T01-079'], 0.9),
+  l_dongcam: N('l_dongcam', 'Đồng cảm là bước đầu, khác bước test', 'c4s2', ['T01-084'], 0.9),
 };
 
-// Quiz chính: 5 câu, mỗi câu gắn với một lá.
+// Quiz: 5 câu, mỗi câu gắn một lá. Câu 1-2 cùng mục 1.1, câu 4-5 cùng mục 3.1.
 const QUIZ = [
   {
-    node: 'l_token',
-    q: 'Câu nào đúng về token?',
-    options: ['Mỗi token luôn là một từ', 'Một từ dài có thể bị tách thành nhiều token', 'Token là một câu hoàn chỉnh', 'Token chỉ dùng cho tiếng Anh'],
+    node: 'l_quantinh',
+    q: 'Theo bài giảng, vì sao thói quen "nghe yêu cầu là nhảy thẳng vào giải pháp" lại nguy hiểm?',
+    options: [
+      'Vì giải pháp thường tốn nhiều tiền',
+      'Vì não chạy theo tư duy nhanh và bỏ qua bước xác định vấn đề',
+      'Vì công nghệ thay đổi quá nhanh',
+      'Vì stakeholder không thích bị hỏi lại',
+    ],
     answer: 1,
   },
   {
-    node: 'l_ctx',
-    q: 'Context window của mô hình đếm bằng gì?',
-    options: ['Số token', 'Số câu', 'Số ký tự hiển thị trên màn hình', 'Số lần gọi API'],
+    node: 'l_boctach',
+    q: 'Sếp đưa một yêu cầu rất chung chung. Cách làm được bài giảng khuyến nghị là gì?',
+    options: [
+      'Bóc tách thành vài phương án cụ thể rồi hỏi lại để xác nhận',
+      'Chờ đến khi sếp mô tả rõ ràng hơn',
+      'Chọn giải pháp phổ biến nhất trên thị trường',
+      'Cứ làm thử một bản rồi sửa sau',
+    ],
     answer: 0,
   },
   {
-    node: 'l_shot',
-    q: 'Few-shot prompting nghĩa là gì?',
-    options: ['Hỏi thật ngắn', 'Đưa vài ví dụ mẫu vào prompt', 'Chạy mô hình vài lần rồi lấy trung bình', 'Giảm số token đầu ra'],
+    node: 'l_dungcaisai',
+    q: 'Theo quan điểm của giảng viên, cái nào nguy hiểm hơn?',
+    options: ['Làm sai cái đúng', 'Làm đúng cái sai', 'Hai cái nguy hiểm như nhau', 'Tuỳ vào ngân sách dự án'],
     answer: 1,
   },
   {
-    node: 'l_cos',
-    q: 'Hai đoạn văn có nghĩa gần nhau thì vector của chúng?',
-    options: ['Có cosine similarity cao', 'Có độ dài bằng nhau', 'Có cùng số chiều nhưng ngược dấu', 'Không liên quan gì'],
+    node: 'l_phanky',
+    q: 'Bước phân kỳ ở viên kim cương thứ nhất gồm những kỹ thuật nào?',
+    options: [
+      'Quan sát, phỏng vấn, khảo sát, đọc log hành vi người dùng',
+      'Gom nhóm các vấn đề rồi lọc trùng',
+      'Vẽ ma trận tác động – nỗ lực',
+      'Viết user story cho đội phát triển',
+    ],
     answer: 0,
   },
   {
-    node: 'l_vec',
-    q: 'Để máy so được nghĩa của hai đoạn văn, bước đầu tiên là?',
-    options: ['Vector hoá (embedding) hai đoạn', 'Dịch cả hai sang tiếng Anh', 'Tóm tắt lại cho ngắn', 'Đếm số từ trùng nhau'],
+    node: 'l_hoitu',
+    q: 'Pha hội tụ dùng những kỹ thuật nào?',
+    options: [
+      'Gom nhóm, hỏi Five Whys, lọc trùng',
+      'Phỏng vấn thêm thật nhiều người dùng mới',
+      'Mở rộng góc nhìn để có thêm insight',
+      'Tăng số lượng ý tưởng càng nhiều càng tốt',
+    ],
     answer: 0,
   },
 ];
 
 // Câu hỏi chẩn đoán cho node cha — đơn giản hơn quiz, dùng để định vị chỗ hổng.
+// ponytail: bộ câu TĨNH, chung cho cả node cha. Hạn chế: học viên sai ý A mà 3 câu nền
+// lại hỏi khía cạnh B/C/D thì "đúng hết" không chứng minh được nền của A vững.
+// Nâng cấp: AI sinh câu nền CÓ ĐIỀU KIỆN theo (node cha, lá bị sai, phương án đã chọn),
+// trích từ span của node cha; bộ tĩnh này giữ làm dự phòng khi API chết. Xem spec.md.
 const PROBES = {
-  c3s1: [
-    { q: 'Embedding biến một đoạn văn bản thành?', options: ['Một dãy số (vector)', 'Một bức ảnh', 'Một câu tóm tắt', 'Một token duy nhất'], answer: 0 },
-    { q: 'Hai vector embedding dùng để làm gì?', options: ['So sánh mức giống nhau về nghĩa', 'Nén file cho nhẹ', 'Mã hoá mật khẩu', 'Đếm số từ'], answer: 0 },
-    { q: 'Cùng một câu đưa qua cùng một model embedding hai lần thì?', options: ['Ra vector như nhau', 'Ra vector ngẫu nhiên', 'Ra số chiều khác nhau', 'Báo lỗi'], answer: 0 },
-  ],
-  c3s2: [
-    { q: 'Retrieval trong RAG làm gì?', options: ['Tìm đoạn tài liệu liên quan câu hỏi', 'Sinh câu trả lời', 'Huấn luyện lại mô hình', 'Dịch câu hỏi'], answer: 0 },
-    { q: 'Vì sao cần retrieval trước khi trả lời?', options: ['Để câu trả lời dựa trên nguồn có thật', 'Để chạy nhanh hơn', 'Để tiết kiệm điện', 'Để đổi ngôn ngữ'], answer: 0 },
-    { q: 'Nếu retrieval lấy sai đoạn thì?', options: ['Câu trả lời dễ sai theo', 'Mô hình tự sửa được', 'Không ảnh hưởng', 'Prompt bị xoá'], answer: 0 },
-  ],
-  c3: [
-    { q: 'RAG là viết tắt của?', options: ['Retrieval-Augmented Generation', 'Random Answer Generator', 'Rapid AI Graph', 'Ranked Attention Gate'], answer: 0 },
-    { q: 'RAG giải quyết vấn đề gì của LLM?', options: ['Trả lời không có nguồn, dễ bịa', 'Chạy chậm', 'Giao diện xấu', 'Không nói được tiếng Việt'], answer: 0 },
-    { q: 'Thứ tự đúng của RAG?', options: ['Tìm tài liệu → đưa vào prompt → sinh câu trả lời', 'Sinh câu trả lời → tìm tài liệu', 'Huấn luyện → sinh → tìm', 'Tìm tài liệu → huấn luyện lại'], answer: 0 },
-  ],
   c1s1: [
-    { q: 'Vì sao phải tách văn bản thành token?', options: ['Mô hình chỉ xử lý được đơn vị rời rạc đã đánh số', 'Cho đẹp', 'Để dịch sang tiếng Anh', 'Để nén file'], answer: 0 },
-    { q: 'Context window giới hạn cái gì?', options: ['Số token mô hình đọc được một lượt', 'Số người dùng cùng lúc', 'Kích thước màn hình', 'Số lần gọi API'], answer: 0 },
-    { q: 'Văn bản dài hơn context window thì?', options: ['Phải cắt bớt hoặc chia nhỏ', 'Mô hình tự nhớ hết', 'Tự động nén không mất gì', 'Không sao cả'], answer: 0 },
-  ],
-  c1s2: [
-    { q: 'Mô hình sinh văn bản bằng cách?', options: ['Đoán token kế tiếp, lặp lại nhiều lần', 'Tra trong cơ sở dữ liệu câu trả lời', 'Sao chép từ Internet', 'Dịch từ tiếng Anh'], answer: 0 },
-    { q: 'Temperature = 0 thì đầu ra?', options: ['Gần như cố định mỗi lần chạy', 'Rất sáng tạo', 'Bị lỗi', 'Dài hơn'], answer: 0 },
-    { q: 'Cùng một prompt chạy hai lần có thể ra khác nhau vì?', options: ['Có yếu tố ngẫu nhiên khi chọn token', 'Mô hình đổi phiên bản', 'Mạng chậm', 'Prompt tự đổi'], answer: 0 },
+    {
+      q: 'Theo bài giảng, việc đầu tiên khi nhận một yêu cầu công nghệ là gì?',
+      options: [
+        'Xác định vấn đề trước, công nghệ chỉ là công cụ để giải nó',
+        'Chọn công nghệ mạnh nhất hiện có',
+        'Ước lượng chi phí triển khai',
+        'Lập kế hoạch tiến độ',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Vì sao con người hay nhảy thẳng vào giải pháp?',
+      options: [
+        'Não đi theo thói quen, chạy bằng tư duy nhanh',
+        'Vì không đủ dữ liệu',
+        'Vì bị giới hạn ngân sách',
+        'Vì công cụ AI gợi ý sẵn',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Khi đề bài còn mơ hồ, nên làm gì trước?',
+      options: [
+        'Đưa ra vài phương án cụ thể rồi hỏi lại để xác nhận',
+        'Tự chọn cách hiểu của mình rồi làm luôn',
+        'Từ chối nhận việc',
+        'Chờ tài liệu chính thức',
+      ],
+      answer: 0,
+    },
   ],
   c1: [
-    { q: 'LLM về bản chất là?', options: ['Mô hình dự đoán token kế tiếp', 'Công cụ tìm kiếm', 'Cơ sở dữ liệu', 'Trình duyệt'], answer: 0 },
-    { q: 'LLM có tra cứu Internet khi trả lời không (nếu không nối công cụ)?', options: ['Không, nó sinh từ tham số đã học', 'Có, luôn tra', 'Chỉ tra khi câu dài', 'Tuỳ mạng'], answer: 0 },
-    { q: 'Vì vậy LLM có thể?', options: ['Nói sai một cách rất tự tin', 'Luôn đúng', 'Không trả lời được câu mới', 'Chỉ trả lời số'], answer: 0 },
+    {
+      q: 'Theo thống kê được nhắc trong bài, phần lớn thành bại khi đưa AI vào doanh nghiệp đến từ đâu?',
+      options: ['Con người và vận hành', 'Chất lượng mô hình', 'Hạ tầng GPU', 'Ngân sách marketing'],
+      answer: 0,
+    },
+    {
+      q: 'Vị trí mà giảng viên cho là đang thiếu nhất trên thị trường?',
+      options: [
+        'Người xác định và bóc tách bài toán',
+        'Kỹ sư huấn luyện mô hình',
+        'Người viết prompt',
+        'Quản trị hạ tầng',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Product manager khác project manager ở chỗ nào?',
+      options: [
+        'PM tự đi tìm bài toán đáng làm; project manager lo tiến độ và ngân sách',
+        'PM viết code, project manager viết tài liệu',
+        'Hai vai trò giống nhau, chỉ khác tên gọi',
+        'PM chỉ có ở công ty outsourcing',
+      ],
+      answer: 0,
+    },
   ],
-  c2s2: [
-    { q: 'Few-shot khác zero-shot ở chỗ?', options: ['Có kèm ví dụ mẫu', 'Ngắn hơn', 'Chạy nhanh hơn', 'Dùng model khác'], answer: 0 },
-    { q: 'Ví dụ trong prompt có tác dụng gì?', options: ['Cho mô hình thấy định dạng đầu ra mong muốn', 'Huấn luyện lại mô hình', 'Tăng context window', 'Giảm giá tiền'], answer: 0 },
-    { q: 'Ví dụ mẫu sai lệch thì?', options: ['Đầu ra bắt chước theo cái sai đó', 'Mô hình bỏ qua', 'Báo lỗi', 'Không ảnh hưởng'], answer: 0 },
+  c3s1: [
+    {
+      q: 'Mô hình Double Diamond có mấy pha?',
+      options: [
+        'Bốn: mở rộng, hội tụ, rồi lại mở rộng, hội tụ',
+        'Hai: phân tích và thiết kế',
+        'Ba: nghiên cứu, làm, đo',
+        'Năm: theo vòng đời dự án',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Viên kim cương thứ nhất phục vụ việc gì?',
+      options: ['Tìm đúng vấn đề', 'Tìm đúng giải pháp', 'Lập kế hoạch nguồn lực', 'Đo kết quả sau khi ra mắt'],
+      answer: 0,
+    },
+    {
+      q: 'Trong hình kim cương, đường đi lên và đi xuống nghĩa là gì?',
+      options: [
+        'Đi lên là mở rộng, đi xuống là hội tụ',
+        'Đi lên là tăng ngân sách, đi xuống là cắt giảm',
+        'Đi lên là tăng người, đi xuống là giảm người',
+        'Không mang nghĩa gì, chỉ là hình vẽ',
+      ],
+      answer: 0,
+    },
   ],
-  c2: [
-    { q: 'Prompt tốt thường có?', options: ['Vai trò, bối cảnh, việc cần làm rõ ràng', 'Càng ngắn càng tốt', 'Nhiều câu hỏi cùng lúc', 'Viết hoa toàn bộ'], answer: 0 },
-    { q: 'Vì sao prompt ảnh hưởng đầu ra?', options: ['Nó là toàn bộ bối cảnh mô hình dựa vào để đoán', 'Nó đổi tham số mô hình', 'Nó chọn máy chủ', 'Nó không ảnh hưởng'], answer: 0 },
-    { q: 'Ràng buộc định dạng nên đặt ở đâu?', options: ['Ngay trong prompt', 'Sau khi có kết quả', 'Trong tên file', 'Không cần'], answer: 0 },
+  c3s2: [
+    {
+      q: 'Vì sao "làm đúng cái sai" bị coi là nguy hiểm hơn?',
+      options: [
+        'Vì ta tự giới hạn không gian giải pháp cho một vấn đề vốn đã sai',
+        'Vì nó luôn tốn nhiều tiền hơn',
+        'Vì khách hàng sẽ phàn nàn ngay',
+        'Vì đội phát triển sẽ bỏ việc',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Khi đã lao vào một vấn đề, cơ chế tâm lý thường thấy là gì?',
+      options: [
+        'Coi nó là đích rồi, rất khó dừng lại để hỏi lại từ đầu',
+        'Luôn sẵn sàng đổi hướng',
+        'Chủ động đi hỏi người ngoài',
+        'Giảm dần sự tự tin',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Nếu rơi vào "làm sai cái đúng" thì xử lý thế nào?',
+      options: [
+        'Vấn đề vẫn đúng nên đi tìm giải pháp khác',
+        'Bỏ hẳn bài toán đó',
+        'Đổi sang vấn đề dễ hơn',
+        'Giữ nguyên giải pháp và làm kỹ hơn',
+      ],
+      answer: 0,
+    },
+  ],
+  c3: [
+    {
+      q: 'Câu của Don Norman "Do not solve the problem I am asked to solve" ý nói gì?',
+      options: [
+        'Đừng vội tin vấn đề được giao là vấn đề thật, phải tìm điểm đau phía sau',
+        'Đừng nhận việc từ người khác',
+        'Chỉ giải vấn đề của chính mình',
+        'Luôn làm đúng yêu cầu khách hàng',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Dogfooding nghĩa là gì?',
+      options: [
+        'Tự mình là user và dùng chính sản phẩm mình làm ra',
+        'Thuê người ngoài kiểm thử',
+        'Ra mắt bản beta cho thị trường',
+        'Sao chép sản phẩm của đối thủ',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Tri thức ẩn của chuyên gia gây khó khăn gì khi đi tìm vấn đề?',
+      options: [
+        'Họ quyết định bằng trực giác mà không dừng lại lý giải, nên khó truyền lại',
+        'Họ luôn quyết định sai',
+        'Họ không chịu chia sẻ',
+        'Họ cần nhiều dữ liệu hơn người mới',
+      ],
+      answer: 0,
+    },
   ],
 };
 
-// Nội dung ôn gợi ý cho từng node (mock — trỏ về slide có sẵn, không sinh bài mới).
+// Nội dung ôn gợi ý cho từng node (trỏ về đoạn transcript có thật, không sinh nội dung mới).
 const REVIEW = {
-  c3s1: ['Xem lại slide d1 trang 21–22: từ văn bản → vector', 'Làm lại 2 ví dụ so sánh cosine ở trang 22'],
-  c3s2: ['Xem lại slide d1 trang 25: chọn top-k thế nào'],
-  c3: ['Xem lại cả chương 3 (trang 20–27) theo thứ tự: embedding → retrieval → generation'],
-  c1s1: ['Xem lại slide d1 trang 5–6 và thử tokenize một câu tiếng Việt'],
-  c1s2: ['Xem lại slide d1 trang 8–9: vòng lặp đoán token + temperature'],
-  c1: ['Xem lại chương 1 (trang 4–11) trước khi quay lại chương 3'],
-  c2s1: ['Xem lại slide d1 trang 13: ba phần của một prompt'],
-  c2s2: ['Xem lại slide d1 trang 16–17 và viết thử một prompt few-shot'],
-  c2: ['Xem lại chương 2 (trang 12–18)'],
+  c1s1: [
+    'Nghe lại [T01-004] và [T01-006]: vấn đề trước, công nghệ sau',
+    'Thử bóc một yêu cầu mơ hồ của chính bạn thành 3 phương án A/B/C',
+  ],
+  c1s2: ['Nghe lại [T01-010] và [T01-011] về khác biệt PM / project manager / product owner'],
+  c1: ['Đi lại cả chương 1 [T01-001…T01-017] theo thứ tự trước khi sang chương 3'],
+  c2s1: ['Nghe lại [T01-020] và [T01-021] về kỳ vọng người dùng và chi phí chuyển đổi'],
+  c3s1: [
+    'Nghe lại [T01-049] và [T01-071]: bốn pha của Double Diamond',
+    'Đối chiếu [T01-074] để phân biệt kỹ thuật phân kỳ với kỹ thuật hội tụ',
+  ],
+  c3s2: ['Nghe lại [T01-060] và [T01-061] về "làm đúng cái sai"'],
+  c3s3: ['Nghe lại [T01-064] về first principle thinking'],
+  c3s4: ['Nghe lại [T01-042] dogfooding, [T01-048] tri thức ẩn, [T01-072] quan sát tại chỗ'],
+  c3: ['Đi lại chương 3 [T01-030…T01-073]: tìm vấn đề đúng → Double Diamond → kỹ thuật khám phá'],
+  c4s1: ['Nghe lại [T01-078] và [T01-079]: hai trục của ma trận và ý nghĩa quick win'],
+  c4s2: ['Nghe lại [T01-084]: đồng cảm khác test ở chỗ nào'],
+  c4: ['Đi lại chương 4 [T01-074…T01-086]'],
 };
 
 // Giải thích đáp án (mock) — why = vì sao đáp án đúng; traps = bẫy của từng phương án sai.
 const EXPLAIN = {
-  l_token: {
-    why: 'Tokenizer cắt theo mẫu ký tự hay gặp, nên một từ dài có thể thành nhiều token, còn từ ngắn thông dụng chỉ một token. Tiếng Việt có dấu thường tốn nhiều token hơn tiếng Anh.',
+  l_quantinh: {
+    why: 'Bài giảng dẫn "Thinking, Fast and Slow": não chạy tư duy nhanh theo thói quen, nghe vấn đề là phản ứng ngay bằng giải pháp, nên bước xác định vấn đề bị bỏ qua [T01-016].',
     traps: {
-      0: 'Nhầm "token = từ" — nhầm phổ biến nhất, và kéo theo tính sai context window.',
-      2: 'Câu là đơn vị lớn hơn token rất nhiều.',
-      3: 'Tokenizer làm việc với mọi ngôn ngữ, chỉ khác nhau ở số token sinh ra.',
+      0: 'Tiền bạc không phải lý do được nêu — vấn đề nằm ở thói quen tư duy.',
+      2: 'Công nghệ đổi nhanh là chuyện khác; ở đây nói về quán tính của người ra quyết định.',
+      3: 'Bài giảng khuyến khích hỏi lại stakeholder, không nói họ khó chịu.',
     },
   },
-  l_temp: {
-    why: 'Temperature làm phẳng phân phối xác suất của token kế tiếp, nên những token ít khả năng hơn vẫn có cơ hội được chọn → đầu ra đa dạng hơn.',
+  l_boctach: {
+    why: 'Cách được nêu là tự biến cái mơ hồ thành cụ thể: đưa ra A, B, C rồi hỏi lại "em hiểu đúng không, là cái nào" để verify với stakeholder [T01-006].',
     traps: {
-      1: 'Đa dạng hơn không đồng nghĩa chính xác hơn — với câu cần chính xác thì thường ngược lại.',
-      2: 'Độ dài do max tokens và nội dung quyết định, không phải temperature.',
-      3: 'Có đổi: cùng một prompt chạy lại có thể ra kết quả khác.',
+      1: 'Chờ người giao việc nói rõ là kỳ vọng sai — nhiều khi chính họ cũng chưa biết mình muốn gì [T01-005].',
+      2: 'Chọn theo số đông chính là nhảy vào giải pháp, đúng cái bẫy bài giảng cảnh báo.',
+      3: 'Làm thử rồi sửa không thay được bước làm rõ đề bài.',
     },
   },
-  l_shot: {
-    why: 'Few-shot là đặt sẵn vài cặp ví dụ vào trong prompt để mô hình bắt chước định dạng và cách trả lời.',
+  l_dungcaisai: {
+    why: 'Quan điểm của giảng viên: làm đúng cái sai nguy hiểm hơn, vì ta tự giới hạn không gian giải pháp cho một vấn đề vốn đã sai, lại còn có cảm giác đang tiến triển [T01-060] [T01-061].',
     traps: {
-      0: 'Độ dài prompt không phải điểm mấu chốt của few-shot.',
-      2: 'Chạy nhiều lần rồi lấy kết quả phổ biến nhất là self-consistency, khác few-shot.',
-      3: 'Thêm ví dụ làm prompt dài ra, không giảm token.',
+      0: 'Làm sai cái đúng thì vấn đề vẫn đúng — chỉ cần đi tìm giải pháp khác [T01-059].',
+      2: 'Bài giảng nhận đây là vấn đề gây tranh cãi nhưng vẫn nêu quan điểm rõ, không coi hai cái ngang nhau.',
+      3: 'Ngân sách không phải tiêu chí được nhắc tới.',
     },
   },
-  l_cos: {
-    why: 'Embedding đặt các đoạn gần nghĩa vào vùng gần nhau trong không gian vector; mức gần đó đo bằng cosine similarity.',
+  l_phanky: {
+    why: 'Phân kỳ là bước mở rộng góc nhìn: quan sát, phỏng vấn, khảo sát, đọc log hành vi — thu càng nhiều insight càng tốt [T01-071].',
     traps: {
-      1: 'Mọi vector từ cùng một model đều cùng số chiều, không liên quan độ dài văn bản.',
-      2: 'Ngược dấu là nghĩa trái nhau, không phải gần nhau.',
-      3: 'Đây chính là cơ chế để tìm đoạn liên quan trong RAG.',
+      1: 'Gom nhóm và lọc trùng là kỹ thuật của pha HỘI TỤ [T01-074] — đây là chỗ hay lẫn nhất.',
+      2: 'Ma trận tác động – nỗ lực dùng ở cuối pha hội tụ [T01-078].',
+      3: 'User story thuộc giai đoạn triển khai, không nằm trong viên kim cương thứ nhất.',
     },
   },
-  l_topk: {
-    why: 'Sau khi so vector câu hỏi với các đoạn tài liệu, hệ thống lấy k đoạn điểm cao nhất đưa vào prompt.',
+  l_hoitu: {
+    why: 'Hội tụ là gom lại: nhóm các vấn đề, hỏi Five Whys để đào sâu nguyên nhân, lọc trùng [T01-074].',
     traps: {
-      0: 'Không liên quan số mô hình chạy song song.',
-      2: 'Số lần thử lại khi lỗi là retry, khác top-k.',
-      3: 'Top-k nói về số đoạn tài liệu lấy ra, không phải số token đầu ra.',
+      1: 'Phỏng vấn thêm là mở rộng, tức pha phân kỳ.',
+      2: 'Mở rộng góc nhìn chính là định nghĩa của phân kỳ — ngược với hội tụ.',
+      3: 'Tăng số ý tưởng cũng là phân kỳ.',
     },
   },
 };
 
-// Giải thích cho câu hỏi chẩn đoán (mock) — cùng thứ tự với PROBES.
+// Giải thích cho câu hỏi chẩn đoán — cùng thứ tự với PROBES.
 const PROBE_WHY = {
-  c3s1: [
-    'Embedding là hàm biến văn bản thành một vector số nhiều chiều — mô hình chỉ so sánh được trên số.',
-    'Hai vector nằm gần nhau nghĩa là hai đoạn gần nghĩa; đó chính là cách tìm đoạn liên quan.',
-    'Cùng model và cùng đầu vào thì ra cùng vector — embedding là hàm tất định, không ngẫu nhiên.',
-  ],
-  c3s2: [
-    'Retrieval chỉ đi tìm đoạn liên quan; phần viết câu trả lời là việc của LLM ở bước sau.',
-    'Có đoạn nguồn thì câu trả lời mới trích dẫn được và đỡ bịa.',
-    'Rác vào thì rác ra: lấy sai đoạn thì câu trả lời sai theo, dù mô hình có tốt.',
-  ],
-  c3: [
-    'RAG = Retrieval-Augmented Generation: sinh câu trả lời sau khi đã truy xuất tài liệu.',
-    'LLM không biết tài liệu nội bộ và dễ nói sai rất tự tin — RAG gắn nguồn thật vào để chặn chuyện đó.',
-    'Thứ tự đúng: tìm tài liệu → đưa vào prompt → sinh câu trả lời.',
-  ],
   c1s1: [
-    'Mô hình làm việc trên dãy số, nên văn bản phải cắt thành các token đã được đánh số.',
-    'Context window là số token tối đa mô hình đọc được trong một lượt.',
-    'Vượt context window thì phải cắt bớt hoặc chia nhỏ — không có cách nhớ hết miễn phí.',
-  ],
-  c1s2: [
-    'Mỗi bước mô hình chọn một token kế tiếp rồi lặp lại, chứ không tra bảng câu trả lời có sẵn.',
-    'Temperature = 0 nghĩa là luôn lấy token khả năng cao nhất nên đầu ra gần như cố định.',
-    'Việc lấy mẫu token có yếu tố ngẫu nhiên nên hai lần chạy có thể ra khác nhau.',
+    'Bài giảng nói thẳng: công nghệ sinh ra để giải một vấn đề, nên phải biết vấn đề trước rồi mới chọn công cụ [T01-004].',
+    'Não đi theo thói quen; không tự bắt mình dừng lại đặt câu hỏi thì sẽ bị cuốn theo tư duy nhanh mãi [T01-016].',
+    'Người làm phải là người biến cái mơ hồ thành cụ thể rồi mang lại verify với stakeholder [T01-006].',
   ],
   c1: [
-    'Bản chất LLM là mô hình dự đoán token kế tiếp, không phải công cụ tra cứu.',
-    'Nếu không nối công cụ, nó chỉ sinh từ tham số đã học, không truy cập Internet.',
-    'Vì sinh theo xác suất nên nó có thể nói sai mà câu văn vẫn rất trôi chảy.',
+    'Nghiên cứu được dẫn trong bài: khoảng 70% đến từ con người và vận hành, không phải công nghệ [T01-003].',
+    'Thị trường tuyển rất nhiều AI engineer nhưng thiếu người đặt ra đề bài đáng làm [T01-002].',
+    'Product manager tự đi tìm bài toán và thị trường; project manager đảm bảo dự án đúng tiến độ, trong ngân sách [T01-010] [T01-011].',
   ],
-  c2s2: [
-    'Few-shot là có ví dụ mẫu trong prompt; zero-shot thì không có ví dụ nào.',
-    'Ví dụ cho mô hình thấy định dạng đầu ra mong muốn, nhanh hơn là mô tả bằng lời.',
-    'Ví dụ lệch thì đầu ra bắt chước luôn cái lệch đó.',
+  c3s1: [
+    'Double Diamond gồm bốn pha: mở rộng – hội tụ cho vấn đề, rồi mở rộng – hội tụ cho giải pháp [T01-049].',
+    'Viên kim cương thứ nhất là problem discovery — tìm đúng vấn đề trước khi nghĩ giải pháp [T01-049].',
+    'Đường đi lên là mở rộng, đường đi xuống là hội tụ [T01-049].',
   ],
-  c2: [
-    'Prompt tốt nói rõ vai trò, bối cảnh và việc cần làm.',
-    'Prompt là toàn bộ bối cảnh mô hình dựa vào để đoán token tiếp theo.',
-    'Ràng buộc định dạng phải đặt ngay trong prompt, sửa sau thì tốn thêm một lượt.',
+  c3s2: [
+    'Khi vấn đề đã sai, mọi giải pháp đều bị giới hạn trong cái sai đó [T01-060].',
+    'Con người đã xác định đích là lao vào, rất khó dừng lại tự hỏi đặt vấn đề có sai không [T01-060].',
+    'Sai giải pháp thì vấn đề vẫn còn đúng, chỉ cần đi tìm cách khác [T01-059].',
   ],
-};
-
-EXPLAIN.l_ctx = {
-  why: 'Context window là giới hạn tính bằng token cho cả phần bạn nhập lẫn phần mô hình sinh ra — vượt giới hạn thì phải cắt bớt hoặc chia nhỏ.',
-  traps: {
-    1: 'Câu không phải đơn vị mô hình làm việc; một câu có thể là vài chục token.',
-    2: 'Ký tự khác token — tiếng Việt có dấu thường tốn nhiều token hơn cùng số ký tự tiếng Anh.',
-    3: 'Số lần gọi API là hạn mức dịch vụ, không liên quan context window.',
-  },
-};
-
-EXPLAIN.l_vec = {
-  why: 'Máy không so nghĩa trực tiếp trên chữ: phải đưa hai đoạn qua model embedding thành vector rồi mới đo được độ gần.',
-  traps: {
-    1: 'Không cần dịch — model embedding đa ngữ so được trực tiếp.',
-    2: 'Tóm tắt làm mất thông tin và không phải bước của retrieval.',
-    3: 'Đếm từ trùng là tìm kiếm từ khoá, bỏ sót khi hai đoạn dùng tên gọi khác nhau cho cùng khái niệm.',
-  },
+  c3: [
+    'Don Norman: đừng lập tức tin vấn đề được giao là vấn đề thật, phải tìm điểm đau phía sau [T01-045].',
+    'Dogfooding là tự làm user của chính sản phẩm mình — Jira dùng Jira để xây Jira [T01-042].',
+    'Chuyên gia quyết định bằng trực giác tích luỹ nhiều năm mà không dừng lại lý giải, nên tri thức đó khó lấy ra [T01-048].',
+  ],
 };
 
 // cho phép chạy bằng node (bộ eval); trong browser thì `module` không tồn tại nên bỏ qua
 if (typeof module !== 'undefined')
-  module.exports = { TREE, QUIZ, PROBES, EXPLAIN, PROBE_WHY, REVIEW };
+  module.exports = { TREE, QUIZ, PROBES, EXPLAIN, PROBE_WHY, REVIEW, SRC };

@@ -1,0 +1,16 @@
+{
+  "rater": "Duy-rmlg81",
+  "cham": {
+    "P01": {
+      "nhan_xet": "khong",
+      "nhanh": "ok",
+      "noi_vong": "ok",
+      "ghi_chu": "khối C chưa ổn vì nhận xét xong rồi nó lại hỏi, và câu hỏi đó không biết mục đích để làm gì"
+    },
+    "P02": {
+      "nhan_xet": "khong",
+      "noi_vong": "ok",
+      "nhanh": "ok"
+    }
+  }
+}

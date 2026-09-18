@@ -17,3 +17,5 @@ package-lock.json
 !codebase/backend/app/data/tree.json
 !codebase/backend/app/data/quiz.json
 !codebase/backend/app/data/probes.json
+data/
+.cache/
