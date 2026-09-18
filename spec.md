@@ -43,53 +43,48 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, ch
 
 ## §1. User & Job
 
-- **Job executor:** học viên AI20k đang học một chương (ví dụ Day 1 — AI & LLM Foundation), làm quiz ôn tập rồi tự hỏi "sai chỗ này thì phải học lại cái gì".
+- **Job executor:** học viên AI20k đang học một chương, làm quiz ôn tập rồi tự hỏi "sai chỗ này thì phải học lại cái gì".
 - **Core JTBD:** *Khi tôi làm sai vài câu trong bài ôn, tôi muốn biết chính xác mình hổng khái niệm nền nào và học lại đúng phần đó, để không phải đọc lại cả chương.*
-- **Problem statement (không chữ AI):** Học viên làm quiz xong chỉ biết "đúng 3/5". Bài ôn được phát theo một lộ trình tuyến tính giống nhau cho mọi người, trong khi mỗi người hổng ở concept khác nhau. Sai một câu thì **chưa biết** hổng nằm ở chính ý đó hay ở một khái niệm nền phía dưới — và hiện không có cách nào biết ngoài việc tự đoán. Hậu quả: học viên đọc lại cả chương cho chắc, hoặc bỏ qua.
+- **Problem statement (không chữ AI):** Học viên làm quiz xong chỉ biết "đúng 3/5". Sai một câu thì **chưa biết** hổng nằm ở chính ý đó hay ở một khái niệm nền phía dưới, và không có cách nào biết ngoài tự đoán. Hậu quả: đọc lại cả chương cho chắc, hoặc bỏ qua.
 
-  *Lưu ý về cách phát biểu:* nhóm **không khẳng định** "chỗ hổng thường nằm ở prerequisite". Đó là một câu hỏi, và sản phẩm là **cái máy đi kiểm câu hỏi đó cho từng người** — kiểm xong có quyền trả lời **không**. Xem §4.
-- **Evidence — chuẩn A (khảo sát).** Form *"Làm sai rồi học gì tiếp?"* · **n = 31** · học viên trong khoá · đạt ngưỡng ≥20 người của guide §1.3. **Đủ 7 câu + hạn chế: [`validation/survey.md`](validation/survey.md).** Ba số dùng để lập luận:
+### Bằng chứng
 
-  | | |
-  |---|---|
-  | **Q4** — điều cản trở nhất | **"Không biết mình thiếu kiến thức nào" 54,8%** (cao nhất) |
-  | **Q5** — sau khi tự tìm hiểu | **54,8%** *"biết mình yếu phần nào nhưng vẫn chưa hiểu"*; chỉ 38,7% hiểu lại được |
-  | **Q6** — lần gần nhất tốn bao lâu | **42% mất hơn 15 phút**, 19,4% hơn 30 phút |
+**Chuẩn B — mining chatlog VLearn.** `scripts/mining.py` (có `--selftest`) → `eval/evidence/mining.md`, nơi khai đủ luật đếm. Data pack không nằm trong repo (`DATA_NOTICE.md`); tải `tutor_turns.csv` về rồi chạy lại là ra đúng số dưới đây. Quần thể sau lọc: **2.555 lượt · 384 học viên** (khoá K4, đã bỏ câu mẫu bấm sẵn của giao diện).
 
-  *Câu hỏi đáng tin nhất là Q6* (hỏi về lần gần nhất, chuẩn Mom Test). *Yếu nhất là Q7* (87,5% nói sẵn sàng dùng) — đúng loại câu guide §1.3 dặn tránh, **không dùng để biện minh cho quyết định chọn**.
+| Chỉ số | Kết quả |
+|---|---|
+| Tutor **hỏi ngược** để chẩn đoán (`ask_probing_question`) | **6/2.555 = 0,2%** |
+| Tutor **giảng lại khái niệm** (`review_concept`) | **2.226/2.555 = 87%** |
+| Học viên **quay lại hỏi thêm về cùng một mục ở một dịp khác** | **106/369 = 29%** |
+| Học viên **bấm đánh giá** · tutor **chấm mức hiểu** | **0,3%** · **0,2%** |
 
-  **Một nửa lát cắt có bằng chứng yếu hơn hẳn nửa kia:** Q2 cho thấy *"Mình đang yếu kiến thức nào"* được **77,4%** chọn, còn *"Nên học lại phần nào trước"* chỉ **38,7%** — thấp nhất trong bốn lựa chọn thực chất. Lát cắt §4 hứa cả hai: **định vị** (nửa A, bằng chứng mạnh) và **lộ trình ôn** (nửa B, yếu hơn). Không phải khảo sát bác bỏ nửa B — 12/31 người vẫn chọn và đề C1 yêu cầu nó — mà là chuyện **trọng số khi kể chuyện**: demo và slide nhấn phần định vị + căn cứ, không nhấn "lộ trình cá nhân hoá".
+Đơn vị là **dịp hỏi** (hai câu cách nhau >30 phút là hai dịp), không phải tin nhắn; *mục bài học* là nhãn giao diện VLearn tự gắn. 29% nhạy với cỡ mục — còn **17,6% nếu bỏ 5 mục lớn nhất**, đây là mức thận trọng khi bị vặn.
 
-- **Evidence — chuẩn B (mining chatlog).** Script: **`scripts/mining.py`** (có `--selftest`) → **`eval/evidence/mining.md`**. Data pack không nằm trong repo (`DATA_NOTICE.md`); tải `tutor_turns.csv` về rồi chạy lại là ra đúng số dưới đây. **Luật đếm khai đầy đủ trong file báo cáo**, tóm tắt: chỉ khoá K4 · bỏ câu mẫu bấm sẵn · đơn vị là **dịp hỏi** (hai câu cách nhau >30 phút là hai dịp), **không** phải tin nhắn. Còn lại **2.555 lượt · 384 học viên**.
+**Chuẩn A — khảo sát.** Form *"Làm sai rồi học gì tiếp?"*, **n = 31**, học viên trong khoá; đủ 7 câu và hạn chế ở [`validation/survey.md`](validation/survey.md).
 
-  | Chỉ số | Kết quả | Ý nghĩa |
-  |---|---|---|
-  | Tutor **hỏi ngược** để chẩn đoán (`ask_probing_question`) | **6/2.555 = 0,2%** | công cụ hiện tại **giảng, gần như không bao giờ đo** học viên hổng đâu |
-  | Tutor **giảng lại khái niệm** (`review_concept`) | **2.226/2.555 = 87%** | một nước đi duy nhất cho mọi loại câu hỏi |
-  | Học viên **quay lại hỏi thêm về cùng một mục ở một dịp khác** | **106/369 = 29%** | **hành vi, chưa phải nguyên nhân** |
-  | Học viên **bấm đánh giá** · tutor **chấm mức hiểu** | **0,3%** · **0,2%** | hai ô ghi nhận "có hiểu không" đều **bỏ trống** |
-  | Câu trả lời tutor **không trích nguồn** | 838/2.555 = 33% | dùng cho ứng viên B ở §2, không phải cho C |
+| | |
+|---|---|
+| **Q4** — điều cản trở nhất | **"Không biết mình thiếu kiến thức nào" 54,8%** (cao nhất) |
+| **Q5** — sau khi tự tìm hiểu | **54,8%** *"biết mình yếu phần nào nhưng vẫn chưa hiểu"*; chỉ 38,7% hiểu lại được |
+| **Q6** — lần gần nhất tốn bao lâu | **42% mất hơn 15 phút**, 19,4% hơn 30 phút |
 
-  *Độ nhạy:* 29% phụ thuộc cỡ mục — còn **17,6% nếu bỏ 5 mục lớn nhất**, 4,8% ở mục nhỏ. Nhưng ở mục nhỏ có **64% cặp (học viên × mục) chỉ hỏi đúng một câu** nên không có cơ hội quay lại; chênh lệch phần lớn do ít tiếp xúc. **Bị vặn thì dùng 17,6%.** Bảng đầy đủ trong `mining.md`.
+**Quote nguyên văn** (mã lượt, cắt ngắn theo luật data pack):
+- **[T10291]** *"Dựa trên tiến độ của mình, mình nên ôn phần nào trước?"* — học viên thật hỏi **đúng** câu sản phẩm này sinh ra để trả lời
+- **[T10326]** *"Giải thích lại giúp mình phần mà mình hay thấy khó."*
+- **[T10317]** *"giải thích lại dc không hơi khó hiểu"*
+- **[T10883]** *"em vẫn chưa hiểu rõ sự khác biệt của agent và llm"*
+- **[T10728]** *"bước 2 là gì tôi đang chưa hiểu, tại sao lại cộng trọng số và cộng vào đâu"*
 
-  *"Mục bài học"* là nhãn `(Đang học phần "…")` do giao diện VLearn tự gắn (118 mục, độ mịn không đều). *"Dịp hỏi"* là cụm câu liền mạch. Ví dụ S0124: hỏi lúc 09:10, quay lại 11:33 cùng một mục — nhưng **hai câu hỏi khác nhau**, nên 29% đọc đúng là *"có quay lại mục đó"*, **không** phải *"hỏi lại điều cũ vì chưa hiểu"*.
+### Ba kết luận rút ra
 
-  **Hai lập luận rút ra:**
-  - **Vì sao có lát cắt này:** công cụ đang có xử lý mọi câu hỏi bằng cùng một nước đi *giảng lại* (87%) và **hỏi ngược đúng 0,2%**; hệ quả đo được là 29% học viên quay lại đúng mục đó ở một dịp khác. Không có bước nào **đo trước khi giảng**.
-  - **Vì sao phải ĐO thay vì hỏi:** hệ thống có sẵn hai chỗ ghi nhận "học viên có hiểu không", cả hai gần như rỗng (0,3% và 0,2%). Không phải vì ai cũng hiểu — khảo sát Q5 có **54,8%** tự nhận vẫn chưa hiểu. **Học viên không tự khai; chờ họ nói ra thì không bao giờ có dữ liệu.**
+1. **Công cụ hiện tại giảng mà không đo.** 87% lượt dùng một nước đi duy nhất là *giảng lại*, hỏi ngược đúng **0,2%**; hệ quả là **29%** học viên quay lại đúng mục đó ở một dịp khác. Chỗ trống là bước **đo trước khi giảng** — đó là lát cắt §4.
+2. **Mà phải đo, chứ không hỏi được.** Hai ô ghi nhận "có hiểu không" đều gần như rỗng (**0,3%** và **0,2%**) — không phải vì ai cũng hiểu, khảo sát Q5 có **54,8%** tự nhận vẫn chưa hiểu. Học viên không tự khai.
+3. **Nhấn định vị, đừng nhấn lộ trình.** Q2: *"Mình đang yếu kiến thức nào"* được **77,4%** chọn, *"Nên học lại phần nào trước"* chỉ **38,7%**. Lát cắt §4 hứa cả hai; nửa định vị có bằng chứng mạnh hơn hẳn. Đề C1 vẫn yêu cầu phần gợi ý ôn nên không bỏ, nhưng demo và slide nên mở bằng phần định vị + căn cứ.
 
-  **Quote nguyên văn** (mã lượt, cắt ngắn theo luật data pack; đủ danh sách trong `mining.md`):
-  - **[T10291]** *"Dựa trên tiến độ của mình, mình nên ôn phần nào trước?"* — học viên thật hỏi **đúng** câu sản phẩm này sinh ra để trả lời
-  - **[T10326]** *"Giải thích lại giúp mình phần mà mình hay thấy khó."*
-  - **[T10317]** *"giải thích lại dc không hơi khó hiểu"*
-  - **[T10883]** *"em vẫn chưa hiểu rõ sự khác biệt của agent và llm"*
-  - **[T10728]** *"bước 2 là gì tôi đang chưa hiểu, tại sao lại cộng trọng số và cộng vào đâu"*
+### Hạn chế của bằng chứng
 
-  **Hạn chế — khai trước khi bị hỏi:**
-  - **"Quay lại cùng một mục" không chứng minh nguyên nhân gì cả** — không chứng minh chưa hiểu, càng không chứng minh hổng prerequisite. Mining đủ để nói **bài toán tồn tại**, không đủ để nói **chỗ hổng ở đâu**; sản phẩm cũng không dựa vào nó để nói điều đó (§4).
-  - **Không có nhãn nào trong data để đối chiếu.** Nhóm từng thử đếm "quay lại **và** nói rõ là chưa hiểu" ra 3,5% (13/369), nhưng nó dựa trên một regex nhóm tự viết, đọc tay thì **độ chính xác chỉ khoảng một nửa** — nên **không đưa vào spec**. Hai lập luận trên dựng bằng phép đếm không suy diễn.
-  - `move_used` là nhãn **do chính tutor tự chọn** — 0,2% nói lên thiết kế của tutor, chưa chắc nói lên nhu cầu học viên.
-  - Khảo sát: người trả lời là **học viên cùng khoá**, không độc lập với nhóm; và mới có bản tổng hợp, **chưa có log nguyên văn** như guide §1.3 đòi.
+- **"Quay lại cùng một mục" là hành vi, không phải nguyên nhân** — không chứng minh học viên chưa hiểu, càng không chứng minh hổng prerequisite; data không có nhãn nào để đối chiếu. Mining đủ để nói **bài toán tồn tại**, không đủ để nói **chỗ hổng ở đâu**; sản phẩm cũng không dựa vào nó để nói điều đó (§4).
+- **`move_used` do chính tutor tự gán**, nên 0,2% nói lên thiết kế của tutor hơn là nhu cầu học viên. **Khảo sát** thì người trả lời là học viên cùng khoá, không độc lập với nhóm, và mới có bản tổng hợp chứ chưa có log nguyên văn như guide §1.3 đòi.
 
 ## §2. Impact & quyết định chọn
 
