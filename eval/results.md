@@ -31,6 +31,15 @@ Sinh tự động bằng `python scripts/run.py --write`
 | C21 | Mục 3.1: sai 2 câu quiz, vòng nền chỉ sai 1/3 | 3.1 Double Diamond: phân kỳ – hội tụ → muc_nong · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: 3.1 Double Diamond: phân kỳ – hội tụ | 3.1 Double Diamond: phân kỳ – hội tụ → muc_nong · hổng: 3.1 Double Diamond: phân kỳ – hội tụ · trần: 3.1 Double Diamond: phân kỳ – hội tụ | ✅ |
 | C22 | Mục 1.1: sai 2 câu quiz, vòng nền chỉ sai 1/3 | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_nong · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể → muc_nong · hổng: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể · trần: 1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể | ✅ |
 
+## 4 case chờ tính năng — giả định nhóm đặt ra, chưa build
+
+| Case | Tình huống | Giả định phải đạt | Đang thiếu |
+|---|---|---|---|
+| C23 | Làm lại vòng: trượt vòng 1 ở mục 3.1, bấm làm lại, lần 2 đúng hết | lời tư vấn phải nhắc: lần đầu sai 2/3, làm lại mới đúng — nên ôn lại cho chắc | chưa build — engine không mang lịch sử vòng, prompt không nhận số lần làm lại |
+| C24 | Học viên chọn tự ôn, sau đó kiểm tra lại đúng hết | kết luận ghi rõ: cờ hổng xoá nhờ kiểm tra lại, KHÔNG phải nhờ học viên tự khai | chưa build — trạng thái sau retest chưa được đưa vào phần tư vấn |
+| C25 | Hai vòng: mục 3.1 trượt, chương 3 đạt — tư vấn phải nhắc đúng câu đã sai ở vòng 1 | nêu đích danh khía cạnh đã sai, không phải cả mục | chưa build — prompt chỉ nhận gap/trần, không nhận từng câu nền đã sai |
+| C26 | Bỏ dở ở vòng 2, mở lại phiên | mở lại là vào thẳng vòng đang dở, dấu vết còn nguyên | chưa kiểm tự động — resume có chạy (localStorage) nhưng chưa có case nào kiểm |
+
 ## Case chưa đạt
 
 Không có.

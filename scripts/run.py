@@ -80,8 +80,11 @@ def fmt_final(f):
     return f"{f.get('scenario')} · hổng: {label(f.get('gap'))} · trần: {label(f.get('ceiling'))}"
 
 
-rows, npass = [], 0
+rows, npass, cho = [], 0, []
 for c in cases:
+    if c.get("xfail"):        # case viết theo giả định, tính năng chưa build
+        cho.append(c)
+        continue
     got = engine.diagnose(c["quiz"], c.get("probes"), graph)
     ok_target = (got["target"] or None) == (c["expect"].get("target") or None)
 
@@ -108,13 +111,21 @@ for c in cases:
         "why": c.get("why", ""),
     })
 
-pct = npass / len(cases) * 100
-nhuman = sum(1 for c in cases if c.get("human"))
+do_cases = [c for c in cases if not c.get("xfail")]
+pct = npass / len(do_cases) * 100
+nhuman = sum(1 for c in do_cases if c.get("human"))
 print(f"\nColdBrew · S1 chẩn đoán: {npass}/{len(cases)} đạt ({pct:.0f}%)")
 print(f"  {len(cases) - nhuman} case nhóm soạn + {nhuman} case chạy thật"
       + (f" · {pending} case chờ điền nhãn" if pending else "") + "\n")
 for r in rows:
     print(f"{'PASS' if r['ok'] else 'FAIL'}  {r['id']}  {r['desc']}")
+if cho:
+    print(chr(10) + f"── {len(cho)} case CHỜ TÍNH NĂNG (giả định nhóm đặt ra, chưa build) ──")
+    for c in cho:
+        print(f"CHỜ   {c['id']}  {c['desc']}")
+        print(f"        giả định: {c['expect']['continuity']['bieu_hien']}")
+        print(f"        thiếu:    {c['xfail']}")
+
 for r in [r for r in rows if not r["ok"]]:
     print(f"\n{r['id']} — kỳ vọng: {r['expect']}\n     thực tế: {r['got']}\n     vì sao kỳ vọng vậy: {r['why']}")
 
@@ -124,19 +135,24 @@ if "--write" in sys.argv:
         "",
         "Sinh tự động bằng `python scripts/run.py --write`",
         "",
-        f"**{npass}/{len(cases)} case đạt ({pct:.0f}%)** — luật chẩn đoán `scripts/engine.py`, không gọi AI.",
+        f"**{npass}/{len(do_cases)} case đạt ({pct:.0f}%)** — luật chẩn đoán `scripts/engine.py`, không gọi AI.",
         "",
-        f"{len(cases) - nhuman} case nhóm soạn + {nhuman} case do thành viên chạy thật (👤)"
+        f"{len(do_cases) - nhuman} case nhóm soạn + {nhuman} case do thành viên chạy thật (👤)"
         + (f" · còn {pending} case chờ điền nhãn" if pending else "") + ".",
         "",
         "| Case | Tình huống | Kỳ vọng | Hệ thống trả về | |",
         "|---|---|---|---|---|",
     ]
     md += [f"| {r['id']} | {r['desc']} | {r['expect']} | {r['got']} | {'✅' if r['ok'] else '❌'} |" for r in rows]
+    if cho:
+        md += ["", f"## {len(cho)} case chờ tính năng — giả định nhóm đặt ra, chưa build", "",
+               "| Case | Tình huống | Giả định phải đạt | Đang thiếu |", "|---|---|---|---|"]
+        md += [f"| {c['id']} | {c['desc']} | {c['expect']['continuity']['bieu_hien']} | {c['xfail']} |"
+               for c in cho]
     md += ["", "## Case chưa đạt", ""]
     fails = [r for r in rows if not r["ok"]]
     md += [f"- **{r['id']}** — {r['why']}" for r in fails] if fails else ["Không có."]
     open(RESULTS, "w", encoding="utf-8").write("\n".join(md) + "\n")
     print("\nĐã ghi eval/results.md")
 
-sys.exit(0 if npass == len(cases) else 1)
+sys.exit(0 if npass == len(do_cases) else 1)

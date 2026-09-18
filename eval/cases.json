@@ -10,7 +10,9 @@
       "muc_nong": "sai 1/3 câu nền -> hổng nông ngay tại mục",
       "muc_duoi_tran": "mục trượt, tầng trên đạt -> hổng ở mục, tầng trên là trần",
       "nen_bai": "trượt tới tận nền, hết đường leo -> học lại cả bài"
-    }
+    },
+    "xfail": "case viết theo GIẢ ĐỊNH nhóm muốn hệ thống đạt, tính năng CHƯA BUILD. Không tính vào tỉ lệ đạt, liệt kê riêng như backlog.",
+    "expect.continuity": "điều hệ thống phải MANG TỪ VÒNG TRƯỚC sang khi kết luận hoặc khi tư vấn"
   },
   "cases": [
     {
@@ -976,6 +978,316 @@
         }
       },
       "why": "Cùng kịch bản muc_nong nhưng ở nhánh khác, chặn kiểu hard-code một nhánh"
+    },
+    {
+      "id": "C23",
+      "desc": "Làm lại vòng: trượt vòng 1 ở mục 3.1, bấm làm lại, lần 2 đúng hết",
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            10
+          ]
+        ]
+      },
+      "lich_su_vong": [
+        {
+          "node": "c3s1",
+          "lan": 1,
+          "sai": 2
+        },
+        {
+          "node": "c3s1",
+          "lan": 2,
+          "sai": 0
+        }
+      ],
+      "expect": {
+        "target": "c3s1",
+        "continuity": {
+          "phai_mang": [
+            "số lần làm lại",
+            "kết quả lần trượt trước"
+          ],
+          "khong_duoc": "coi như học viên chỉ làm một lần và đúng hết",
+          "bieu_hien": "lời tư vấn phải nhắc: lần đầu sai 2/3, làm lại mới đúng — nên ôn lại cho chắc"
+        }
+      },
+      "xfail": "chưa build — engine không mang lịch sử vòng, prompt không nhận số lần làm lại",
+      "kiem_bang": "tay",
+      "why": "Đúng ở lần thử thứ hai không đồng nghĩa đã nắm; hệ thống bỏ qua chi tiết này là tự xoá mất tín hiệu quan trọng nhất"
+    },
+    {
+      "id": "C24",
+      "desc": "Học viên chọn tự ôn, sau đó kiểm tra lại đúng hết",
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "c3": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            11
+          ]
+        ]
+      },
+      "lich_su_vong": [
+        {
+          "node": "c3s1",
+          "lan": 1,
+          "sai": 2
+        },
+        {
+          "hanh_dong": "tu_on"
+        },
+        {
+          "retest": "c3s1",
+          "sai": 0
+        }
+      ],
+      "expect": {
+        "target": "c3s1",
+        "continuity": {
+          "phai_mang": [
+            "học viên tự ôn chứ không đi hết chẩn đoán",
+            "kết quả bài kiểm tra lại"
+          ],
+          "bieu_hien": "kết luận ghi rõ: cờ hổng xoá nhờ kiểm tra lại, KHÔNG phải nhờ học viên tự khai"
+        }
+      },
+      "xfail": "chưa build — trạng thái sau retest chưa được đưa vào phần tư vấn",
+      "kiem_bang": "tay",
+      "why": "Phân biệt 'tự khai đã ổn' với 'đã xác nhận bằng bài kiểm tra' là lõi của sản phẩm, phải thể hiện ra chữ"
+    },
+    {
+      "id": "C25",
+      "desc": "Hai vòng: mục 3.1 trượt, chương 3 đạt — tư vấn phải nhắc đúng câu đã sai ở vòng 1",
+      "quiz": [
+        [
+          1,
+          9
+        ],
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          13
+        ],
+        [
+          3,
+          11
+        ]
+      ],
+      "probes": {
+        "c3s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            8
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "c3": [
+          [
+            0,
+            9
+          ],
+          [
+            0,
+            8
+          ],
+          [
+            0,
+            11
+          ]
+        ]
+      },
+      "lich_su_vong": [
+        {
+          "node": "c3s1",
+          "lan": 1,
+          "sai": 2,
+          "sai_cau": [
+            1,
+            2
+          ]
+        },
+        {
+          "node": "c3",
+          "lan": 2,
+          "sai": 0
+        }
+      ],
+      "expect": {
+        "target": "c3s1",
+        "final": {
+          "scenario": "muc_duoi_tran",
+          "gap": "c3s1",
+          "ceiling": "c3",
+          "prompt": "on_muc_co_tran"
+        },
+        "continuity": {
+          "phai_mang": [
+            "câu nền cụ thể đã sai ở vòng 1"
+          ],
+          "khong_duoc": "nói chung chung 'bạn hổng mục này'",
+          "bieu_hien": "nêu đích danh khía cạnh đã sai, không phải cả mục"
+        }
+      },
+      "xfail": "chưa build — prompt chỉ nhận gap/trần, không nhận từng câu nền đã sai",
+      "kiem_bang": "tay",
+      "why": "Người dạy giỏi nhắc đúng chỗ học viên vừa vấp, không đọc lại cả mục"
+    },
+    {
+      "id": "C26",
+      "desc": "Bỏ dở ở vòng 2, mở lại phiên",
+      "quiz": [
+        [
+          0,
+          10
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          0,
+          9
+        ],
+        [
+          0,
+          8
+        ]
+      ],
+      "probes": {
+        "c1s1": [
+          [
+            1,
+            9
+          ],
+          [
+            2,
+            10
+          ],
+          [
+            0,
+            8
+          ]
+        ]
+      },
+      "lich_su_vong": [
+        {
+          "node": "c1s1",
+          "lan": 1,
+          "sai": 2
+        },
+        {
+          "su_kien": "dong_trinh_duyet"
+        },
+        {
+          "su_kien": "mo_lai"
+        }
+      ],
+      "expect": {
+        "target": "c1s1",
+        "continuity": {
+          "phai_mang": [
+            "toàn bộ dấu vết của vòng trước"
+          ],
+          "khong_duoc": "hỏi lại từ câu quiz đầu tiên",
+          "bieu_hien": "mở lại là vào thẳng vòng đang dở, dấu vết còn nguyên"
+        }
+      },
+      "xfail": "chưa kiểm tự động — resume có chạy (localStorage) nhưng chưa có case nào kiểm",
+      "kiem_bang": "tay",
+      "why": "Đề bài bắt buộc demo được resume; không có case thì không ai biết nó gãy lúc nào"
     }
   ]
 }
