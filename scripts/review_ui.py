@@ -47,7 +47,12 @@ h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mocha);font-size:14px;margin:0
 .ans{font-size:13px;color:var(--mocha);margin:8px 0;white-space:pre-wrap}
 .out{background:var(--cream);border:1px solid var(--latte);border-radius:10px;padding:12px;
 white-space:pre-wrap;font-size:14px;margin:10px 0}
-.q{font-size:13px;font-weight:600;margin:10px 0 4px}
+.q{font-size:13px;font-weight:600;margin:14px 0 4px}
+.blk{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--caramel);
+margin:16px 0 4px;border-top:1px solid var(--latte);padding-top:8px}
+.pin{display:inline-block;background:var(--espresso);color:var(--cream);font-size:10px;
+font-weight:700;letter-spacing:.6px;padding:2px 7px;border-radius:999px;margin-right:6px;
+vertical-align:1px}
 .blk{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--caramel);
 margin:14px 0 4px;border-top:1px solid var(--latte);padding-top:8px}
 button{font:inherit;border:1px solid var(--latte);background:var(--milk);color:var(--mocha);
@@ -86,16 +91,21 @@ ROWS.forEach(r => {
   d.innerHTML = `
    <div class="head"><b>${r.id} · ${r.desc}</b>
      <span class="tag">${r.scenario}</span></div>
-   <div class="ans">${r.bai_lam.join('\\n')}</div>
-   <div class="q">Hệ thống kết luận chỗ hổng: <b>${r.gap || '(một ý trong quiz)'}</b></div>
+   <div class="blk">KHỐI A · BÀI LÀM CỦA HỌC VIÊN</div>
+   <div class="ans">${r.bai_lam.join('\n')}</div>
+   <div class="blk">KHỐI B · LUẬT CHẨN ĐOÁN KẾT LUẬN <span class="tag">${r.scenario}</span>
+     <span style="font-weight:400;text-transform:none;letter-spacing:0">— do code sinh, không phải AI</span></div>
+   <div class="ans">Chỗ hổng: <b>${r.gap_label || '(một ý trong quiz)'}</b>${
+     r.ceiling_label ? '<br>Nền đã xác nhận ổn tới: <b>' + r.ceiling_label + '</b>' : ''}</div>
+   <div class="blk">KHỐI C · NHẬN XÉT DO AI VIẾT</div>
    <div class="out">${r.out.replace(/</g,'&lt;')}</div>
-   <div class="q">① Nhận xét AI viết ra có ổn không?</div>
+   <div class="q">① <span class="pin">KHỐI C</span> Nhận xét AI viết ra có ổn không?</div>
    <div><button class="yes" data-i="${r.id}" data-k="nhan_xet" data-v="ok">Ổn</button>
         <button class="no" data-i="${r.id}" data-k="nhan_xet" data-v="khong">Chưa ổn</button></div>
-   <div class="q">② Nhìn khối <b>A</b> rồi khối <b>B</b> — chỗ hổng luật chỉ ra có đúng không?</div>
+   <div class="q">② <span class="pin">KHỐI A + B</span> Chỗ hổng luật chỉ ra có đúng với bài làm không?</div>
    <div><button class="yes" data-i="${r.id}" data-k="nhanh" data-v="ok">Đúng</button>
         <button class="no" data-i="${r.id}" data-k="nhanh" data-v="khong">Sai</button></div>
-   <div class="q">③ Nhìn khối <b>B</b> và <b>C</b> — có mâu thuẫn với vòng trước không? <span style="font-weight:400;color:var(--mocha)">(vd: bảo chưa nắm chương trong khi chương vừa đúng hết)</span></div>
+   <div class="q">③ <span class="pin">KHỐI B + C</span> Nhận xét có mâu thuẫn với kết luận của luật không? <span style="font-weight:400;color:var(--mocha)">(vd: bảo chưa nắm chương trong khi chương vừa đúng hết)</span></div>
    <div><button class="yes" data-i="${r.id}" data-k="noi_vong" data-v="ok">Không mâu thuẫn</button>
         <button class="no" data-i="${r.id}" data-k="noi_vong" data-v="khong">Có mâu thuẫn</button></div>
    <input type="text" placeholder="Ghi chú (vì sao chưa ổn / sai chỗ nào)"
