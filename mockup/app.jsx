@@ -28,6 +28,7 @@ const BLANK = {
   target: null,
   round: 0,
   retry: 0,
+  hits: [], // các lá dẫn tới giả thuyết hiện tại
   roundRecs: [], // kết quả vòng chẩn đoán vừa xong
   decision: null, // escalate | locate | restart
   nextTarget: null,
@@ -96,6 +97,7 @@ function App() {
               {s.stage === 'quiz' && <Quiz go={go} />}
               {s.stage === 'result' && <Result s={s} go={go} think={think} />}
               {s.stage === 'explain' && <Explain s={s} go={go} think={think} />}
+              {s.stage === 'analysis' && <Analysis s={s} go={go} think={think} />}
               {s.stage === 'probe' && <Probe s={s} think={think} />}
               {s.stage === 'review' && <Review s={s} go={go} think={think} />}
               {s.stage === 'plan' && <Plan s={s} go={go} />}
@@ -103,7 +105,7 @@ function App() {
           )}
         </main>
         <aside className="side">
-          <TreeView status={s.status} target={s.stage === 'probe' ? s.target : null} />
+          <TreeView status={s.status} target={s.stage === 'probe' || s.stage === 'analysis' ? s.target : null} />
           <Why trace={s.trace} />
         </aside>
       </div>
@@ -180,6 +182,7 @@ const labelOfStage = (st) =>
     quiz: 'đang làm quiz',
     result: 'đã có kết quả',
     explain: 'đang xem giải thích đáp án',
+    analysis: 'đang xem phân tích của AI',
     probe: 'đang chẩn đoán',
     review: 'đang xem kết quả vòng chẩn đoán',
     plan: 'đã có lộ trình',
@@ -408,10 +411,18 @@ function startDiagnosis(s, think) {
     [
       `Đọc ${s.records.length} câu trả lời và thời gian làm từng câu`,
       `Gắn ${candidates.length} tín hiệu yếu về các node trên cây tri thức`,
-      `Chọn phần nền cần kiểm tra: ${TREE[target].label}`,
+      `Dựng giả thuyết: chỗ hổng nằm ở ${TREE[target].label}`,
     ],
-    { stage: 'probe', target, round: 1, retry: 0, trace, status: { ...s.status, [target]: 'probing' } },
-  2000
+    {
+      stage: 'analysis',
+      target,
+      round: 1,
+      retry: 0,
+      hits: byParent[target].map((r) => r.node),
+      trace,
+      status: { ...s.status, [target]: 'probing' },
+    },
+    2000
   );
 }
 
@@ -521,6 +532,148 @@ function Explain({ s, go, think }) {
           ← Về bảng kết quả
         </button>
       </div>
+    </section>
+  );
+}
+
+/* ---------- màn AI trình bày giả thuyết, học viên đánh giá ---------- */
+
+// trả lời chat mock — bám vào node đang nghi và tín hiệu đã thu được
+function chatAnswer(q, s) {
+  const node = TREE[s.target];
+  const hits = (s.hits || []).map((h) => TREE[h].label).join(', ');
+  const t = q.toLowerCase();
+  if (/vì sao|tại sao|sao lại|căn cứ/.test(t))
+    return `Vì ${s.hits.length} tín hiệu yếu của bạn (${hits}) đều nằm dưới "${node.label}". Các mục khác trong bài không có tín hiệu nào, nên mình chưa đụng tới. Nguồn: ${node.page}.`;
+  if (/là gì|khái niệm|định nghĩa|nghĩa là/.test(t))
+    return `${node.label} — ${(PROBE_WHY[s.target] || [])[0] || 'xem slide nguồn'} Nguồn: ${node.page}.`;
+  if (/đọc nhầm|bấm nhầm|nhầm|không phải|sai đề|oan/.test(t))
+    return `Hiểu rồi. Mình chấm trên tín hiệu thu được chứ không biết bạn đọc nhầm hay không — nếu vậy bạn bấm "Chưa thuyết phục" rồi làm lại quiz, hoặc cứ kiểm tra 3 câu nền để loại trừ cho chắc.`;
+  if (/mục khác|chương khác|phần khác|chỗ khác/.test(t))
+    return `Được. Bản mock này mỗi lần chỉ theo một nhánh nhiều tín hiệu nhất; muốn ôn mục khác thì quay lại bảng kết quả và xem giải thích từng câu.`;
+  if (/ôn|học thế nào|bắt đầu|làm gì/.test(t))
+    return `Gợi ý ôn cho "${node.label}": ${(REVIEW[s.target] || ['xem lại slide nguồn']).join(' · ')}. Nguồn: ${node.page}.`;
+  return `Bản mock chưa có câu trả lời cho ý này — khi nối AI thật, câu trả lời vẫn sẽ phải trích từ node trong cây (hiện là ${node.label}, ${node.page}).`;
+}
+
+const CHAT_SUGGEST = [
+  'Vì sao lại là mục này mà không phải mục khác?',
+  'Mục này là gì, mình xem lại ở đâu?',
+  'Mình sai câu đó do đọc nhầm đề thôi',
+];
+
+function Analysis({ s, go, think }) {
+  const node = TREE[s.target];
+  const hits = s.hits || [];
+  const recs = s.records.filter((r) => hits.includes(r.node));
+  const rushed = recs.some((r) => r.flag === 'rush');
+  const onlySlow = recs.every((r) => r.correct);
+  const confidence = onlySlow ? 'thấp' : rushed ? 'trung bình' : hits.length >= 2 ? 'trung bình' : 'thấp';
+
+  const [chat, setChat] = useState([]);
+  const [draft, setDraft] = useState('');
+  const [open, setOpen] = useState(false);
+
+  const send = (q) => {
+    if (!q.trim()) return;
+    setChat([...chat, { me: true, text: q }, { me: false, text: chatAnswer(q, s) }]);
+    setDraft('');
+    go({ trace: [...s.trace, { t: 'Học viên hỏi lại', d: q }] });
+  };
+
+  const accept = () =>
+    think(
+      [`Lấy 3 câu nền của "${node.label}"`, `Nguồn: ${node.page}`],
+      {
+        stage: 'probe',
+        trace: [...s.trace, { t: 'Học viên đánh giá', d: 'Giả thuyết hợp lý → đồng ý kiểm tra 3 câu nền' }],
+      },
+      1200
+    );
+
+  const skipToPlan = () =>
+    go({
+      stage: 'plan',
+      verdict: 'accepted',
+      trace: [
+        ...s.trace,
+        { t: 'Học viên đánh giá', d: 'Giả thuyết hợp lý → ôn luôn, bỏ qua bước kiểm tra' },
+      ],
+    });
+
+  return (
+    <section>
+      <h2>AI nghĩ gì về bài làm của bạn</h2>
+
+      <div className="card">
+        <h3>Tín hiệu thu được</h3>
+        <ul>
+          {recs.map((r, i) => (
+            <li key={i}>
+              {TREE[r.node].label} — {FLAG_TEXT[r.flag] || 'đúng'} ({fmt(r.sec)})
+            </li>
+          ))}
+        </ul>
+        <h3>Giả thuyết</h3>
+        <p>
+          {hits.length} tín hiệu này đều nằm dưới <b>{node.label}</b>. Nhiều khả năng chỗ hổng là ở
+          mục này, hoặc ở phần nền phía trên nó. Để xác nhận, mình muốn hỏi bạn 3 câu nền của mục
+          này — sai tiếp thì mình sẽ đề nghị leo lên một tầng.
+        </p>
+        <p className="muted">
+          Mức chắc chắn: <b>{confidence}</b>
+          {onlySlow && ' — bạn không sai câu nào, giả thuyết chỉ dựa trên thời gian trả lời.'}
+          {rushed && ' — có câu bạn bấm rất nhanh, có thể là bấm bừa chứ không phải không biết.'}
+          {!onlySlow && !rushed && ' — dựa trên câu sai, chưa kiểm tra lại.'}
+        </p>
+        <Source node={node} />
+      </div>
+
+      <h3>Bạn thấy suy luận này có hợp lý không?</h3>
+      <div className="row">
+        <button className="primary" onClick={accept}>
+          Hợp lý — kiểm tra 3 câu nền →
+        </button>
+        <button className="ghost" onClick={skipToPlan}>
+          Hợp lý — ôn luôn mục này
+        </button>
+        <button className="ghost" onClick={() => setOpen(true)}>
+          💬 Chưa thuyết phục — hỏi thêm
+        </button>
+      </div>
+
+      {open && (
+        <div className="card">
+          <h3>Hỏi lại AI</h3>
+          <div className="chat">
+            {chat.map((m, i) => (
+              <p key={i} className={m.me ? 'bub me' : 'bub ai'}>
+                {m.text}
+              </p>
+            ))}
+          </div>
+          <div className="row">
+            {CHAT_SUGGEST.map((q, i) => (
+              <button key={i} className="link" onClick={() => send(q)}>
+                {q}
+              </button>
+            ))}
+          </div>
+          <div className="row">
+            <input
+              className="input"
+              value={draft}
+              placeholder="Hỏi gì đó về chẩn đoán này…"
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && send(draft)}
+            />
+            <button className="primary" onClick={() => send(draft)}>
+              Gửi
+            </button>
+          </div>
+          <p className="hint">Mọi câu hỏi của bạn được ghi vào dấu vết quyết định.</p>
+        </div>
+      )}
     </section>
   );
 }
@@ -793,6 +946,13 @@ function Plan({ s, go }) {
           </ul>
           <Source node={node} />
         </div>
+      )}
+
+      {s.verdict === 'accepted' && (
+        <p className="hint">
+          Bạn đồng ý với giả thuyết và bỏ qua bước kiểm tra, nên hệ thống chưa xác nhận lại bằng câu
+          hỏi — nếu ôn xong vẫn thấy vướng, làm lại quiz để chẩn đoán tiếp.
+        </p>
       )}
 
       {s.verdict === 'self' && (

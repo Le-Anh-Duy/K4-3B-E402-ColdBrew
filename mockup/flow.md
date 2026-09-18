@@ -15,7 +15,10 @@ flowchart TD
   Y --> D
   X -->|🔍 Tìm phần nền bị hổng| D["AI #2 · chẩn đoán trên cây tri thức"]
   D --> E[Gom tín hiệu yếu theo node cha gần nhất]
-  E --> F[Hỏi 3 câu nền về node cha · vòng n]
+  E --> P["Màn phân tích: tín hiệu thu được · giả thuyết ·<br/>mức chắc chắn — học viên đánh giá"]
+  P -->|chưa thuyết phục| CH[Chat hỏi lại AI] --> P
+  P -->|hợp lý, ôn luôn| K
+  P -->|hợp lý, kiểm tra tiếp| F[Hỏi 3 câu nền về node cha · vòng n]
   F --> R[Màn kết quả vòng n · hệ thống nói đọc được gì]
   R -->|học viên: làm lại vòng này| F
   R -->|học viên: mình tự ôn được| K
@@ -39,10 +42,16 @@ sequenceDiagram
 
   HV->>UI: làm 5 câu, nộp bài
   UI->>HV: kết quả đúng/sai + đáp án + trang slide
-  HV->>UI: bấm "ôn lại câu sai"
-  UI->>DX: danh sách lá bị sai
+  HV->>UI: bấm "tìm phần nền bị hổng"
+  UI->>DX: danh sách lá bị sai + thời gian trả lời
   DX->>KB: lấy node cha gần nhất của các lá sai
   KB-->>DX: node cha + 3 câu hỏi nền + trang nguồn
+  DX->>HV: trình bày giả thuyết + mức chắc chắn, chờ học viên đánh giá
+  opt học viên thấy chưa thuyết phục
+    HV->>DX: hỏi lại (chat)
+    DX-->>HV: trả lời, mọi câu đều trích từ node trong cây
+  end
+  HV-->>DX: đồng ý kiểm tra (hoặc chọn ôn luôn)
   DX->>HV: vòng chẩn đoán n (3 câu)
   HV-->>DX: đáp án
   DX->>HV: kết quả vòng n + "hệ thống đọc được gì" + 3 lựa chọn
@@ -98,6 +107,8 @@ Ngưỡng 25s/3s là **hằng số mock**, sẽ hiệu chỉnh khi có dữ li�
 | Sai/bỏ trống ≤ 1/3 câu nền | Chốt: hổng nằm đúng ở node này |
 | Sai/bỏ trống ≥ 2/3 câu nền | Leo lên node cha, hỏi lại |
 | Chạm gốc, hoặc quá 3 vòng | Kết luận chưa nắm bài → compact cả bài, học lại |
+
+**Không chẩn đoán sau lưng học viên.** Trước vòng đầu tiên, hệ thống trình bày *tín hiệu thu được · giả thuyết · mức chắc chắn (thấp/trung bình)* rồi hỏi học viên thấy có hợp lý không: **hợp lý → kiểm tra 3 câu nền** · **hợp lý → ôn luôn, bỏ qua kiểm tra** · **chưa thuyết phục → chat hỏi lại**. Câu trả lời trong chat vẫn phải trích từ node trong cây.
 
 **Không tự leo tầng.** Hết mỗi vòng, hệ thống dừng ở màn kết quả, nói rõ đọc được gì rồi để học viên chọn: *đi tiếp lên tầng trên* · *làm lại vòng này* · *mình tự ôn được* (dừng chẩn đoán, nhận lộ trình ở mức hiện tại kèm cảnh báo hổng có thể sâu hơn). Mọi lựa chọn đều được ghi vào dấu vết quyết định.
 

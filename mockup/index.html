@@ -115,6 +115,17 @@
       .wide { width: 100%; margin: 6px 0; }
       .mini { border-top: 1px dashed var(--latte); padding-top: 10px; margin-top: 10px; }
       .mini .q { margin-bottom: 4px; }
+      .chat { margin: 6px 0 10px; }
+      .bub {
+        max-width: 85%; padding: 9px 12px; border-radius: 12px; margin: 6px 0; font-size: 14px;
+      }
+      .bub.me { background: var(--caramel); color: #fff; margin-left: auto; border-bottom-right-radius: 3px; }
+      .bub.ai { background: var(--cream); border: 1px solid var(--latte); border-bottom-left-radius: 3px; }
+      .input {
+        flex: 1; min-width: 180px; font: inherit; padding: 9px 12px;
+        border: 1px solid var(--latte); border-radius: 10px; background: var(--milk); color: inherit;
+      }
+      .input:focus { outline: 2px solid var(--caramel); outline-offset: 1px; }
       .steps { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--mocha); }
       .steps li { margin: 6px 0; animation: fade 0.35s ease-out; }
       @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
