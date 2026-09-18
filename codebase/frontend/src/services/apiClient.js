@@ -7,6 +7,7 @@ export async function apiRequest(path, { method = 'GET', body, signal } = {}) {
   const timeout = setTimeout(() => controller.abort(), 60000)
   const abort = () => controller.abort()
   signal?.addEventListener('abort', abort, { once: true })
+  if (signal?.aborted) controller.abort()
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       method,
@@ -14,11 +15,13 @@ export async function apiRequest(path, { method = 'GET', body, signal } = {}) {
       body: body === undefined ? undefined : JSON.stringify(body),
       signal: controller.signal,
     })
-    const data = await response.json().catch(() => null)
     if (!response.ok) {
-      const detail = typeof data?.detail === 'string' ? data.detail : `HTTP ${response.status}`
-      throw new Error(`Backend: ${detail}. Không chuyển sang dữ liệu demo.`)
+      // Do not surface provider error bodies, which may contain sensitive details.
+      const error = new Error(`Backend trả lỗi HTTP ${response.status}.`)
+      error.status = response.status
+      throw error
     }
+    const data = await response.json().catch(() => null)
     if (data === null) throw new Error('Backend không trả JSON hợp lệ.')
     return data
   } catch (error) {
