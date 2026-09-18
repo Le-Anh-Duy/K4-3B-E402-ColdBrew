@@ -301,14 +301,15 @@ Chênh lệch 5/5 máy so với 4/5 người ở chuỗi nhiều vòng là lý d
 | Nguyễn Thị Phương Duyên | 2A202603001 | `TODO` |
 | Đào Trọng Khang | 2A202602974 | `TODO` |
 
-- **Willing users: 2 người** đã nhận lời, đều là học viên trong khoá và ngoài nhóm. Danh tính giữ kín theo luật bảo mật dữ liệu của khoá; nhóm lưu tên và MSHV ngoài repo, đối chiếu được khi ban tổ chức yêu cầu.
+- **Willing users: 3 người**, đều là học viên trong khoá và ngoài nhóm, đã nhận lời thử prototype. Danh tính giữ kín theo luật bảo mật của khoá; nhóm lưu tên và MSHV ngoài repo, đối chiếu được khi ban tổ chức yêu cầu.
 
-  | Mã | Vì sao sẵn sàng thử (nguyên văn rút gọn) |
+  | Người thử | Vì sao sẵn sàng (nguyên văn rút gọn) |
   |---|---|
-  | **Willing user A** | Muốn hệ thống nhanh hơn và chính xác hơn |
-  | **Willing user B** | Hay phải mở lại slide, mà slide load rất lâu và tìm thì mất thời gian |
+  | **A** | Muốn hệ thống nhanh hơn và chính xác hơn |
+  | **B** | Hay phải mở lại slide, mà slide load rất lâu và tìm thì mất thời gian |
+  | **C** | Thấy ứng dụng thú vị vì dùng Knowledge Graph, có tiềm năng |
 
-  Lý do của B là pain về **tìm lại đúng chỗ trong tài liệu**, gần với job nhưng không trùng: sản phẩm này trả về mã đoạn transcript thay vì bắt mở lại slide, nên có chạm tới, song nó không phải nhu cầu chẩn đoán prerequisite. Ghi đúng như vậy để không tính nhầm thành xác nhận cho lát cắt.
+  Đọc ba lý do này theo thang bằng chứng của guide §4.2 thì cả ba đều là **dự đoán tương lai**, tức tầng yếu nhất, nên chưa tính là xác nhận cho lát cắt. Ngoài ra chỉ lý do của A chạm tới job; B nói về pain **tìm lại chỗ trong tài liệu** (sản phẩm trả mã đoạn thay vì bắt mở slide nên có liên quan, nhưng không phải nhu cầu chẩn đoán prerequisite), còn C nói về **công nghệ** chứ không phải nhu cầu. Giá trị thật của cả ba nằm ở vòng validation phía dưới, không nằm ở câu nhận lời.
 
 - **Kế hoạch vòng validation** (bonus theo guide §4.2, làm trước CP5): mỗi người một phiên 10 phút theo 5 nhịp comfort, context, task theo outcome, quan sát im lặng, hỏi sau khi dùng. Giao task bằng kết quả cần đạt chứ không chỉ nút bấm. Log từng người một dòng trong `validation/`, kèm quote nguyên văn và mức nghiêm trọng. Nếu kịp thì mời thêm một người từ nhóm khác trong phòng.
 - Multi-prototype: không làm.
