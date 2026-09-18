@@ -45,6 +45,7 @@ class SessionStateIn(BaseModel):
     trace: Optional[List[TraceStep]] = []
     status: Optional[Dict[str, str]] = {}
     verdict: Optional[str] = None
+    feedback: Optional[Dict[str, Any]] = None
 
 class SessionOut(BaseModel):
     session_id: str

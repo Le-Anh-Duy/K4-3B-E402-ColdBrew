@@ -12,6 +12,7 @@ from .routers import (
     diagnosis,
     plan,
     session,
+    feedback,
 )
 
 app = FastAPI(
@@ -51,3 +52,4 @@ app.include_router(probes.router, prefix="/api/v0")
 app.include_router(diagnosis.router, prefix="/api/v0")
 app.include_router(plan.router, prefix="/api/v0")
 app.include_router(session.router, prefix="/api/v0")
+app.include_router(feedback.router, prefix="/api/v0")

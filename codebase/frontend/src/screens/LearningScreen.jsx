@@ -213,6 +213,22 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
     }
   }
 
+  async function handleFeedback(feedback) {
+    update({ feedback })
+    try {
+      await learningService.submitFeedback({
+        sessionId: session.id,
+        stars: feedback.stars,
+        reasons: feedback.reasons,
+        comment: feedback.comment,
+        node: state.target,
+        topic: session.topic,
+      })
+    } catch (e) {
+      console.warn('submitFeedback error:', e)
+    }
+  }
+
   const phase = state.stage === 'quiz' || state.stage === 'result' ? 0 : ['analysis', 'refuse', 'probe', 'review', 'explain'].includes(state.stage) ? 1 : 2
   const titles = {
     quiz: 'Quiz ôn tập', result: 'Kết quả quiz', explain: 'Giải thích đáp án', refuse: 'Chưa đủ căn cứ',
@@ -288,10 +304,10 @@ export default function LearningScreen({ session, isActive = true, onComplete, o
             <QuestionRunner key={`retest-${state.target}`} items={state.probeQuestions} isActive={isActive} onDone={submitRetest} submitLabel="Nộp kiểm tra lại" source={node?.page} />
           )}
           {!busy && state.stage === 'retestDone' && (
-            <RetestResult state={state} tree={tree} onPlan={() => update({ stage: 'plan' })} onFeedback={feedback => update({ feedback })} onComplete={() => update({ stage: 'complete' })} />
+            <RetestResult state={state} tree={tree} onPlan={() => update({ stage: 'plan' })} onFeedback={handleFeedback} onComplete={() => update({ stage: 'complete' })} />
           )}
           {!busy && state.stage === 'complete' && (
-            <Completion state={state} total={session.questions.length} onHome={onHome} />
+            <Completion state={state} total={session.questions.length} onHome={onHome} onFeedback={handleFeedback} />
           )}
         </div>
         <LearningAside session={session} state={state} tree={tree} onFinish={() => update({ stage: 'complete' })} />
@@ -472,18 +488,87 @@ function RetestResult({ state, tree, onPlan, onFeedback, onComplete }) {
   </section>
 }
 
-function Rating({ value, onSubmit }) {
+function Rating({ value, onSubmit, title = 'Lời tư vấn ôn tập có dùng được không?' }) {
   const [stars, setStars] = useState(value?.stars || 0)
   const [reasons, setReasons] = useState(value?.reasons || [])
-  const options = ['Chung chung', 'Khó hiểu', 'Không đúng chỗ mình hổng', 'Vừa đủ, dùng được']
-  if (value) return <section className="rating-card"><h3>Cảm ơn bạn</h3><p>Bạn đã chấm lời tư vấn {value.stars}/5. Đánh giá này không làm thay đổi kết quả kiến thức.</p></section>
-  return <section className="rating-card"><h3>Lời tư vấn ôn tập có dùng được không?</h3><div className="rating-stars">{[1, 2, 3, 4, 5].map(number => <button key={number} className={number <= stars ? 'selected' : ''} onClick={() => setStars(number)} aria-label={`${number} sao`}>★</button>)}</div><div className="reason-chips">{options.map(option => <button key={option} className={reasons.includes(option) ? 'selected' : ''} onClick={() => setReasons(previous => previous.includes(option) ? previous.filter(item => item !== option) : [...previous, option])}>{option}</button>)}</div><Button disabled={!stars} onClick={() => onSubmit({ stars, reasons, node: null })}>Gửi đánh giá</Button></section>
+  const [comment, setComment] = useState(value?.comment || '')
+  const options = ['Chung chung', 'Khó hiểu', 'Không đúng chỗ mình hổng', 'Vừa đủ, dùng được', 'Rất sát bài học']
+  if (value) {
+    return (
+      <section className="rating-card">
+        <h3>Cảm ơn bạn đã gửi nhận xét!</h3>
+        <p>Bạn đã chấm {value.stars}/5 sao{value.reasons?.length ? ` · ${value.reasons.join(', ')}` : ''}. Đánh giá này giúp cải thiện trải nghiệm học tập.</p>
+        {value.comment && <p className="muted" style={{ fontStyle: 'italic', marginTop: '6px' }}>"{value.comment}"</p>}
+      </section>
+    )
+  }
+  return (
+    <section className="rating-card">
+      <h3>{title}</h3>
+      <div className="rating-stars">
+        {[1, 2, 3, 4, 5].map(number => (
+          <button
+            key={number}
+            className={number <= stars ? 'selected' : ''}
+            onClick={() => setStars(number)}
+            aria-label={`${number} sao`}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+      <div className="reason-chips">
+        {options.map(option => (
+          <button
+            key={option}
+            className={reasons.includes(option) ? 'selected' : ''}
+            onClick={() => setReasons(previous => previous.includes(option) ? previous.filter(item => item !== option) : [...previous, option])}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+      <div style={{ marginTop: '12px' }}>
+        <input
+          type="text"
+          placeholder="Nhận xét thêm về bài học hoặc câu hỏi (tùy chọn)..."
+          value={comment}
+          onChange={e => setComment(e.target.value)}
+          style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #dce4dd', fontSize: '13px' }}
+        />
+      </div>
+      <div style={{ marginTop: '12px' }}>
+        <Button disabled={!stars} onClick={() => onSubmit({ stars, reasons, comment, node: null })}>
+          Gửi nhận xét
+        </Button>
+      </div>
+    </section>
+  )
 }
 
-function Completion({ state, total, onHome }) {
+function Completion({ state, total, onHome, onFeedback }) {
   const correct = state.records.filter(record => record.correct).length
   const answered = state.records.filter(record => record.flag !== 'skip').length
-  return <section className="completion"><div className="completion-icon">✓</div><span className="eyebrow">THÊM MỘT BƯỚC TIẾN</span><h2>Phiên học đã hoàn thành</h2><p>Kết quả quiz, lỗ hổng và lần kiểm tra lại đã được lưu vào tiến độ.</p><div className="completion-stats"><div><strong>{correct}/{total}</strong><span>Câu quiz đúng</span></div><div><strong>{answered}/{total}</strong><span>Câu đã trả lời</span></div></div><Button onClick={onHome}>Về trang chủ →</Button></section>
+  return (
+    <section className="completion">
+      <div className="completion-icon">✓</div>
+      <span className="eyebrow">THÊM MỘT BƯỚC TIẾN</span>
+      <h2>Phiên học đã hoàn thành</h2>
+      <p>Kết quả quiz, lỗ hổng và lần kiểm tra lại đã được lưu vào tiến độ.</p>
+      <div className="completion-stats">
+        <div><strong>{correct}/{total}</strong><span>Câu quiz đúng</span></div>
+        <div><strong>{answered}/{total}</strong><span>Câu đã trả lời</span></div>
+      </div>
+      <div style={{ maxWidth: '540px', margin: '24px auto', textAlign: 'left' }}>
+        <Rating
+          value={state.feedback}
+          onSubmit={onFeedback}
+          title="Đánh giá & nhận xét về phiên học này:"
+        />
+      </div>
+      <Button onClick={onHome}>Về trang chủ →</Button>
+    </section>
+  )
 }
 
 function LearningAside({ session, state, tree, onFinish }) {

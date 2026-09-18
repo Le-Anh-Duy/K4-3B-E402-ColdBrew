@@ -9,6 +9,7 @@ import {
   apiGetTree,
   apiGradeQuiz,
   apiUpdateSession,
+  apiSubmitFeedback,
 } from '../api.js'
 import { backendService } from './backendService'
 import { demoLearningService } from './demoLearningService'
@@ -320,6 +321,16 @@ export const learningService = {
     writeJson(`${FLOW_KEY}:${sessionId}`, progress)
     if (remote) void apiUpdateSession(sessionId, progress)
     return progress
+  },
+  async submitFeedback({ sessionId, stars, reasons = [], comment = '', node = null, topic = null }) {
+    const payload = { session_id: sessionId, stars, reasons, comment, node_id: node, topic }
+    try {
+      const res = await apiSubmitFeedback(payload)
+      return res
+    } catch (e) {
+      console.warn('apiSubmitFeedback error:', e)
+      return null
+    }
   },
   clearProgress(sessionId) {
     progressBySession.delete(sessionId)

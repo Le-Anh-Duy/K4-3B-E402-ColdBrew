@@ -500,6 +500,49 @@ Cụm endpoint này hiện thực hóa yêu cầu của **Spec §0** (Lưu trữ
 
 ---
 
+### 3.8. Đánh Giá & Nhận Xét Phiên Học (User Feedback & Review)
+
+#### `POST /api/v0/feedback` hoặc `POST /api/v0/session/{session_id}/feedback`
+- **Mục đích:** Tiếp nhận đánh giá số sao (1-5), các lý do chọn nhanh (chip tags) và nhận xét đóng góp ý kiến của học viên sau khi kết thúc phiên quiz hoặc lộ trình ôn tập.
+- **Request Body:**
+  ```json
+  {
+    "session_id": "6b4c4a53-ede0-4005-8c37-c78ee7b39523",
+    "stars": 5,
+    "reasons": ["Vừa đủ, dùng được", "Đúng chỗ mình hổng"],
+    "comment": "Giải thích chi tiết và gợi ý ôn tập rất hữu ích!",
+    "node_id": "c3s1",
+    "topic": "3.1 Double Diamond: phân kỳ – hội tụ"
+  }
+  ```
+- **Response `200 OK`:**
+  ```json
+  {
+    "ok": true,
+    "id": "a8fd7eb7-05d0-4f1c-9972-a48a383607f2",
+    "session_id": "6b4c4a53-ede0-4005-8c37-c78ee7b39523",
+    "stars": 5,
+    "reasons": ["Vừa đủ, dùng được", "Đúng chỗ mình hổng"],
+    "comment": "Giải thích chi tiết và gợi ý ôn tập rất hữu ích!",
+    "node_id": "c3s1",
+    "topic": "3.1 Double Diamond: phân kỳ – hội tụ",
+    "created_at": "2026-09-18T20:41:00.123456",
+    "message": "Đã lưu nhận xét và đánh giá phiên học thành công"
+  }
+  ```
+
+#### `GET /api/v0/session/{session_id}/feedback`
+- **Mục đích:** Lấy thông tin nhận xét và đánh giá đã lưu của một phiên học cụ thể.
+- **Response `200 OK`:** Trả về đối tượng `FeedbackOut`.
+- **Mã lỗi:** `404 Not Found` nếu phiên chưa tồn tại hoặc chưa có nhận xét.
+
+#### `GET /api/v0/feedback`
+- **Mục đích:** Lấy danh sách các nhận xét gần nhất từ học viên (hỗ trợ phân tích chất lượng bài học).
+- **Query Parameter:** `limit` — số lượng tối đa bản ghi cần lấy (mặc định 20).
+- **Response `200 OK`:** Danh sách `FeedbackOut[]`.
+
+---
+
 ## 4. Bảng Tra Cứu Trạng Thái & Hằng Số Sư Phạm (Data Dictionary & Enums)
 
 | Tên Trường / Tham số | Giá Trị Hợp Lệ | Ý Nghĩa Sư Phạm & Quy Tắc Kích Hoạt |

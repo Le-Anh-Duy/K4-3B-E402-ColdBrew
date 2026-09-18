@@ -119,3 +119,15 @@ export async function apiUpdateSession(sessionId, state) {
     body: JSON.stringify(state),
   });
 }
+
+// 10. Feedback & Nhận xét phiên học
+export async function apiSubmitFeedback(payload) {
+  return await fetchJson(`${API_BASE}/feedback`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function apiGetSessionFeedback(sessionId) {
+  return await fetchJson(`${API_BASE}/session/${sessionId}/feedback`);
+}
