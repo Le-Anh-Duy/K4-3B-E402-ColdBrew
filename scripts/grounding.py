@@ -97,7 +97,12 @@ def run_case(c):
     return {
         "id": c["id"], "desc": c.get("desc", ""), "scenario": final["scenario"], "prompt": final["prompt"],
         "bai_lam": [l for l in user.split(chr(10)) if l.startswith("- Câu ")],
-        "gap": gap, "ceiling": ceiling, "out": out.strip(), "cited": cited,
+        "gap": gap, "ceiling": ceiling,
+        "gap_label": (TREE[gap]["label"] if gap else
+                      "(một ý trong quiz: " + ", ".join(
+                          TREE[r["node"]]["label"] for r in records if not r["correct"]) + ")"),
+        "ceiling_label": (TREE[ceiling]["label"] if ceiling and ceiling != gap else ""),
+        "out": out.strip(), "cited": cited,
         "bad_span": [s for s in cited if s not in ALL_SPANS],
         "off_topic": [s for s in cited if s in ALL_SPANS and s not in allowed],
         "c1": c1, "c2": c2, "c3": c3, "c4": c4, "pass": c1 and c2 and c3,

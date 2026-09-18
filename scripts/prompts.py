@@ -95,8 +95,16 @@ def build_user_msg(graph, gap_id, ceiling_id, level, records, quiz):
             f"- Câu {i+1}: {q['q']} → chọn \"{chosen}\" "
             f"({'đúng' if r['correct'] else 'SAI'}, {r['sec']}s, cờ {r['flag']})"
         )
+    # các Ý CỤ THỂ học viên làm sai — thiếu dòng này thì kịch bản y_le không biết nói về ý nào
+    sai = [tree[r["node"]]["label"] for r in records if not r["correct"] and r["node"] in tree]
     lines.append("")
-    lines.append(f"CHỖ HỔNG ĐÃ XÁC ĐỊNH: {tree[focus]['label'] if focus in tree else focus}")
+    if sai:
+        lines.append("Ý CỤ THỂ BẠN ẤY LÀM SAI: " + " · ".join(sai))
+    lines.append("")
+    if gap_id:
+        lines.append(f"CHỖ HỔNG ĐÃ XÁC ĐỊNH: {tree[gap_id]['label']}")
+    else:
+        lines.append("CHỖ HỔNG ĐÃ XÁC ĐỊNH: chính (các) ý ở trên — phần nền của mục đã kiểm tra và ĐẠT")
     if ceiling_id and ceiling_id != focus:
         lines.append(f"NỀN ĐÃ XÁC NHẬN ỔN TỚI: {tree[ceiling_id]['label']}")
     return "\n".join(lines)

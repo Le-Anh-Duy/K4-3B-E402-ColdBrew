@@ -43,6 +43,8 @@ h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mocha);font-size:14px;margin:0
 .out{background:var(--cream);border:1px solid var(--latte);border-radius:10px;padding:12px;
 white-space:pre-wrap;font-size:14px;margin:10px 0}
 .q{font-size:13px;font-weight:600;margin:10px 0 4px}
+.blk{font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--caramel);
+margin:14px 0 4px;border-top:1px solid var(--latte);padding-top:8px}
 button{font:inherit;border:1px solid var(--latte);background:var(--milk);color:var(--mocha);
 border-radius:9px;padding:6px 14px;cursor:pointer;margin-right:6px}
 button.yes.on{background:var(--good);color:#fff;border-color:var(--good)}
@@ -54,7 +56,8 @@ padding:10px 16px;font-size:14px;display:flex;justify-content:space-between}
 .done{opacity:.55}
 </style></head><body><div class="wrap">
 <h1>Chấm tay — nhận xét AI</h1>
-<p class="sub">Mỗi thẻ: đọc bài làm, xem hệ thống chỉ chỗ hổng nào, rồi trả lời hai câu.
+<p class="sub">Mỗi thẻ có ba khối: <b>A</b> bài làm của học viên · <b>B</b> kết luận của LUẬT (code, không phải AI)
+· <b>C</b> nhận xét do AI viết. Ba câu hỏi bên dưới chấm ba thứ khác nhau — mỗi câu ghi rõ nhìn vào khối nào.
 Tự lưu vào <code>eval/human_review.json</code>.</p>
 <div id="list"></div></div>
 <div class="bar"><span id="tally"></span><span id="status">—</span></div>
@@ -75,10 +78,10 @@ ROWS.forEach(r => {
    <div class="q">① Nhận xét AI viết ra có ổn không?</div>
    <div><button class="yes" data-i="${r.id}" data-k="nhan_xet" data-v="ok">Ổn</button>
         <button class="no" data-i="${r.id}" data-k="nhan_xet" data-v="khong">Chưa ổn</button></div>
-   <div class="q">② Chọn nhánh (chỗ hổng) có đúng với bài làm này không?</div>
+   <div class="q">② Nhìn khối <b>A</b> rồi khối <b>B</b> — chỗ hổng luật chỉ ra có đúng không?</div>
    <div><button class="yes" data-i="${r.id}" data-k="nhanh" data-v="ok">Đúng</button>
         <button class="no" data-i="${r.id}" data-k="nhanh" data-v="khong">Sai</button></div>
-   <div class="q">③ Có mâu thuẫn với vòng trước không? <span style="font-weight:400;color:var(--mocha)">(vd: bảo chưa nắm chương trong khi chương vừa đúng hết)</span></div>
+   <div class="q">③ Nhìn khối <b>B</b> và <b>C</b> — có mâu thuẫn với vòng trước không? <span style="font-weight:400;color:var(--mocha)">(vd: bảo chưa nắm chương trong khi chương vừa đúng hết)</span></div>
    <div><button class="yes" data-i="${r.id}" data-k="noi_vong" data-v="ok">Không mâu thuẫn</button>
         <button class="no" data-i="${r.id}" data-k="noi_vong" data-v="khong">Có mâu thuẫn</button></div>
    <input type="text" placeholder="Ghi chú (vì sao chưa ổn / sai chỗ nào)"
