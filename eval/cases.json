@@ -9,56 +9,56 @@
   "cases": [
     {
       "id": "C01",
-      "desc": "Sai 2 câu, cả hai đều thuộc 3.1 Embedding",
+      "desc": "Sai 2 câu, cả hai đều thuộc 3.1 Double Diamond",
       "quiz": [[1, 9], [0, 8], [1, 11], [2, 14], [3, 12]],
       "expect": { "target": "c3s1" },
-      "why": "Hai tín hiệu duy nhất đều nằm dưới 3.1 Embedding, không có tín hiệu ở chỗ khác"
+      "why": "Hai tín hiệu duy nhất đều nằm dưới mục 3.1, không có tín hiệu ở chỗ khác"
     },
     {
       "id": "C02",
-      "desc": "Sai 2 câu, cả hai đều thuộc 1.1 Token",
+      "desc": "Sai 2 câu, cả hai đều thuộc 1.1 Yêu cầu mơ hồ",
       "quiz": [[0, 10], [2, 9], [1, 7], [0, 8], [0, 9]],
       "expect": { "target": "c1s1" },
-      "why": "Hai câu sai cùng thuộc mục token, phần còn lại đúng và nhanh"
+      "why": "Hai câu sai cùng thuộc mục 1.1, phần còn lại đúng và nhanh"
     },
     {
       "id": "C03",
-      "desc": "Sai đúng 1 câu ở 2.2 Few-shot",
+      "desc": "Sai đúng 1 câu ở 3.2 Làm đúng cái sai",
       "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
-      "expect": { "target": "c2s2" },
-      "why": "Chỉ một tín hiệu, nằm ở mục few-shot"
+      "expect": { "target": "c3s2" },
+      "why": "Chỉ một tín hiệu, nằm ở mục 3.2"
     },
     {
       "id": "C04",
-      "desc": "Bỏ trống 2 câu của 3.1 Embedding",
+      "desc": "Bỏ trống 2 câu của 3.1 Double Diamond",
       "quiz": [[1, 6], [0, 7], [1, 9], [null, 4], [null, 3]],
       "expect": { "target": "c3s1" },
-      "why": "Bỏ trống tính như chưa nắm; cả hai đều thuộc embedding"
+      "why": "Bỏ trống tính như chưa nắm; cả hai đều thuộc mục 3.1"
     },
     {
       "id": "C05",
-      "desc": "Sai 1 câu token + bỏ trống 1 câu token",
+      "desc": "Sai 1 câu + bỏ trống 1 câu, cùng mục 1.1",
       "quiz": [[0, 11], [null, 5], [1, 8], [0, 10], [0, 9]],
       "expect": { "target": "c1s1" },
       "why": "Hai tín hiệu cùng mục, một sai một bỏ trống"
     },
     {
       "id": "C06",
-      "desc": "Hoà 1-1: sai 1 câu token (chương 1) và 1 câu embedding (chương 3)",
+      "desc": "Hoà 1-1: sai 1 câu ở mục 1.1 (chương 1) và 1 câu ở mục 3.1 (chương 3)",
       "quiz": [[0, 12], [0, 9], [1, 8], [2, 11], [0, 10]],
       "expect": { "target": "c1s1" },
-      "why": "Hoà thì ưu tiên phần nền học trước trong bài — token là nền của embedding"
+      "why": "Hoà thì ưu tiên phần nền học trước trong bài — mục 1.1 là tiền đề của mục 3.1"
     },
     {
       "id": "C07",
-      "desc": "Hai tín hiệu ở embedding + một tín hiệu ở token (chương nền)",
+      "desc": "Hai tín hiệu ở mục 3.1 + một tín hiệu ở mục 1.1 (tiền đề của 3.1)",
       "quiz": [[0, 13], [0, 8], [1, 9], [2, 12], [3, 10]],
       "expect": { "target": "c1s1" },
-      "why": "Có tín hiệu ở cả chương nền lẫn chương sau thì phải xử nền trước, dù chương sau nhiều câu sai hơn — sai nền thì ôn embedding cũng vô ích"
+      "why": "Cây có cạnh prereq: c3s1 <- c1s1. Có tín hiệu ở cả tiền đề lẫn node phụ thuộc thì phải xử tiền đề trước, dù node phụ thuộc nhiều câu sai hơn"
     },
     {
       "id": "C08",
-      "desc": "Đúng hết, nhưng 2 câu embedding mất hơn 25s",
+      "desc": "Đúng hết, nhưng 2 câu của mục 3.1 mất hơn 25s",
       "quiz": [[1, 9], [0, 8], [1, 10], [0, 31], [0, 28]],
       "expect": { "target": "c3s1" },
       "why": "Không sai câu nào nhưng chậm bất thường ở cùng một mục — đủ để hỏi thêm, chưa đủ để kết luận"
@@ -86,22 +86,22 @@
     },
     {
       "id": "C12",
-      "desc": "Bỏ trống toàn bộ",
+      "desc": "Bỏ trống toàn bộ 5 câu",
       "quiz": [[null, 3], [null, 2], [null, 3], [null, 2], [null, 3]],
       "expect": { "target": "c1s1" },
       "why": "Bỏ trống hết thì tín hiệu trải khắp bài, bắt đầu từ mục nền đầu tiên là hợp lý"
     },
     {
       "id": "C13",
-      "desc": "Embedding: sai 2 câu quiz, vòng nền trả lời đúng cả 3",
+      "desc": "Mục 3.1: sai 2 câu quiz, vòng nền trả lời đúng cả 3",
       "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
       "probes": { "c3s1": [[0, 8], [0, 7], [0, 9]] },
       "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3s1" } },
-      "why": "Nắm được nền của embedding thì chỗ hổng đúng là ở mục này, không cần leo lên"
+      "why": "Nắm được nền của mục 3.1 thì chỗ hổng đúng là ở mục này, không cần leo lên"
     },
     {
       "id": "C14",
-      "desc": "Embedding: sai 2 câu nền, lên chương RAG thì trả lời đúng",
+      "desc": "Mục 3.1: sai 2 câu nền, lên chương 3 thì trả lời đúng",
       "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
       "probes": { "c3s1": [[1, 9], [2, 8], [0, 10]], "c3": [[0, 9], [0, 8], [0, 11]] },
       "expect": { "target": "c3s1", "final": { "verdict": "located", "node": "c3" } },
@@ -109,7 +109,7 @@
     },
     {
       "id": "C15",
-      "desc": "Embedding: sai cả vòng mục lẫn vòng chương",
+      "desc": "Mục 3.1: sai cả vòng mục lẫn vòng chương",
       "quiz": [[1, 9], [0, 8], [1, 10], [2, 13], [3, 11]],
       "probes": { "c3s1": [[1, 9], [2, 8], [1, 10]], "c3": [[1, 9], [2, 8], [3, 11]] },
       "expect": { "target": "c3s1", "final": { "verdict": "restart", "node": "c3" } },
@@ -117,7 +117,7 @@
     },
     {
       "id": "C16",
-      "desc": "Token: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1",
+      "desc": "Mục 1.1: sai 2 câu quiz, vòng nền sai 2/3, lên chương 1 chỉ sai 1",
       "quiz": [[0, 10], [2, 9], [1, 8], [0, 9], [0, 8]],
       "probes": { "c1s1": [[1, 9], [2, 10], [0, 8]], "c1": [[0, 9], [1, 10], [0, 8]] },
       "expect": { "target": "c1s1", "final": { "verdict": "located", "node": "c1" } },
@@ -125,11 +125,11 @@
     },
     {
       "id": "C17",
-      "desc": "Few-shot: sai quiz, sai cả vòng mục lẫn vòng chương 2",
+      "desc": "Mục 3.2: sai quiz, sai cả vòng mục lẫn vòng chương 3",
       "quiz": [[1, 8], [0, 7], [3, 13], [0, 9], [0, 8]],
-      "probes": { "c2s2": [[1, 9], [2, 8], [3, 10]], "c2": [[1, 9], [2, 10], [3, 8]] },
-      "expect": { "target": "c2s2", "final": { "verdict": "restart", "node": "c2" } },
-      "why": "Hổng tới mức chương prompting, trên nữa là gốc — học lại cả bài"
+      "probes": { "c3s2": [[1, 9], [2, 8], [3, 10]], "c3": [[1, 9], [2, 10], [3, 8]] },
+      "expect": { "target": "c3s2", "final": { "verdict": "restart", "node": "c3" } },
+      "why": "Hổng tới mức chương 3, trên nữa là gốc — học lại cả bài"
     },
     {
       "id": "C18",
@@ -149,7 +149,7 @@
     },
     {
       "id": "C20",
-      "desc": "Token: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3",
+      "desc": "Mục 1.1: bỏ trống 2 câu quiz, vòng nền sai 3/3, chương 1 sai 3/3",
       "quiz": [[null, 4], [null, 3], [1, 9], [0, 8], [0, 9]],
       "probes": { "c1s1": [[1, 8], [2, 9], [3, 7]], "c1": [[1, 9], [2, 8], [3, 10]] },
       "expect": { "target": "c1s1", "final": { "verdict": "restart", "node": "c1" } },

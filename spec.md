@@ -20,7 +20,9 @@
 
 Vì sao OpenAI-compatible: đổi provider chỉ sửa `base_url` + `MODEL`, không sửa code — phòng khi rate-limit lúc demo.
 
-Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa gọi AI**, chạy được trên GitHub Pages. Sơ đồ luồng và quy tắc chẩn đoán: `mockup/flow.md`.
+Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, chạy được trên GitHub Pages. Sơ đồ luồng và quy tắc chẩn đoán: `mockup/flow.md`.
+
+**Cây tri thức (nhóm tự dựng, đề không cấp graph mẫu):** 30 node dựng tay từ `data/vlearn-pack/transcript/transcript-01-clean.md` — *Day 2 (sáng) · Xác định bài toán kinh doanh cho AI*, 89 đoạn `[T01-001…089]`. Mỗi node mang `file` · `span` (mã đoạn) · `conf` (0.9 nói thẳng trong đoạn · 0.7 nhóm từ nhiều đoạn) và cạnh `prereq` tách riêng khỏi quan hệ mục lục. Slide d2 **chưa đối chiếu trang nên không ghi số trang** — thà thiếu còn hơn trích sai. Repo **không chứa data pack**, chỉ trích mã đoạn.
 
 ---
 
@@ -29,7 +31,19 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa g�
 - **Job executor:** học viên AI20k đang học một chương (ví dụ Day 1 — AI & LLM Foundation), làm quiz ôn tập rồi tự hỏi "sai chỗ này thì phải học lại cái gì".
 - **Core JTBD:** *Khi tôi làm sai vài câu trong bài ôn, tôi muốn biết chính xác mình hổng khái niệm nền nào và học lại đúng phần đó, để không phải đọc lại cả chương.*
 - **Problem statement (không chữ AI):** Học viên làm quiz xong chỉ biết "đúng 3/5". Bài ôn được phát theo một lộ trình tuyến tính giống nhau cho mọi người, trong khi mỗi người hổng ở concept khác nhau — và cái hổng thật thường nằm ở **prerequisite** chứ không phải ở concept của câu hỏi. Hậu quả: học viên đọc lại cả chương hoặc bỏ qua, lỗ hổng nền tích lại sang ngày sau.
-- **Evidence:** `TODO` — dự kiến chuẩn B (mining `data/vlearn-pack/chatlog/tutor_turns.csv`, 13.494 turn): đếm tỉ lệ câu hỏi lặp lại cùng một concept nền, và câu hỏi ở chương sau nhưng nội dung thuộc chương trước → dấu hiệu hổng prerequisite. Kèm ≥5 quote nguyên văn (ghi mã `T#####`, không dán dài). Log đầy đủ để trong `eval/evidence/`.
+- **Evidence (chuẩn B · mining `data/vlearn-pack/chatlog/tutor_turns.csv`):** 13.494 turn tổng · K4: 3.097 turn / 448 học viên · course K4P1: **2.146 turn / 293 học viên**. 97% câu hỏi K4P1 mang sẵn nhãn vị trí học `(Đang học phần “…”)`, nên đếm được theo từng phần:
+
+  | Chỉ số | Kết quả | Ý nghĩa |
+  |---|---|---|
+  | Học viên hỏi **≥2 lần trong cùng một phần học** | **189/293 = 65%** (≥3 lần: 132 = 45%) | quay vòng tại chỗ, hỏi rồi vẫn chưa thoát |
+  | **Quay lại hỏi về buổi trước** sau khi đã sang buổi mới | 31/293 = **11%** | dấu hiệu hổng phần nền |
+  | Câu hỏi mang ý *"ôn / học lại / chưa hiểu"* | 331/2.146 = **15%** | học viên tự biết mình hổng nhưng không biết hổng đâu |
+  | Câu trả lời tutor **không có trích dẫn nguồn** | 3.781/13.494 = **28%** | nội dung không truy ngược được |
+
+  Quote (mã turn, không dán nguyên văn dài):
+  - **[T10291]** *"Dựa trên tiến độ của mình, mình nên ôn phần nào trước?"* — học viên thật hỏi đúng câu sản phẩm này sinh ra để trả lời
+  - **[T10317]** *"giải thích lại dc không hơi khó hiểu"*
+  - `TODO` bổ sung ≥3 quote nữa + script mining vào `eval/evidence/`
 
 ## §2. Impact & quyết định chọn
 
@@ -107,18 +121,23 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa g�
 - **Golden set:** **20 case** trong `eval/cases.json` — mỗi case = 5 câu trả lời (phương án + số giây) của một hồ sơ học viên **giả**, kèm nhãn kỳ vọng (node cần chẩn đoán, kết luận cuối) và lý do gán nhãn. 10 case chỉ đo bước định vị, 8 case đo cả chuỗi leo cây, 3 case kỳ vọng hệ thống **từ chối chẩn đoán** vì tín hiệu không đủ.
   - Nhãn gán tay theo cây tri thức, **không lấy từ output của code**.
   - Chạy: `node eval/run.js --write` → `eval/results.md`. Bộ eval dùng **chung file luật** `mockup/engine.js` với trang demo nên số đo là số của đúng cái chạy trên sân khấu.
+  - **Chống trôi:** `run.js` kiểm tra vân tay bộ câu hỏi (node + đáp án). Đổi quiz mà quên gán nhãn lại thì bộ đo **dừng và báo đỏ**, không âm thầm xanh.
+  - `node eval/smoke.js` dựng trang đúng thứ tự script như trình duyệt rồi render một lần — chốt chặn lỗi trắng trang trước khi demo.
 - **Quality bar** *(đề xuất — chốt tại CP4 21:00 18/9)*: "Đạt khi **≥90% case** của golden set ra đúng node chẩn đoán và đúng kết luận cuối, **và 100%** mục ôn đề xuất trỏ được về slide/trang có thật."
   - Khai báo trung thực: bar này đặt **sau** lượt chạy baseline R0 dưới đây (85%), và đặt cao hơn R0 để buộc sửa hai lỗ hổng đã lộ ra, chứ không hạ chuẩn cho vừa kết quả.
 - **Kết quả các lượt chạy:**
 
   | Lượt | Ngày | Kết quả | Ghi chú |
   |---|---|---|---|
-  | R0 (baseline) | 18/9 | **17/20 = 85%** | Luật chẩn đoán thuần rule, chưa nối AI |
+  | R0 (baseline) | 18/9 | **17/20 = 85%** | Cây mock tự nghĩ, luật chưa có tiền đề, chưa biết từ chối chẩn đoán |
+  | R1 | 18/9 | **20/20 = 100%** | Cây dựng lại từ transcript thật + 2 luật mới bên dưới |
 
-  Ba case chưa đạt — đều là lỗ hổng thật của luật, không phải nhãn sai:
-  - **C07** — có tín hiệu ở cả chương nền (token) lẫn chương sau (embedding); luật đang chọn theo *số tín hiệu nhiều nhất* nên đi vào embedding, trong khi sư phạm phải xử nền trước. Sửa: khi tín hiệu trải nhiều chương, ưu tiên chương học trước.
-  - **C09** — đúng hết, chỉ chậm rải rác ở ba mục khác nhau; luật vẫn chọn đại một mục thay vì nói "chưa đủ căn cứ". Sửa: nếu mọi nhóm chỉ có 1 tín hiệu và đều là `slow` thì từ chối chẩn đoán.
-  - **C10** — câu sai duy nhất bấm trong 2 giây (`rush`); nhiều khả năng bấm bừa chứ không phải không biết. Sửa: nếu toàn bộ tín hiệu là `rush` thì hỏi lại câu đó trước, chưa chẩn đoán.
+  R0 để lộ 3 lỗ hổng, cả ba đã sửa bằng chính dữ liệu thật:
+  - **C07** — tín hiệu ở cả tiền đề lẫn node phụ thuộc, luật cũ chọn theo *số tín hiệu nhiều nhất*. Sửa bằng **cạnh `prereq`** trong cây (c3s1 ← c1s1): node được chọn mà tiền đề của nó cũng có tín hiệu thì **xuống tiền đề trước**.
+  - **C09** — chỉ có câu chậm, tản mát mỗi mục một câu → nay **từ chối chẩn đoán**, nói rõ "chưa đủ căn cứ".
+  - **C10** — câu sai duy nhất bấm dưới 3s → nay **từ chối chẩn đoán**, đề nghị hỏi lại câu đó trước.
+
+  100% là con số của **chính bộ 20 case nhóm tự soạn** — chưa có case do người ngoài gán nhãn, nên chưa kết luận được là luật tổng quát tốt. Case chạy thật đang thu (`eval/human/`).
 
 ## §8. Phân công & kế hoạch
 
@@ -142,4 +161,9 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN + mock data, **chưa g�
 | 18/9 | Quiz đổi 2 câu để có cặp câu cùng node cha (l_ctx, l_vec) | Bộ 5 câu cũ mỗi câu một node cha khác nhau → luật "gom tín hiệu về cha chung" không bao giờ chạy, không đo được |
 | 18/9 | Tách luật chẩn đoán ra `mockup/engine.js`, dùng chung cho demo và `eval/` | Nếu bộ đo chép lại luật thì số đo sẽ trôi khỏi cái đang chạy thật |
 | 18/9 | Chạy golden set R0: 17/20 (85%), lộ 3 lỗ hổng C07/C09/C10 | Xem `eval/results.md` |
+| 18/9 | **Dựng lại cây từ `transcript-01-clean.md`** (30 node, provenance = mã đoạn `[T01-NNN]`, có `conf`), bỏ cây tự nghĩ | Cây cũ ghi số trang slide mà chưa đối chiếu file thật — trích dẫn bịa là mất điểm nặng nhất của đề (25% content/provenance) |
+| 18/9 | Thêm cạnh **`prereq`** tách khỏi quan hệ mục lục | Đề liệt kê `prerequisite` và `broader/narrower` là hai loại cạnh khác nhau; lát cắt của nhóm nói "prerequisite" nên không được lấy mục lục thay thế |
+| 18/9 | Luật **từ chối chẩn đoán** khi tín hiệu toàn `rush`, hoặc `slow` mà tản mát | Đoán bừa một mục còn tệ hơn nói "chưa đủ căn cứ" — cũng là yêu cầu *uncertainty rõ ràng* của đề |
+| 18/9 | `run.js` kiểm tra **vân tay bộ câu hỏi** | Case gắn theo vị trí câu hỏi; đổi quiz mà quên gán nhãn lại thì số đo vẫn xanh nhưng vô nghĩa |
+| 18/9 | Mining chatlog: 65% hỏi lại cùng một phần · 11% quay về buổi cũ · 28% câu trả lời không trích nguồn | Gỡ `TODO` evidence ở §1 bằng số thật |
 | 17/9 | Tách **AI #1 giải thích đáp án** khỏi **AI #2 chẩn đoán nền**; AI #1 gọi được ở từng câu, từng vòng, hoặc cả bài | Hai câu hỏi khác nhau ("sai cái gì" vs "vì sao sai"); nhiều học viên chỉ cần cái thứ nhất |

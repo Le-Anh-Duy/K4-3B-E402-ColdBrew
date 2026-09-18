@@ -34,10 +34,19 @@ const ENGINE = (() => {
     return { missed, shaky, candidates: missed.length ? missed : shaky };
   }
 
-  // chọn node cha để chẩn đoán: nhiều tín hiệu nhất; hoà thì lấy node xuất hiện sớm nhất trong bài
+  // chọn node cha để chẩn đoán. Thứ tự luật:
+  //   1) gom tín hiệu theo node cha
+  //   2) TỪ CHỐI chẩn đoán khi tín hiệu quá mỏng (bấm bừa, hoặc chậm mà tản mát)
+  //   3) nhiều tín hiệu nhất; hoà thì lấy node xuất hiện sớm nhất trong bài
+  //   4) nếu node chọn được có TIỀN ĐỀ (prereq) cũng đang có tín hiệu -> xuống tiền đề trước
   function pickTarget(records, tree) {
     const { missed, shaky, candidates } = weakSignals(records);
-    if (!candidates.length) return { target: null, hits: [], missed, shaky };
+    const none = (reason) => ({ target: null, hits: [], missed, shaky, reason });
+    if (!candidates.length) return none('không có tín hiệu yếu nào');
+
+    // (2a) toàn bộ tín hiệu đều là bấm-quá-nhanh -> nhiều khả năng bấm bừa, hỏi lại đã
+    if (candidates.every((r) => r.flag === 'rush'))
+      return none('các câu sai đều bấm dưới ngưỡng đọc hết đề — có thể bấm bừa, cần hỏi lại trước');
 
     const order = [];
     const byParent = {};
@@ -49,9 +58,22 @@ const ENGINE = (() => {
       }
       byParent[p].push(r);
     });
-    const target = order.reduce((best, p) =>
-      byParent[p].length > byParent[best].length ? p : best
-    );
+
+    // (2b) chỉ có tín hiệu "đúng nhưng chậm" và tản mát mỗi nơi một câu -> chưa đủ căn cứ
+    if (!missed.length && order.every((p) => byParent[p].length < 2))
+      return none('chỉ có câu trả lời chậm, lại tản mát ở nhiều mục — chưa đủ căn cứ để khoanh vùng');
+
+    let target = order.reduce((best, p) => (byParent[p].length > byParent[best].length ? p : best));
+
+    // (4) ưu tiên tiền đề: hổng ở nền thì ôn phần sau cũng vô ích
+    const seen = new Set();
+    while (!seen.has(target)) {
+      seen.add(target);
+      const pre = (tree[target].prereq || []).find((id) => byParent[id] && !seen.has(id));
+      if (!pre) break;
+      target = pre;
+    }
+
     return { target, hits: byParent[target].map((r) => r.node), missed, shaky };
   }
 

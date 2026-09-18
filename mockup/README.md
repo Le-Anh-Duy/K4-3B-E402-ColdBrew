@@ -14,4 +14,6 @@ python -m http.server 5500
 
 Hết mỗi vòng chẩn đoán có **màn quyết định**: đi tiếp lên tầng trên · làm lại vòng này · mình tự ôn được. Hệ thống không tự leo tầng.
 
-Đường demo: sai câu 4 và 5 (đều thuộc chương RAG) → *AI Suggestion* → vòng chẩn đoán "3.1 Embedding" → xem phân tích → chọn kiểm tra tiếp "Chương 3 · RAG" → lộ trình ôn + panel "vì sao".
+Cây tri thức dựng tay từ `transcript-01-clean.md` (Day 2 sáng · Xác định bài toán kinh doanh cho AI), 30 node, provenance là mã đoạn `[T01-NNN]`.
+
+Đường demo: sai câu 4 và 5 (đều thuộc mục *3.1 Double Diamond*) → *AI Suggestion* → chẩn đoán ở 3.1 → xem phân tích → kiểm tra tiếp *Chương 3* → lộ trình ôn + panel "vì sao" → tư vấn cách ôn → kiểm tra lại.

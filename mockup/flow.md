@@ -80,17 +80,21 @@ sequenceDiagram
 
 ## Cấu trúc dữ liệu (mock, trong `data.js`)
 
+Nguồn thật: `data/vlearn-pack/transcript/transcript-01-clean.md` — *Day 2 (sáng) · Xác định bài toán kinh doanh cho AI*, 89 đoạn `[T01-001…089]`. Cây **do nhóm dựng tay**, 30 node.
+
 ```
-root  = tên bài giảng (Day 1 · AI & LLM Foundation)   [trang 1–29]
- ├── chương        (Chương 3 · RAG)                   [trang 20–27]
- │    ├── mục      (3.1 Embedding)                    [trang 21–22]
- │    │    ├── lá  (Văn bản được vector hoá)          [trang 21]
- │    │    └── lá  (Cosine cao = nghĩa gần)           [trang 22]
- │    └── mục      (3.2 Retrieval top-k)              [trang 25]
+root  = Day 2 (sáng) · Xác định bài toán kinh doanh cho AI   [T01-001…089]
+ ├── chương      (Chương 3 · Tìm đúng vấn đề)                [T01-030…073]
+ │    ├── mục    (3.1 Double Diamond)   prereq -> 1.1        [T01-049, T01-071]
+ │    │    ├── lá (Phân kỳ: mở rộng góc nhìn)                [T01-071]
+ │    │    └── lá (Hội tụ: gom nhóm, Five Whys)  prereq->Phân kỳ  [T01-074]
+ │    └── mục    (3.2 Làm đúng cái sai)  prereq -> 1.1       [T01-060, T01-061]
  └── ...
 ```
 
-- **Mọi node đều có `page`** — câu hỏi và nội dung ôn chỉ được lấy từ node có nguồn, không sinh nội dung mới.
+Mỗi node mang `file` · `span` (mã đoạn) · `conf` (0.9 nói thẳng trong đoạn · 0.7 nhóm lại từ nhiều đoạn). Slide d2 **chưa đối chiếu trang nên không ghi số trang** — thà thiếu còn hơn trích sai.
+
+- **Mọi node đều truy được về nguồn** — câu hỏi và nội dung ôn chỉ lấy từ node có mã đoạn, không sinh nội dung mới.
 - Quiz chính hỏi ở tầng **lá**; chẩn đoán hỏi ở tầng **cha** và leo dần lên.
 - `status` mỗi node: `ok` / `weak` / `probing` — hiện màu trên cây ở cột phải.
 
@@ -115,6 +119,13 @@ Ngưỡng 25s/3s là **hằng số mock**, sẽ hiệu chỉnh khi có dữ li�
 | Sai/bỏ trống ≤ 1/3 câu nền | Chốt: hổng nằm đúng ở node này |
 | Sai/bỏ trống ≥ 2/3 câu nền | Leo lên node cha, hỏi lại |
 | Chạm gốc, hoặc quá 3 vòng | Kết luận chưa nắm bài → compact cả bài, học lại |
+
+**Hai luật chỉ có được nhờ cây thật:**
+
+| Luật | Nội dung |
+|---|---|
+| **Ưu tiên tiền đề** | Node được chọn mà có cạnh `prereq` cũng đang có tín hiệu thì **xuống tiền đề trước**. Ví dụ hổng ở *3.1 Double Diamond* nhưng *1.1 Yêu cầu mơ hồ* (tiền đề) cũng sai → chẩn đoán 1.1 trước, vì sai nền thì ôn phần sau vô ích |
+| **Từ chối chẩn đoán** | Toàn bộ tín hiệu là `rush` → có thể bấm bừa, hỏi lại đã. Chỉ có `slow` mà tản mát mỗi mục một câu → nói thẳng "chưa đủ căn cứ" thay vì chọn đại |
 
 **Không chẩn đoán sau lưng học viên.** Trước vòng đầu tiên, hệ thống trình bày *tín hiệu thu được · giả thuyết · mức chắc chắn (thấp/trung bình)* rồi hỏi học viên thấy có hợp lý không: **hợp lý → kiểm tra 3 câu nền** · **hợp lý → ôn luôn, bỏ qua kiểm tra** · **chưa thuyết phục → chat hỏi lại**. Câu trả lời trong chat vẫn phải trích từ node trong cây.
 

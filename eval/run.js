@@ -7,6 +7,19 @@ const path = require('path');
 const E = require('../mockup/engine.js');
 const { TREE, QUIZ, PROBES } = require('../mockup/data.js');
 
+// Vân tay bộ câu hỏi: case gắn theo VỊ TRÍ câu hỏi, nên đổi QUIZ mà quên sửa case thì
+// số đo vẫn xanh nhưng đã vô nghĩa. Lệch vân tay là dừng, bắt gán nhãn lại.
+const FINGERPRINT = 'l_quantinh,l_boctach,l_dungcaisai,l_phanky,l_hoitu|1,0,1,0,0';
+const fp = QUIZ.map((q) => q.node).join(',') + '|' + QUIZ.map((q) => q.answer).join(',');
+if (fp !== FINGERPRINT) {
+  console.error('');
+  console.error('QUIZ da doi so voi luc gan nhan golden set.');
+  console.error('   van tay da ghi:   ' + FINGERPRINT);
+  console.error('   van tay hien tai: ' + fp);
+  console.error('   -> Gan nhan lai eval/cases.json roi cap nhat FINGERPRINT trong file nay.');
+  process.exit(1);
+}
+
 const cases = JSON.parse(fs.readFileSync(path.join(__dirname, 'cases.json'), 'utf8')).cases;
 
 // thêm case do người trong nhóm tự chạy (eval/human/*.json); bỏ qua case chưa điền nhãn
