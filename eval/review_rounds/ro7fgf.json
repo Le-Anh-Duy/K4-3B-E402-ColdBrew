@@ -1,0 +1,41 @@
+{
+  "rater": "ro7fgf",
+  "run_id": "20260918-1500",
+  "cham": {
+    "M01": {
+      "hash": "d41181a1",
+      "run_id": "20260918-1500",
+      "tung_vong": "ok",
+      "noi_tiep": "ok",
+      "ket_luan": "ok"
+    },
+    "M02": {
+      "hash": "8f3586ee",
+      "run_id": "20260918-1500",
+      "tung_vong": "ok",
+      "noi_tiep": "ok",
+      "ket_luan": "ok"
+    },
+    "M03": {
+      "hash": "4fba103a",
+      "run_id": "20260918-1500",
+      "tung_vong": "ok",
+      "noi_tiep": "khong",
+      "ket_luan": "ok"
+    },
+    "M04": {
+      "hash": "c7fc6e76",
+      "run_id": "20260918-1500",
+      "tung_vong": "ok",
+      "noi_tiep": "ok",
+      "ket_luan": "ok"
+    },
+    "M05": {
+      "hash": "cade40e9",
+      "run_id": "20260918-1500",
+      "tung_vong": "ok",
+      "noi_tiep": "ok",
+      "ket_luan": "ok"
+    }
+  }
+}

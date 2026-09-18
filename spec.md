@@ -155,7 +155,40 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, ch
   - **C09** — chỉ có câu chậm, tản mát mỗi mục một câu → nay **từ chối chẩn đoán**, nói rõ "chưa đủ căn cứ".
   - **C10** — câu sai duy nhất bấm dưới 3s → nay **từ chối chẩn đoán**, đề nghị hỏi lại câu đó trước.
 
-  100% là con số của **chính bộ 20 case nhóm tự soạn** — chưa có case do người ngoài gán nhãn, nên chưa kết luận được là luật tổng quát tốt. Case chạy thật đang thu (`eval/human/`).
+  100% là con số của **chính bộ case nhóm tự soạn** — chưa có case do người ngoài gán nhãn, nên nó chỉ chứng minh luật khớp đặc tả của nhóm, chưa chứng minh đặc tả đúng.
+
+### Số đo nộp CP3 — nội dung AI sinh qua endpoint thật
+
+**Thử 20 lượt, 16 lượt đạt** (model `gemini-3.5-flash-lite`, gọi qua `POST /ai/plan/generate`, dữ liệu đóng băng ở `eval/grounding.json`).
+
+*Chuẩn đạt (chốt trước khi chạy):* mọi mã đoạn AI trích ra **có thật** trong cây · **không trích ra ngoài** phần tư liệu hệ thống đã cấp cho lượt đó · có trích dẫn kèm câu tự kiểm.
+
+*4 lượt trượt:* 3 lượt trích mã đoạn ngoài phạm vi tư liệu được cấp — đều rơi vào kịch bản *"học lại cả bài"*, nơi tư liệu cấp rộng nhất; 1 lượt câu tự kiểm sai định dạng. **Không lượt nào bịa mã đoạn không tồn tại.**
+
+### Chấm thêm về mức độ HỮU ÍCH (LLM mạnh hơn chấm) — 11/20
+
+Chuẩn: người học **chưa đọc tài liệu** vẫn hiểu · giải thích phương án sai **bằng nội dung** · có hành động rõ.
+
+Chín lượt trượt cho thấy **ràng buộc chống bịa đang siết quá tay** — AI an toàn bằng cách bám chữ trong tư liệu, nên lúc cần *giảng* thì chỉ *trích*:
+
+| Nhóm lỗi | Số lượt | Ví dụ |
+|---|---|---|
+| Viện dẫn tài liệu thay cho giải thích | 4 | *"sai vì tư liệu không đề cập đến..."* |
+| Mức "học lại cả bài" rỗng ruột | 4 | chỉ liệt kê tên chương + 3 gạch đầu dòng, câu tự kiểm thành thủ tục |
+| Né trả lời thứ luật tự suy được | 1 | *"tư liệu chưa nói rõ về thứ tự nên ôn lại"* |
+
+### Các phép đo khác (không nộp CP3, để trả lời hỏi đáp)
+
+| Phép đo | Kết quả | Đo gì |
+|---|---|---|
+| Luật chẩn đoán (`scripts/run.py`) | **22/22** | code quyết định hỏi node nào, leo tầng không, chỗ hổng ở đâu — không gọi AI |
+| Đồng bộ ba bản luật (`scripts/parity.py`) | **26/26** | backend · bộ đo · trang mock cho cùng kết quả |
+| Chuỗi nhiều vòng — máy (`scripts/multiround.py`) | **5/5** | mỗi vòng bám đúng node · không lặp vòng trước · không kết luận hổng ở node vừa đúng |
+| Chuỗi nhiều vòng — người chấm | **4/5** | M03 (*chương chỉ sai 1/3*) bị đánh là vòng sau rời rạc với vòng trước |
+| Endpoint (`scripts/api_smoke.py`) | **17/17** | 11 endpoint + 2 phép thử luật qua HTTP |
+| Khung câu trả lời (`scripts/validate.py`) | **17/20** | đếm trích dẫn · đúng một dòng `Tự kiểm:` · độ dài |
+
+Chênh lệch **5/5 máy vs 4/5 người** ở chuỗi nhiều vòng là bằng chứng phép đo máy chưa đủ: máy chỉ đo được độ trùng từ, không đo được "nội dung có tiến triển không".
 
 ## §8. Phân công & kế hoạch
 
@@ -184,4 +217,7 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, ch
 | 18/9 | Luật **từ chối chẩn đoán** khi tín hiệu toàn `rush`, hoặc `slow` mà tản mát | Đoán bừa một mục còn tệ hơn nói "chưa đủ căn cứ" — cũng là yêu cầu *uncertainty rõ ràng* của đề |
 | 18/9 | `run.js` kiểm tra **vân tay bộ câu hỏi** | Case gắn theo vị trí câu hỏi; đổi quiz mà quên gán nhãn lại thì số đo vẫn xanh nhưng vô nghĩa |
 | 18/9 | Mining chatlog: 65% hỏi lại cùng một phần · 11% quay về buổi cũ · 28% câu trả lời không trích nguồn | Gỡ `TODO` evidence ở §1 bằng số thật |
+| 18/9 | Nối Gemini qua backend; đo 20 lượt: **16/20 có căn cứ**, nhưng chỉ **11/20 hữu ích** | Số đo đầu tiên có AI thật. Hai chuẩn cho hai thứ khác nhau — có căn cứ không đồng nghĩa dạy được |
+| 18/9 | Thêm **S5 · chuỗi nhiều vòng** (5 phiên, AI nhận xét từng vòng) | Trước đó không phép đo nào chạm tới `/ai/explain/round`, tức cơ chế trung tâm chưa từng được đo |
+| 18/9 | Bản chấm tay gắn theo **hash câu trả lời**, đổi nội dung là nhận xét cũ hết hiệu lực | Nhận xét cho bản cũ lặng lẽ dính vào bản mới thì số đo thành sai |
 | 17/9 | Tách **AI #1 giải thích đáp án** khỏi **AI #2 chẩn đoán nền**; AI #1 gọi được ở từng câu, từng vòng, hoặc cả bài | Hai câu hỏi khác nhau ("sai cái gì" vs "vì sao sai"); nhiều học viên chỉ cần cái thứ nhất |

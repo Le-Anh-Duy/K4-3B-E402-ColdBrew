@@ -13,6 +13,100 @@
       "nhan_xet": "khong",
       "noi_vong": "ok",
       "nhanh": "ok"
+    },
+    "P03": {
+      "hash": "674c70dd",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok",
+      "noi_vong": "ok"
+    },
+    "P04": {
+      "hash": "e2c0bd1e",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P05": {
+      "hash": "fe1d73a6",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P06": {
+      "hash": "6b380c79",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P07": {
+      "hash": "edbf0fc8",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P08": {
+      "hash": "6978ff9a",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok"
+    },
+    "P09": {
+      "hash": "8a704cdc",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P10": {
+      "hash": "aedb24eb",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P11": {
+      "hash": "ad4b044c",
+      "run_id": "20260918-1449",
+      "nhan_xet": "ok",
+      "nhanh": "ok"
+    },
+    "P15": {
+      "hash": "ee892a49",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok",
+      "noi_vong": "ok"
+    },
+    "P16": {
+      "hash": "2f3ffa85",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok"
+    },
+    "P17": {
+      "hash": "a84e1a87",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok",
+      "noi_vong": "ok"
+    },
+    "P18": {
+      "hash": "b2620477",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok"
+    },
+    "P19": {
+      "hash": "b13cf0ac",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok"
+    },
+    "P20": {
+      "hash": "46abf881",
+      "run_id": "20260918-1449",
+      "nhan_xet": "khong",
+      "nhanh": "ok",
+      "noi_vong": "ok"
     }
   }
 }
