@@ -8,6 +8,7 @@ class TreeNode(BaseModel):
     parent: Optional[str] = None
     compact: Optional[List[str]] = None
     content_summary: Optional[str] = None
+    prereq: Optional[List[str]] = None
 
 class TreeResponse(BaseModel):
     nodes: Dict[str, TreeNode]
