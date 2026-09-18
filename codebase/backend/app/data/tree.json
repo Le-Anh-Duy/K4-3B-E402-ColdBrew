@@ -1,0 +1,379 @@
+{
+  "root": {
+    "id": "root",
+    "label": "Day 2 (sáng) · Xác định bài toán kinh doanh cho AI",
+    "parent": null,
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-001",
+      "T01-089"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-001] [T01-089]",
+    "compact": [
+      "Xác định đúng vấn đề trước; công nghệ chỉ là công cụ để giải nó [T01-004]",
+      "Double Diamond: phân kỳ rồi hội tụ, làm hai lần — vấn đề trước, giải pháp sau [T01-049]",
+      "Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]"
+    ]
+  },
+  "c1": {
+    "id": "c1",
+    "label": "Chương 1 · Vì sao phải tìm đúng bài toán",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-001",
+      "T01-017"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-001] [T01-017]"
+  },
+  "c1s1": {
+    "id": "c1s1",
+    "label": "1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể",
+    "parent": "c1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-004",
+      "T01-006",
+      "T01-016"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-004] [T01-006] [T01-016]"
+  },
+  "c1s2": {
+    "id": "c1s2",
+    "label": "1.2 Product manager và project manager",
+    "parent": "c1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-008",
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-008] [T01-011]"
+  },
+  "c2": {
+    "id": "c2",
+    "label": "Chương 2 · Đặc thù của sản phẩm AI",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-018",
+      "T01-029"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-018] [T01-029]"
+  },
+  "c2s1": {
+    "id": "c2s1",
+    "label": "2.1 Vì sao làm sản phẩm AI khó hơn",
+    "parent": "c2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-019",
+      "T01-021",
+      "T01-025"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-019] [T01-021] [T01-025]"
+  },
+  "c3": {
+    "id": "c3",
+    "label": "Chương 3 · Tìm đúng vấn đề",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-030",
+      "T01-073"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-030] [T01-073]"
+  },
+  "c3s1": {
+    "id": "c3s1",
+    "label": "3.1 Double Diamond: phân kỳ – hội tụ",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-049",
+      "T01-069",
+      "T01-071",
+      "T01-074"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-049] [T01-069] [T01-071] [T01-074]",
+    "prereq": [
+      "c1s1"
+    ]
+  },
+  "c3s2": {
+    "id": "c3s2",
+    "label": "3.2 Làm đúng cái sai vs làm sai cái đúng",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-050",
+      "T01-059",
+      "T01-060",
+      "T01-061"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-050] [T01-059] [T01-060] [T01-061]",
+    "prereq": [
+      "c1s1"
+    ]
+  },
+  "c3s3": {
+    "id": "c3s3",
+    "label": "3.3 First principle thinking",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-062",
+      "T01-064",
+      "T01-068"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-062] [T01-064] [T01-068]"
+  },
+  "c3s4": {
+    "id": "c3s4",
+    "label": "3.4 Kỹ thuật khám phá vấn đề",
+    "parent": "c3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-042",
+      "T01-045",
+      "T01-048",
+      "T01-072"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-042] [T01-045] [T01-048] [T01-072]"
+  },
+  "c4": {
+    "id": "c4",
+    "label": "Chương 4 · Chọn bài toán để làm",
+    "parent": "root",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074",
+      "T01-086"
+    ],
+    "conf": 0.7,
+    "page": "transcript-01-clean.md · [T01-074] [T01-086]"
+  },
+  "c4s1": {
+    "id": "c4s1",
+    "label": "4.1 Ma trận tác động – nỗ lực",
+    "parent": "c4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074",
+      "T01-078",
+      "T01-079"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-074] [T01-078] [T01-079]",
+    "prereq": [
+      "c3s1"
+    ]
+  },
+  "c4s2": {
+    "id": "c4s2",
+    "label": "4.2 Vòng lặp HCD",
+    "parent": "c4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-081",
+      "T01-084"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-081] [T01-084]",
+    "prereq": [
+      "c3s4"
+    ]
+  },
+  "l_quantinh": {
+    "id": "l_quantinh",
+    "label": "Quán tính nhảy thẳng vào giải pháp",
+    "parent": "c1s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-004",
+      "T01-016"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-004] [T01-016]"
+  },
+  "l_boctach": {
+    "id": "l_boctach",
+    "label": "Bóc tách yêu cầu mơ hồ rồi verify với stakeholder",
+    "parent": "c1s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-006"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-006]"
+  },
+  "l_pm": {
+    "id": "l_pm",
+    "label": "PM tự đi tìm bài toán; project manager lo tiến độ",
+    "parent": "c1s2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-010",
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-010] [T01-011]"
+  },
+  "l_po": {
+    "id": "l_po",
+    "label": "Product owner đào sâu user khi bài toán đã rõ",
+    "parent": "c1s2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-011"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-011]"
+  },
+  "l_kyvong": {
+    "id": "l_kyvong",
+    "label": "Kỳ vọng người dùng thay đổi rất nhanh",
+    "parent": "c2s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-020"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-020]"
+  },
+  "l_chuyendoi": {
+    "id": "l_chuyendoi",
+    "label": "Chi phí chuyển đổi sản phẩm rẻ đi",
+    "parent": "c2s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-021"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-021]"
+  },
+  "l_phanky": {
+    "id": "l_phanky",
+    "label": "Phân kỳ: mở rộng góc nhìn để thu insight",
+    "parent": "c3s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-071"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-071]"
+  },
+  "l_hoitu": {
+    "id": "l_hoitu",
+    "label": "Hội tụ: gom nhóm, Five Whys, lọc trùng",
+    "parent": "c3s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-074"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-074]",
+    "prereq": [
+      "l_phanky"
+    ]
+  },
+  "l_dungcaisai": {
+    "id": "l_dungcaisai",
+    "label": "Làm đúng cái sai nguy hiểm hơn",
+    "parent": "c3s2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-060",
+      "T01-061"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-060] [T01-061]"
+  },
+  "l_firstprinciple": {
+    "id": "l_firstprinciple",
+    "label": "Bóc vấn đề về nguyên lý gốc",
+    "parent": "c3s3",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-064"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-064]"
+  },
+  "l_quansat": {
+    "id": "l_quansat",
+    "label": "Quan sát người dùng tại nơi họ làm việc",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-072"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-072]"
+  },
+  "l_dogfood": {
+    "id": "l_dogfood",
+    "label": "Dogfooding: tự làm user của sản phẩm mình",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-042"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-042]"
+  },
+  "l_trithucan": {
+    "id": "l_trithucan",
+    "label": "Tri thức ẩn của chuyên gia",
+    "parent": "c3s4",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-048"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-048]"
+  },
+  "l_matran": {
+    "id": "l_matran",
+    "label": "Đặt vấn đề lên hai trục tác động và nỗ lực",
+    "parent": "c4s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-078"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-078]"
+  },
+  "l_quickwin": {
+    "id": "l_quickwin",
+    "label": "High impact – low effort là quick win",
+    "parent": "c4s1",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-079"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-079]"
+  },
+  "l_dongcam": {
+    "id": "l_dongcam",
+    "label": "Đồng cảm là bước đầu, khác bước test",
+    "parent": "c4s2",
+    "file": "transcript-01-clean.md",
+    "span": [
+      "T01-084"
+    ],
+    "conf": 0.9,
+    "page": "transcript-01-clean.md · [T01-084]"
+  }
+}

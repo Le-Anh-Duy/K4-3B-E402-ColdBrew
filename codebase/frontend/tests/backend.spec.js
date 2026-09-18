@@ -1,12 +1,36 @@
 import { test, expect } from '@playwright/test'
 
-test('Dashboard checks the supported health route, never speculative business routes', async ({ page }) => {
+test('Adaptive backend catalog and quiz are mapped into the current UI', async ({ page }) => {
+  const nodes = {
+    root: { id: 'root', label: 'Bài học từ backend', parent: null, page: 'T01' },
+    topic: { id: 'topic', label: 'Chủ đề backend', parent: 'root', page: 'T01-001' },
+    leaf: { id: 'leaf', label: 'Ý kiểm tra', parent: 'topic', page: 'T01-002' },
+  }
+  const quiz = Array.from({ length: 5 }, (_, index) => ({ id: `q${index + 1}`, node: 'leaf', q: `Câu backend ${index + 1}?`, options: ['A', 'B', 'C', 'D'] }))
+  await page.route('**/api/v0/graph/tree', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ nodes }) }))
+  await page.route('**/api/v0/quiz', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(quiz) }))
+  await page.route('**/api/v0/session', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ session_id: 'backend-session', state: { stage: 'home' } }) }))
+  await page.route('**/api/v0/session/**', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ session_id: 'backend-session', state: { stage: 'quiz' } }) }))
+
+  await page.goto('/')
+  await page.getByLabel('Email', { exact: true }).fill('backend@example.com')
+  await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
+  await page.getByRole('button', { name: 'Đăng nhập' }).click()
+  await expect(page.locator('.setup-fields select').first()).toHaveValue('adaptive-backend')
+  await expect(page.locator('.setup-fields select').first()).toContainText('Bài học từ backend')
+  await expect(page.locator('.count-options button')).toHaveCount(1)
+  await page.getByRole('button', { name: 'Bắt đầu Quiz' }).click()
+  await expect(page.getByRole('heading', { name: 'Câu backend 1?' })).toBeVisible()
+  await expect(page.getByText('Dữ liệu có cây tri thức')).toBeVisible()
+})
+
+test('Dashboard tries the adaptive graph endpoint and falls back cleanly when offline', async ({ page }) => {
   const paths = []
   page.on('request', request => {
     if (new URL(request.url()).pathname.startsWith('/api/')) paths.push(new URL(request.url()).pathname)
   })
   // This test explicitly simulates an offline backend, not a successful LLM call.
-  await page.route('**/api/health', route => route.fulfill({ status: 503, body: 'Unavailable' }))
+  await page.route('**/api/v0/graph/tree', route => route.fulfill({ status: 503, body: 'Unavailable' }))
   await page.goto('/')
   await page.getByLabel('Email', { exact: true }).fill('offline@example.com')
   await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
@@ -14,7 +38,8 @@ test('Dashboard checks the supported health route, never speculative business ro
   await page.getByRole('button', { name: 'Bắt đầu Quiz' }).click()
   await expect(page.getByText('Câu 1/5', { exact: true })).toBeVisible()
   await expect.poll(() => paths.length).toBeGreaterThan(0)
-  expect(paths.every(path => path === '/api/health')).toBe(true)
+  expect(paths).toContain('/api/v0/graph/tree')
+  expect(paths.every(path => path === '/api/v0/graph/tree')).toBe(true)
   await expect.poll(() => page.evaluate(async () => {
     const { learningService } = await import('/src/services/learningService.js')
     return learningService.getConnectionStatus().state

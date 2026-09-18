@@ -1,0 +1,24 @@
+from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# Tìm file .env ở các cấp thư mục (repo root, codebase, backend)
+current = Path(__file__).resolve()
+possible_envs = [
+    current.parents[4] / ".env",  # d:\...\K4-3B-E402-ColdBrew\.env (Repo root)
+    current.parents[3] / ".env",  # codebase\.env
+    current.parents[2] / ".env",  # codebase\backend\.env
+    Path.cwd() / ".env",
+]
+
+for p in possible_envs:
+    if p.exists():
+        load_dotenv(p, override=True)
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
+MODEL = os.getenv("MODEL", "gemini-2.5-flash")
+
+SLOW_SEC = 25  # Ngưỡng đúng nhưng chậm (>25s)
+RUSH_SEC = 3   # Ngưỡng sai quá nhanh (<3s: bấm bừa)
+MAX_ROUNDS = 3 # Số vòng leo cây tối đa

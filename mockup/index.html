@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ColdBrew · Mockup CP2</title>
+    <style>
+      :root {
+        --cream: #fbf6ef;
+        --milk: #fffdfa;
+        --latte: #ead9c4;
+        --caramel: #c08457;
+        --espresso: #3b2a20;
+        --mocha: #7a5c48;
+        --good: #5b8c5a;
+        --bad: #c25b45;
+        --amber: #d8a13a;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--cream);
+        color: var(--espresso);
+        font: 15px/1.6 system-ui, "Segoe UI", sans-serif;
+      }
+      .shell { max-width: 1100px; margin: 0 auto; padding: 20px 16px 60px; }
+      .head {
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+      }
+      .brand { display: flex; align-items: center; gap: 12px; }
+      .cup {
+        font-size: 26px; background: var(--latte); border-radius: 50%;
+        width: 46px; height: 46px; display: grid; place-items: center;
+      }
+      h1 { margin: 0; font-size: 22px; letter-spacing: -0.3px; }
+      .brand p { margin: 0; font-size: 13px; color: var(--mocha); }
+      .head-right { display: flex; align-items: center; gap: 8px; }
+      .badge {
+        background: var(--amber); color: #3b2a20; font-size: 11px; font-weight: 700;
+        padding: 4px 8px; border-radius: 999px; letter-spacing: 0.4px;
+      }
+      .badge.live { background: var(--good); color: #fff; }
+      .layout { display: grid; grid-template-columns: 1fr 300px; gap: 18px; align-items: start; }
+      .panel, .box {
+        background: var(--milk); border: 1px solid var(--latte);
+        border-radius: 16px; padding: 18px;
+      }
+      .box { margin-bottom: 14px; }
+      h2 { margin: 0 0 6px; font-size: 19px; }
+      h3 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--mocha); }
+      .muted { color: var(--mocha); font-size: 14px; }
+      .good { color: var(--good); font-weight: 600; }
+      .card {
+        border: 1px solid var(--latte); border-radius: 12px;
+        padding: 12px 14px; margin: 12px 0; background: var(--cream);
+      }
+      .card.ok { border-color: #bcd5bb; background: #f4f9f3; }
+      .card.bad { border-color: #e6bfb6; background: #fdf4f2; }
+      .card.shaky { border-color: #e8d09a; background: #fdf8ec; }
+      .progress { display: flex; align-items: center; gap: 6px; margin: 4px 0 12px; }
+      .pip {
+        width: 26px; height: 6px; border-radius: 3px; background: var(--latte);
+      }
+      .pip.done { background: var(--mocha); }
+      .pip.now { background: var(--caramel); }
+      .timer { margin-left: auto; font-size: 13px; color: var(--mocha); font-variant-numeric: tabular-nums; }
+      .time-chip { float: right; font-size: 12px; color: var(--mocha); font-variant-numeric: tabular-nums; }
+      .hint { font-size: 12px; color: var(--mocha); margin: 8px 0 0; font-style: italic; }
+      .flag { font-size: 12px; margin: 6px 0 0; font-weight: 600; color: var(--bad); }
+      .flag.slow { color: #a67c1f; }
+      .link {
+        background: none; border: none; padding: 4px 0; font-size: 12px;
+        color: var(--mocha); text-decoration: underline;
+      }
+      .q { margin: 0 0 8px; }
+      .opt {
+        display: block; padding: 8px 10px; margin: 5px 0; border-radius: 9px;
+        border: 1px solid var(--latte); background: var(--milk); cursor: pointer;
+      }
+      .opt:hover { border-color: var(--caramel); }
+      .opt.on { border-color: var(--caramel); background: #f7ebdf; font-weight: 600; }
+      .opt input { margin-right: 8px; }
+      .src { font-size: 12px; color: var(--mocha); margin: 8px 0 0; }
+      button {
+        font: inherit; font-weight: 600; border-radius: 10px;
+        padding: 10px 16px; cursor: pointer; border: 1px solid transparent;
+      }
+      .primary { background: var(--caramel); color: #fff; }
+      .primary:disabled { background: var(--latte); color: var(--mocha); cursor: not-allowed; }
+      .ghost { background: transparent; border-color: var(--latte); color: var(--mocha); }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+      .tree, .tree ul { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+      .tn { padding: 2px 0; color: var(--mocha); }
+      .dot {
+        display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+        background: var(--latte); margin-right: 6px;
+      }
+      .tn.ok > .dot, .dot.ok { background: var(--good); }
+      .tn.shaky > .dot, .dot.shaky { background: #e0be6e; }
+      .tn.weak > .dot, .dot.weak { background: var(--bad); }
+      .tn.probing > .dot, .dot.probing { background: var(--amber); }
+      .tn.weak { color: var(--bad); font-weight: 600; }
+      .tn.probing { color: var(--espresso); font-weight: 600; }
+      .legend { font-size: 11px; color: var(--mocha); margin: 10px 0 0; }
+      .think { text-align: center; padding: 40px 10px; }
+      .think h2 { margin: 14px 0 10px; }
+      .spinner {
+        width: 34px; height: 34px; margin: 0 auto; border-radius: 50%;
+        border: 3px solid var(--latte); border-top-color: var(--caramel);
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner.sm { width: 16px; height: 16px; border-width: 2px; display: inline-block; vertical-align: -3px; }
+      .inline-load { font-size: 14px; color: var(--mocha); margin: 12px 0; }
+      .wide { width: 100%; margin: 6px 0; }
+      .mini { border-top: 1px dashed var(--latte); padding-top: 10px; margin-top: 10px; }
+      .mini .q { margin-bottom: 4px; }
+      .chat { margin: 6px 0 10px; }
+      .bub {
+        max-width: 85%; padding: 9px 12px; border-radius: 12px; margin: 6px 0; font-size: 14px;
+      }
+      .bub.me { background: var(--caramel); color: #fff; margin-left: auto; border-bottom-right-radius: 3px; }
+      .bub.ai { background: var(--cream); border: 1px solid var(--latte); border-bottom-left-radius: 3px; }
+      .input {
+        flex: 1; min-width: 180px; font: inherit; padding: 9px 12px;
+        border: 1px solid var(--latte); border-radius: 10px; background: var(--milk); color: inherit;
+      }
+      .input:focus { outline: 2px solid var(--caramel); outline-offset: 1px; }
+      .steps { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--mocha); }
+      .steps li { margin: 6px 0; animation: fade 0.35s ease-out; }
+      @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation: none; } .steps li { animation: none; }
+      }
+      .dump {
+        width: 100%; margin-top: 8px; font: 12px/1.5 ui-monospace, Consolas, monospace;
+        border: 1px solid var(--latte); border-radius: 10px; padding: 8px; background: var(--cream);
+        color: var(--espresso); resize: vertical;
+      }
+      code { font: 12px ui-monospace, Consolas, monospace; background: var(--latte); padding: 1px 4px; border-radius: 4px; }
+      .stars { display: flex; gap: 4px; margin: 4px 0 8px; }
+      .star {
+        background: none; border: none; padding: 0 2px; font-size: 26px; line-height: 1;
+        color: var(--latte); cursor: pointer;
+      }
+      .star.on { color: var(--amber); }
+      .chip {
+        font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 999px;
+        border: 1px solid var(--latte); background: var(--milk); color: var(--mocha);
+      }
+      .chip.on { border-color: var(--caramel); background: #f7ebdf; color: var(--espresso); font-weight: 600; }
+      .ai-badge {
+        display: inline-block; background: var(--good); color: #fff; font-size: 11px;
+        font-weight: 700; padding: 3px 9px; border-radius: 999px; margin: 0 0 8px;
+      }
+      .trace { padding-left: 18px; font-size: 13px; margin: 0; }
+      .trace li { margin-bottom: 4px; }
+      @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- React qua CDN + Babel standalone: không cần npm install cho bản mock -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.2/babel.min.js"></script>
+    <script src="engine.js"></script>
+    <script src="data.js"></script>
+    <script type="text/babel" src="app.jsx"></script>
+  </body>
+</html>

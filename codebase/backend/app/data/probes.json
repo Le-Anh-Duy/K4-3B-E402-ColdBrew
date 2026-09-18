@@ -1,0 +1,204 @@
+{
+  "c1s1": {
+    "questions": [
+      {
+        "q": "Theo bài giảng, việc đầu tiên khi nhận một yêu cầu công nghệ là gì?",
+        "options": [
+          "Xác định vấn đề trước, công nghệ chỉ là công cụ để giải nó",
+          "Chọn công nghệ mạnh nhất hiện có",
+          "Ước lượng chi phí triển khai",
+          "Lập kế hoạch tiến độ"
+        ],
+        "answer": 0,
+        "why": "Bài giảng nói thẳng: công nghệ sinh ra để giải một vấn đề, nên phải biết vấn đề trước rồi mới chọn công cụ [T01-004]."
+      },
+      {
+        "q": "Vì sao con người hay nhảy thẳng vào giải pháp?",
+        "options": [
+          "Não đi theo thói quen, chạy bằng tư duy nhanh",
+          "Vì không đủ dữ liệu",
+          "Vì bị giới hạn ngân sách",
+          "Vì công cụ AI gợi ý sẵn"
+        ],
+        "answer": 0,
+        "why": "Não đi theo thói quen; không tự bắt mình dừng lại đặt câu hỏi thì sẽ bị cuốn theo tư duy nhanh mãi [T01-016]."
+      },
+      {
+        "q": "Khi đề bài còn mơ hồ, nên làm gì trước?",
+        "options": [
+          "Đưa ra vài phương án cụ thể rồi hỏi lại để xác nhận",
+          "Tự chọn cách hiểu của mình rồi làm luôn",
+          "Từ chối nhận việc",
+          "Chờ tài liệu chính thức"
+        ],
+        "answer": 0,
+        "why": "Người làm phải là người biến cái mơ hồ thành cụ thể rồi mang lại verify với stakeholder [T01-006]."
+      }
+    ],
+    "review": [
+      "Nghe lại [T01-004] và [T01-006]: vấn đề trước, công nghệ sau",
+      "Thử bóc một yêu cầu mơ hồ của chính bạn thành 3 phương án A/B/C"
+    ]
+  },
+  "c1": {
+    "questions": [
+      {
+        "q": "Theo thống kê được nhắc trong bài, phần lớn thành bại khi đưa AI vào doanh nghiệp đến từ đâu?",
+        "options": [
+          "Con người và vận hành",
+          "Chất lượng mô hình",
+          "Hạ tầng GPU",
+          "Ngân sách marketing"
+        ],
+        "answer": 0,
+        "why": "Nghiên cứu được dẫn trong bài: khoảng 70% đến từ con người và vận hành, không phải công nghệ [T01-003]."
+      },
+      {
+        "q": "Vị trí mà giảng viên cho là đang thiếu nhất trên thị trường?",
+        "options": [
+          "Người xác định và bóc tách bài toán",
+          "Kỹ sư huấn luyện mô hình",
+          "Người viết prompt",
+          "Quản trị hạ tầng"
+        ],
+        "answer": 0,
+        "why": "Thị trường tuyển rất nhiều AI engineer nhưng thiếu người đặt ra đề bài đáng làm [T01-002]."
+      },
+      {
+        "q": "Product manager khác project manager ở chỗ nào?",
+        "options": [
+          "PM tự đi tìm bài toán đáng làm; project manager lo tiến độ và ngân sách",
+          "PM viết code, project manager viết tài liệu",
+          "Hai vai trò giống nhau, chỉ khác tên gọi",
+          "PM chỉ có ở công ty outsourcing"
+        ],
+        "answer": 0,
+        "why": "Product manager tự đi tìm bài toán và thị trường; project manager đảm bảo dự án đúng tiến độ, trong ngân sách [T01-010] [T01-011]."
+      }
+    ],
+    "review": [
+      "Đi lại cả chương 1 [T01-001…T01-017] theo thứ tự trước khi sang chương 3"
+    ]
+  },
+  "c3s1": {
+    "questions": [
+      {
+        "q": "Mô hình Double Diamond có mấy pha?",
+        "options": [
+          "Bốn: mở rộng, hội tụ, rồi lại mở rộng, hội tụ",
+          "Hai: phân tích và thiết kế",
+          "Ba: nghiên cứu, làm, đo",
+          "Năm: theo vòng đời dự án"
+        ],
+        "answer": 0,
+        "why": "Double Diamond gồm bốn pha: mở rộng – hội tụ cho vấn đề, rồi mở rộng – hội tụ cho giải pháp [T01-049]."
+      },
+      {
+        "q": "Viên kim cương thứ nhất phục vụ việc gì?",
+        "options": [
+          "Tìm đúng vấn đề",
+          "Tìm đúng giải pháp",
+          "Lập kế hoạch nguồn lực",
+          "Đo kết quả sau khi ra mắt"
+        ],
+        "answer": 0,
+        "why": "Viên kim cương thứ nhất là problem discovery — tìm đúng vấn đề trước khi nghĩ giải pháp [T01-049]."
+      },
+      {
+        "q": "Trong hình kim cương, đường đi lên và đi xuống nghĩa là gì?",
+        "options": [
+          "Đi lên là mở rộng, đi xuống là hội tụ",
+          "Đi lên là tăng ngân sách, đi xuống là cắt giảm",
+          "Đi lên là tăng người, đi xuống là giảm người",
+          "Không mang nghĩa gì, chỉ là hình vẽ"
+        ],
+        "answer": 0,
+        "why": "Đường đi lên là mở rộng, đường đi xuống là hội tụ [T01-049]."
+      }
+    ],
+    "review": [
+      "Nghe lại [T01-049] và [T01-071]: bốn pha của Double Diamond",
+      "Đối chiếu [T01-074] để phân biệt kỹ thuật phân kỳ với kỹ thuật hội tụ"
+    ]
+  },
+  "c3s2": {
+    "questions": [
+      {
+        "q": "Vì sao \"làm đúng cái sai\" bị coi là nguy hiểm hơn?",
+        "options": [
+          "Vì ta tự giới hạn không gian giải pháp cho một vấn đề vốn đã sai",
+          "Vì nó luôn tốn nhiều tiền hơn",
+          "Vì khách hàng sẽ phàn nàn ngay",
+          "Vì đội phát triển sẽ bỏ việc"
+        ],
+        "answer": 0,
+        "why": "Khi vấn đề đã sai, mọi giải pháp đều bị giới hạn trong cái sai đó [T01-060]."
+      },
+      {
+        "q": "Khi đã lao vào một vấn đề, cơ chế tâm lý thường thấy là gì?",
+        "options": [
+          "Coi nó là đích rồi, rất khó dừng lại để hỏi lại từ đầu",
+          "Luôn sẵn sàng đổi hướng",
+          "Chủ động đi hỏi người ngoài",
+          "Giảm dần sự tự tin"
+        ],
+        "answer": 0,
+        "why": "Con người đã xác định đích là lao vào, rất khó dừng lại tự hỏi đặt vấn đề có sai không [T01-060]."
+      },
+      {
+        "q": "Nếu rơi vào \"làm sai cái đúng\" thì xử lý thế nào?",
+        "options": [
+          "Vấn đề vẫn đúng nên đi tìm giải pháp khác",
+          "Bỏ hẳn bài toán đó",
+          "Đổi sang vấn đề dễ hơn",
+          "Giữ nguyên giải pháp và làm kỹ hơn"
+        ],
+        "answer": 0,
+        "why": "Sai giải pháp thì vấn đề vẫn còn đúng, chỉ cần đi tìm cách khác [T01-059]."
+      }
+    ],
+    "review": [
+      "Nghe lại [T01-060] và [T01-061] về \"làm đúng cái sai\""
+    ]
+  },
+  "c3": {
+    "questions": [
+      {
+        "q": "Câu của Don Norman \"Do not solve the problem I am asked to solve\" ý nói gì?",
+        "options": [
+          "Đừng vội tin vấn đề được giao là vấn đề thật, phải tìm điểm đau phía sau",
+          "Đừng nhận việc từ người khác",
+          "Chỉ giải vấn đề của chính mình",
+          "Luôn làm đúng yêu cầu khách hàng"
+        ],
+        "answer": 0,
+        "why": "Don Norman: đừng lập tức tin vấn đề được giao là vấn đề thật, phải tìm điểm đau phía sau [T01-045]."
+      },
+      {
+        "q": "Dogfooding nghĩa là gì?",
+        "options": [
+          "Tự mình là user và dùng chính sản phẩm mình làm ra",
+          "Thuê người ngoài kiểm thử",
+          "Ra mắt bản beta cho thị trường",
+          "Sao chép sản phẩm của đối thủ"
+        ],
+        "answer": 0,
+        "why": "Dogfooding là tự làm user của chính sản phẩm mình — Jira dùng Jira để xây Jira [T01-042]."
+      },
+      {
+        "q": "Tri thức ẩn của chuyên gia gây khó khăn gì khi đi tìm vấn đề?",
+        "options": [
+          "Họ quyết định bằng trực giác mà không dừng lại lý giải, nên khó truyền lại",
+          "Họ luôn quyết định sai",
+          "Họ không chịu chia sẻ",
+          "Họ cần nhiều dữ liệu hơn người mới"
+        ],
+        "answer": 0,
+        "why": "Chuyên gia quyết định bằng trực giác tích luỹ nhiều năm mà không dừng lại lý giải, nên tri thức đó khó lấy ra [T01-048]."
+      }
+    ],
+    "review": [
+      "Đi lại chương 3 [T01-030…T01-073]: tìm vấn đề đúng → Double Diamond → kỹ thuật khám phá"
+    ]
+  }
+}

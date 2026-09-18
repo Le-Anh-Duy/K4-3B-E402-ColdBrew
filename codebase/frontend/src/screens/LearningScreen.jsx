@@ -1,76 +1,512 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
-import { Button, Feedback, ProgressBar, QuestionCard } from '../components/UI'
+import { useEffect, useRef, useState } from 'react'
+import { Button, Feedback, ProgressBar } from '../components/UI'
 import { learningService } from '../services/learningService'
-import { initialFlow, learningReducer } from '../services/learningFlow'
+
+const INITIAL_FLOW = {
+  stage: 'quiz',
+  records: [],
+  target: null,
+  hits: [],
+  status: {},
+  trace: [],
+  hypothesis: null,
+  probeQuestions: [],
+  round: 1,
+  retry: 0,
+  roundRecs: [],
+  decision: null,
+  nextTarget: null,
+  lastFailed: null,
+  gap: null,
+  ceiling: null,
+  scenario: null,
+  verdict: null,
+  plan: null,
+  retestRecs: [],
+  feedback: null,
+}
+
+const FLAG_TEXT = {
+  slow: 'Đúng nhưng chậm — nên xem lại cho chắc',
+  wrong: 'Chưa chính xác',
+  rush: 'Trả lời rất nhanh — có thể chưa đọc hết đề',
+  skip: 'Đã bỏ qua',
+}
+
+const fmt = seconds => `${Math.floor((seconds || 0) / 60)}:${String((seconds || 0) % 60).padStart(2, '0')}`
 
 export default function LearningScreen({ session, isActive = true, onComplete, onHome }) {
-  const [state, dispatch] = useReducer(learningReducer, initialFlow)
-  const [support, setSupport] = useState(null)
+  const [state, setState] = useState(() => ({ ...INITIAL_FLOW, ...(learningService.getFlow(session.id) || {}) }))
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [saved, setSaved] = useState(false)
-  const elapsed = useRef(0)
-  const startedAt = useRef(null)
-  const { stage, index, round, selected, result, explained, answers } = state
-  const total = session.questions.length
-  const answered = Object.keys(answers).length
-  const correct = Object.values(answers).filter(Boolean).length
-  useEffect(() => { let active = true; learningService.getSupport(session.topic, { sessionId: session.id, questionId: session.questions[index].id }).then(s => { if (active) setSupport(s) }).catch(e => { if (active) setError(e.message) }); return () => { active = false } }, [session.id, session.topic, index])
-  async function finish() {
-    await onComplete({ id: session.id, topic: session.topic, total, answered, correct, weak: correct < answered ? [session.topic] : [], date: new Date().toISOString() })
-    setSaved(true)
+  const completedRef = useRef(false)
+  const tree = session.tree || {}
+  const node = tree[state.target]
+
+  function update(patch) {
+    setState(previous => ({ ...previous, ...patch }))
   }
-  useEffect(() => { if (stage === 'complete') finish().catch(e => setError(`Chưa lưu được phiên: ${e.message}`)) }, [stage])
+
   useEffect(() => {
-    if (stage !== 'complete') learningService.saveProgress(session.id, { stage, index, round, selected }).catch(e => setError(`Chưa đồng bộ được tiến độ: ${e.message}`))
-  }, [stage, index, round, selected, result, session.id])
-  async function go(nextStage) {
+    learningService.saveProgress(session.id, state, session.remote).catch(() => {})
+  }, [session.id, session.remote, state])
+
+  useEffect(() => {
+    if (state.stage !== 'complete' || completedRef.current) return
+    completedRef.current = true
+    const answered = state.records.filter(record => record.flag !== 'skip').length
+    const correct = state.records.filter(record => record.correct).length
+    const weak = [...new Set(state.records.filter(record => !record.correct || record.flag === 'slow').map(record => tree[record.node]?.label || record.node))]
+    onComplete({ id: session.id, topic: session.topic, total: session.questions.length, answered, correct, weak, date: new Date().toISOString() })
+      .catch(nextError => setError(`Chưa lưu được phiên: ${nextError.message}`))
+  }, [onComplete, session, state.records, state.stage, tree])
+
+  async function submitQuiz(picked, times) {
+    setBusy(true)
     setError('')
-    if (['summary', 'deep'].includes(nextStage)) {
-      setBusy(true)
-      try { setSupport(await learningService.getReview(session.topic, { sessionId: session.id, questionId: session.questions[index].id })) }
-      catch (e) { setError(e.message); return }
-      finally { setBusy(false) }
+    try {
+      const records = await learningService.gradeQuiz(session, picked, times)
+      const status = {}
+      records.forEach(record => { status[record.node] = record.correct ? (record.flag === 'slow' ? 'shaky' : 'ok') : 'weak' })
+      update({ stage: 'result', records, status })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
     }
-    dispatch({ type: 'go', stage: nextStage })
   }
-  function next() { dispatch({ type: 'next', total }) }
-  const question = stage === 'quiz' || stage === 'retryOriginal' ? session.questions[index] : stage === 'similar' ? support?.similar : stage === 'recheck' ? support?.recheck : stage === 'prerequisite' ? support?.checks[round] : stage === 'deep' ? support?.checks[round] : null
-  useEffect(() => { elapsed.current = 0 }, [question?.id, stage])
+
+  async function startDiagnosis() {
+    const diagnosis = learningService.pickTarget(state.records, tree)
+    if (!diagnosis.target) {
+      update({
+        stage: 'refuse',
+        trace: [...state.trace, { t: 'Chưa chẩn đoán', d: diagnosis.reason }],
+      })
+      return
+    }
+    setBusy(true)
+    setError('')
+    try {
+      const hypothesis = await learningService.getHypothesis({ session, target: diagnosis.target, hits: diagnosis.hits, records: state.records })
+      const targetLabel = tree[diagnosis.target]?.label || diagnosis.target
+      const weakSummary = diagnosis.candidates.map(record => `${tree[record.node]?.label || record.node} (${FLAG_TEXT[record.flag] || 'tín hiệu yếu'}, ${fmt(record.sec)})`).join(' · ')
+      update({
+        stage: 'analysis',
+        target: diagnosis.target,
+        hits: diagnosis.hits,
+        hypothesis,
+        round: 1,
+        retry: 0,
+        trace: [
+          ...state.trace,
+          { t: 'Tín hiệu yếu', d: weakSummary },
+          { t: 'Định vị', d: `${diagnosis.hits.length} tín hiệu cùng thuộc “${targetLabel}”` },
+        ],
+        status: { ...state.status, [diagnosis.target]: 'probing' },
+      })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function openProbe(target = state.target, patch = {}) {
+    setBusy(true)
+    setError('')
+    try {
+      const probeQuestions = await learningService.getProbes(session, target)
+      update({ stage: 'probe', target, probeQuestions, ...patch })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function submitProbe(picked, times) {
+    setBusy(true)
+    setError('')
+    try {
+      const result = await learningService.evaluateRound({
+        session,
+        target: state.target,
+        round: state.round,
+        questions: state.probeQuestions,
+        picked,
+        times,
+        lastFailed: state.lastFailed,
+      })
+      const targetLabel = tree[state.target]?.label || state.target
+      update({
+        stage: 'review',
+        roundRecs: result.records,
+        decision: result.decision,
+        nextTarget: result.next_target,
+        gap: result.gap,
+        ceiling: result.ceiling,
+        scenario: result.scenario,
+        lastFailed: result.decision === 'escalate' ? (state.lastFailed || state.target) : state.lastFailed,
+        status: { ...state.status, [state.target]: result.decision === 'locate' ? 'shaky' : 'weak' },
+        trace: [...state.trace, { t: `Vòng ${state.round} · ${targetLabel}`, d: `sai/bỏ trống ${result.bad_count}/${state.probeQuestions.length}` }],
+      })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function openPlan(verdict) {
+    setBusy(true)
+    setError('')
+    const nextState = { ...state, verdict, stage: 'plan' }
+    try {
+      const plan = await learningService.generatePlan({ session, state: nextState })
+      update({ stage: 'plan', verdict, plan })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function startRetest() {
+    const target = state.gap || state.target
+    setBusy(true)
+    setError('')
+    try {
+      const probeQuestions = await learningService.getProbes(session, target)
+      update({ stage: 'retest', target, probeQuestions })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function submitRetest(picked, times) {
+    setBusy(true)
+    setError('')
+    try {
+      const result = await learningService.evaluateRound({
+        session,
+        target: state.target,
+        round: state.round,
+        questions: state.probeQuestions,
+        picked,
+        times,
+        lastFailed: state.lastFailed,
+      })
+      const passed = result.records.every(record => record.correct)
+      update({
+        stage: 'retestDone',
+        retestRecs: result.records,
+        status: { ...state.status, [state.target]: passed ? 'ok' : 'weak' },
+        trace: [...state.trace, { t: 'Kiểm tra lại', d: passed ? 'Đúng tất cả — xác nhận đã nắm' : 'Vẫn còn câu sai — giữ cờ cần ôn' }],
+      })
+    } catch (nextError) {
+      setError(nextError.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const phase = state.stage === 'quiz' || state.stage === 'result' ? 0 : ['analysis', 'refuse', 'probe', 'review', 'explain'].includes(state.stage) ? 1 : 2
+  const titles = {
+    quiz: 'Quiz ôn tập', result: 'Kết quả quiz', explain: 'Giải thích đáp án', refuse: 'Chưa đủ căn cứ',
+    analysis: 'Phân tích bài làm', probe: `Chẩn đoán · vòng ${state.round}`, review: `Kết quả vòng ${state.round}`,
+    plan: 'Lộ trình ôn tập', retest: 'Kiểm tra lại sau khi ôn', retestDone: 'Kết quả kiểm tra lại', complete: 'Phiên học của bạn',
+  }
+
+  return (
+    <div className="learning-layout">
+      <div className="learning-top">
+        <button className="text-button muted" onClick={onHome}>← Trang chủ <span className="desktop-only">· phiên được tự động lưu</span></button>
+        <span className="pill">{session.source === 'backend' ? 'Dữ liệu có cây tri thức' : 'Chế độ demo offline'}</span>
+      </div>
+      <div className="learning-grid">
+        <div className="learning-content">
+          <div className="stepper" aria-label="Các bước học tập">
+            {['Làm quiz', 'Hiểu lỗ hổng', 'Ôn đúng chỗ'].map((label, index) => (
+              <div className={phase === index ? 'current' : phase > index ? 'done' : ''} key={label}>
+                <span>{phase > index ? '✓' : `0${index + 1}`}</span>{label}
+              </div>
+            ))}
+          </div>
+          <div className="learning-title">
+            <span className="eyebrow">{session.topic}</span>
+            <h1>{titles[state.stage]}</h1>
+            <p className="muted">{state.stage === 'quiz' ? 'Làm hết bài trước khi xem đáp án. Bạn có thể quay lại, bỏ chọn hoặc bỏ qua.' : 'Mỗi kết luận đều dựa trên tín hiệu và cây tri thức của bài.'}</p>
+          </div>
+
+          {error && <Feedback type="error" title={error} />}
+          {busy && <Thinking />}
+
+          {!busy && state.stage === 'quiz' && (
+            <QuestionRunner key="quiz" items={session.questions} isActive={isActive} onDone={submitQuiz} submitLabel="Nộp bài" />
+          )}
+          {!busy && state.stage === 'result' && (
+            <QuizResult session={session} state={state} onExplain={() => update({ stage: 'explain' })} onDiagnose={startDiagnosis} onComplete={() => update({ stage: 'complete' })} />
+          )}
+          {!busy && state.stage === 'explain' && (
+            <section>
+              <AnswerReview items={session.questions} records={state.records} tree={tree} showExplanation />
+              <div className="action-row">
+                <Button onClick={startDiagnosis}>Tìm phần nền bị hổng →</Button>
+                <Button variant="secondary" onClick={() => update({ stage: 'result' })}>Về kết quả</Button>
+              </div>
+            </section>
+          )}
+          {!busy && state.stage === 'refuse' && (
+            <section>
+              <Feedback type="warning" title="Chưa đủ căn cứ để chỉ ra chỗ hổng">{state.trace.at(-1)?.d}</Feedback>
+              <p className="muted">Đoán một mục rồi yêu cầu bạn ôn nhầm sẽ kém hữu ích hơn việc nói rõ rằng dữ liệu hiện chưa đủ.</p>
+              <div className="action-row"><Button onClick={() => update({ ...INITIAL_FLOW, stage: 'quiz' })}>Làm lại quiz</Button><Button variant="secondary" onClick={() => update({ stage: 'result' })}>Về kết quả</Button></div>
+            </section>
+          )}
+          {!busy && state.stage === 'analysis' && (
+            <AnalysisPanel session={session} state={state} onAccept={() => openProbe()} onPlan={() => openPlan('accepted')} onTrace={trace => update({ trace })} />
+          )}
+          {!busy && state.stage === 'probe' && (
+            <QuestionRunner key={`${state.target}-${state.round}-${state.retry}`} items={state.probeQuestions} isActive={isActive} onDone={submitProbe} submitLabel="Kiểm tra" source={node?.page} />
+          )}
+          {!busy && state.stage === 'review' && (
+            <ReviewPanel
+              state={state}
+              tree={tree}
+              onRetry={() => openProbe(state.target, { retry: state.retry + 1, trace: [...state.trace, { t: 'Học viên chọn', d: `Làm lại vòng ${state.round}` }] })}
+              onNext={() => openProbe(state.nextTarget, { round: state.round + 1, retry: 0, trace: [...state.trace, { t: 'Leo tầng', d: `Kiểm tra tiếp “${tree[state.nextTarget]?.label || state.nextTarget}”` }], status: { ...state.status, [state.nextTarget]: 'probing' } })}
+              onPlan={openPlan}
+            />
+          )}
+          {!busy && state.stage === 'plan' && (
+            <PlanPanel state={state} tree={tree} onRetest={startRetest} onBack={() => update({ stage: 'analysis' })} />
+          )}
+          {!busy && state.stage === 'retest' && (
+            <QuestionRunner key={`retest-${state.target}`} items={state.probeQuestions} isActive={isActive} onDone={submitRetest} submitLabel="Nộp kiểm tra lại" source={node?.page} />
+          )}
+          {!busy && state.stage === 'retestDone' && (
+            <RetestResult state={state} tree={tree} onPlan={() => update({ stage: 'plan' })} onFeedback={feedback => update({ feedback })} onComplete={() => update({ stage: 'complete' })} />
+          )}
+          {!busy && state.stage === 'complete' && (
+            <Completion state={state} total={session.questions.length} onHome={onHome} />
+          )}
+        </div>
+        <LearningAside session={session} state={state} tree={tree} onFinish={() => update({ stage: 'complete' })} />
+      </div>
+    </div>
+  )
+}
+
+function QuestionRunner({ items, isActive, onDone, submitLabel, source }) {
+  const [index, setIndex] = useState(0)
+  const [picked, setPicked] = useState({})
+  const [times, setTimes] = useState({})
+  const [, tick] = useState(0)
+  const startedAt = useRef(Date.now())
+
   useEffect(() => {
-    if (!isActive || result || !question) return
-    startedAt.current = performance.now()
-    return () => { if (startedAt.current !== null) elapsed.current += performance.now() - startedAt.current; startedAt.current = null }
-  }, [question?.id, stage, isActive, result])
-  async function grade() {
-    if (selected === null || busy) return
-    setBusy(true); setError('')
-    const timeSec = (elapsed.current + (startedAt.current === null ? 0 : performance.now() - startedAt.current)) / 1000
-    try { dispatch({ type: 'grade', result: await learningService.grade(question.id, selected, { sessionId: session.id, timeSec, stage }) }) } catch (e) { setError(e.message) } finally { setBusy(false) }
+    const timer = setInterval(() => { if (isActive) tick(value => value + 1) }, 1000)
+    return () => clearInterval(timer)
+  }, [isActive])
+
+  useEffect(() => {
+    if (!isActive && startedAt.current) {
+      const elapsed = Math.round((Date.now() - startedAt.current) / 1000)
+      setTimes(previous => ({ ...previous, [index]: (previous[index] || 0) + elapsed }))
+      startedAt.current = null
+    } else if (isActive && !startedAt.current) startedAt.current = Date.now()
+  }, [index, isActive])
+
+  function commit() {
+    if (!startedAt.current) return times
+    const elapsed = Math.round((Date.now() - startedAt.current) / 1000)
+    const next = { ...times, [index]: (times[index] || 0) + elapsed }
+    setTimes(next)
+    startedAt.current = Date.now()
+    return next
   }
-  async function explain() {
-    setBusy(true); setError('')
-    try { dispatch({ type: 'explanation', result: await learningService.explain(question.id, result, { sessionId: session.id }) }) }
-    catch (e) { setError(e.message) } finally { setBusy(false) }
+
+  function move(nextIndex) {
+    commit()
+    setIndex(nextIndex)
   }
-  const labels = { quiz: 'Quiz ngắn', similar: 'Thử một ví dụ khác', prerequisite: `Kiểm tra nhanh — Vòng ${round + 1}/2`, recheck: 'Quay lại concept ban đầu', retryOriginal: 'Thử lại câu ban đầu', summary: 'Tổng hợp kiến thức', deep: 'Ôn tập chuyên sâu', reviewChoice: 'Chọn cách ôn tập', complete: 'Phiên học của bạn' }
-  const phase = stage === 'quiz' ? 0 : ['similar', 'prerequisite', 'recheck'].includes(stage) ? 1 : 2
-  const actions = <div className="action-row"><Button onClick={next}>Quay lại Quiz →</Button><Button variant="ghost" onClick={() => go('complete')}>Kết thúc</Button></div>
-  if (!support && !error) return <div className="empty-state" role="status">Đang chuẩn bị kiến thức cho bạn…</div>
-  return <div className="learning-layout"><div className="learning-top"><button className="text-button muted" onClick={onHome}>← Trang chủ <span className="desktop-only">· giữ phiên hiện tại</span></button><span className="pill">{session.document.title}</span></div><div className="learning-grid"><div className="learning-content"><div className="stepper" aria-label="Các bước học tập">{['Làm quiz', 'Hiểu lỗ hổng', 'Ôn đúng chỗ'].map((s, i) => <div className={phase === i ? 'current' : phase > i ? 'done' : ''} key={s}><span>{phase > i ? '✓' : `0${i + 1}`}</span>{s}</div>)}</div><div className="learning-title"><span className="eyebrow">{session.topic}</span><h1>{labels[stage]}</h1><p className="muted">{stage === 'quiz' ? 'Cứ chọn theo những gì bạn hiểu. Mỗi câu trả lời là một gợi ý để học tốt hơn.' : stage === 'prerequisite' ? `Kiến thức nền đang kiểm tra: ${support?.foundations[round]}` : stage === 'summary' ? 'Phần kiến thức liên quan được tổng hợp trong bài' : stage === 'deep' ? `Cùng củng cố: ${support?.foundations[round]}` : 'Đi từng bước nhỏ để hiểu rõ hơn.'}</p></div>
-      {error && <Feedback type="error" title={error} />}
-      {question && <><div className="question-meta"><span>{stage === 'quiz' ? `Câu ${index + 1}/${total}` : stage === 'prerequisite' ? `Vòng ${round + 1}/2 · Câu 1/1` : 'Câu hỏi củng cố · 1/1'}</span><span>{stage === 'quiz' ? `${answered}/${total} câu đã kiểm tra` : 'Không tính vào điểm quiz ban đầu'}</span></div><ProgressBar value={stage === 'quiz' ? answered / total * 100 : result ? 100 : 0} />
-      {stage === 'deep' && <section className="mini-lesson"><span className="eyebrow">ĐỌC CHẬM MỘT CHÚT</span><h2>{support.cards[round + 1].title}</h2><p>{support.cards[round + 1].definition}</p><div className="example"><strong>Ví dụ dễ nhớ</strong><p>{support.cards[round + 1].example}</p></div><small>Nội dung minh họa · chưa liên kết slide gốc.</small></section>}
-      <QuestionCard question={question} selected={selected} onSelect={value => dispatch({ type: 'select', value })} result={result} busy={busy} onCheck={grade} />
-      {result && <div className="result-area">
-        {stage === 'quiz' && (result.correct ? <><Feedback title="Chính xác!">{result.explanation}</Feedback><div className="action-row"><Button onClick={next}>{index + 1 === total ? 'Xem kết quả' : 'Câu tiếp theo'} →</Button></div></> : <><Feedback type="error" title="Chưa chính xác — cùng tìm hiểu nhé.">Đáp án đúng đã được đánh dấu màu xanh.</Feedback>{!explained ? <Button variant="secondary" onClick={() => dispatch({ type: 'explain' })}>Xem giải thích ↓</Button> : <section className="explanation-panel"><span className="eyebrow">VÌ SAO ĐÁP ÁN NÀY ĐÚNG?</span><p>{result.explanation}</p><div className="diagnosis"><span className="pill">Nhận định demo · chưa đủ căn cứ</span><h3>Có vẻ bạn hiểu concept nhưng có thể đang nhầm khi áp dụng.</h3><p>Một câu sai chưa đủ để kết luận. Thử thêm một ví dụ hoặc kiểm tra kiến thức nền nhé.</p></div><div className="action-row"><Button onClick={() => go('similar')}>Thử một ví dụ khác →</Button><Button variant="secondary" onClick={() => go('prerequisite')}>Tiếp tục ôn</Button></div></section>}</>)}
-        {stage === 'similar' && (result.correct ? <><Feedback title="Có vẻ bạn đã hiểu concept nhưng đã nhầm hoặc áp dụng sai ở câu trước.">{result.explanation}</Feedback>{actions}</> : <><Feedback type="warning" title="Có thể bạn đang thiếu một số kiến thức nền liên quan.">{result.explanation}</Feedback><Button onClick={() => go('prerequisite')}>Kiểm tra kiến thức nền →</Button></>)}
-        {stage === 'prerequisite' && (result.correct ? <><Feedback title="Bạn đã nắm được kiến thức nền này.">Cùng quay lại concept ban đầu với một câu tương đương.</Feedback><Button onClick={() => go('recheck')}>Kiểm tra lại concept →</Button></> : <><Feedback type="warning" title={round === 0 ? 'Phần kiến thức nền này chưa thật vững.' : 'Mình dừng kiểm tra tại đây nhé.'}>{result.explanation}{round === 1 && <p>Đã kiểm tra đủ 2 vòng. Hãy dành một chút thời gian để ôn lại.</p>}</Feedback><Button onClick={() => dispatch({ type: 'nextRound' })}>{round === 0 ? 'Tiếp tục vòng 2' : 'Chọn cách ôn tập'} →</Button></>)}
-        {['recheck', 'retryOriginal'].includes(stage) && (result.correct ? <><Feedback title="Chính xác! Bạn đã kết nối được kiến thức.">{result.explanation}</Feedback>{actions}</> : <><Feedback type="warning" title="Concept này vẫn cần thêm một chút củng cố.">{result.explanation}</Feedback><div className="action-row"><Button onClick={() => go('summary')}>Tổng hợp kiến thức</Button><Button variant="secondary" onClick={() => go('deep')}>Ôn tập chuyên sâu</Button></div></>)}
-        {stage === 'deep' && (result.correct ? <><Feedback title="Bạn đã nắm được phần kiến thức cơ bản này.">{result.explanation}</Feedback><div className="action-row"><Button onClick={next}>Quay lại Quiz ban đầu →</Button><Button variant="secondary" onClick={() => go('complete')}>Kết thúc phiên học</Button></div></> : <><Feedback type="error" title={`Bạn đã trả lời sai kiến thức cơ bản và cần ôn tập lại phần ${support.foundations[round]}.`}>{result.explanation}</Feedback><div className="action-row"><Button onClick={() => go('deep')}>Ôn lại phần này ↻</Button><Button variant="ghost" onClick={() => go('complete')}>Kết thúc</Button></div></>)}
-      </div>}</>}
-      {stage === 'reviewChoice' && <><Feedback type="warning" title="Có vẻ bạn đang thiếu một số kiến thức nền liên quan.">Bạn muốn xem lại theo cách nào?</Feedback><div className="review-choices"><button onClick={() => go('summary')}><span className="square-icon">▤</span><h2>Tổng hợp kiến thức</h2><p>Xem lại bức tranh chung, định nghĩa và ví dụ ngắn.</p><strong>Xem tổng hợp →</strong></button><button onClick={() => go('deep')}><span className="square-icon peach">◎</span><h2>Ôn tập chuyên sâu</h2><p>Đi chậm hơn với bài học nhỏ và câu hỏi kiến thức nền.</p><strong>Bắt đầu ôn tập →</strong></button></div></>}
-      {stage === 'summary' && <><div className="knowledge-list">{support.cards.map((card, i) => <section className="knowledge-card" key={card.title}><div className="knowledge-number">0{i + 1}</div><div><span className="eyebrow">{card.tag}</span><h2>{card.title}</h2><p>{card.definition}</p><div className="example"><strong>Ví dụ</strong><p>{card.example}</p></div><small>Nguồn slide: chưa được cung cấp · nội dung demo</small></div></section>)}</div><div className="action-row"><Button onClick={() => go('retryOriginal')}>Thử lại câu ban đầu</Button><Button variant="secondary" onClick={next}>Quay lại Quiz</Button><Button variant="secondary" onClick={() => go('deep')}>Ôn tập chuyên sâu</Button><Button variant="ghost" onClick={() => go('complete')}>Kết thúc</Button></div></>}
-      {stage === 'complete' && <section className="completion"><div className="completion-icon">✓</div><span className="eyebrow">THÊM MỘT BƯỚC TIẾN</span><h2>{answered === total ? 'Bạn đã hoàn thành quiz!' : 'Phiên học đã kết thúc'}</h2><p>Mỗi lần nhìn lại là một lần hiểu rõ hơn.</p><div className="completion-stats"><div><strong>{correct}/{answered}</strong><span>Câu đã trả lời đúng</span></div><div><strong>{answered}/{total}</strong><span>Câu quiz đã làm</span></div></div>{correct < answered && <p className="notice">Gợi ý tiếp tục củng cố: {session.topic}. Đây là kết quả demo, chưa phải chẩn đoán từ backend.</p>}<Button onClick={onHome}>Về trang chủ →</Button></section>}
-    </div><aside className="learning-aside"><section className="session-card"><span className="eyebrow">PHIÊN HỌC HIỆN TẠI</span><div className="book-art" aria-hidden="true">▤</div><h3>{session.topic}</h3><p>{session.document.title}</p><div className="divider" /><div className="meta-line"><span>Quiz ngắn</span><strong>{total} câu</strong></div><div className="meta-line"><span>Đã trả lời</span><strong>{answered}/{total}</strong></div><ProgressBar value={answered / total * 100} /><div className="aside-note">✧ <span>Không sao nếu chưa đúng.<br />Đó là nơi việc học bắt đầu.</span></div></section><section className="quiet-note"><strong>Vì sao có bước kiểm tra nền?</strong><p>Đôi khi điều còn thiếu nằm ở kiến thức trước đó. Chúng mình kiểm tra tối đa 2 vòng để bạn không bị lạc quá xa.</p></section>{stage !== 'complete' && <button className="text-button muted" onClick={() => go('complete')}>Kết thúc phiên học</button>}</aside></div></div>
+
+  const question = items[index]
+  const selected = picked[index]
+  const liveSeconds = (times[index] || 0) + (isActive && startedAt.current ? Math.round((Date.now() - startedAt.current) / 1000) : 0)
+  const doneCount = Object.keys(picked).length
+
+  return (
+    <section>
+      <div className="question-meta"><span>Câu {index + 1}/{items.length}</span><span>⏱ {fmt(liveSeconds)}</span></div>
+      <ProgressBar value={(index + 1) / items.length * 100} label="Tiến độ bộ câu hỏi" />
+      <section className="question-card">
+        <span className="eyebrow">CHỌN MỘT ĐÁP ÁN</span>
+        <h2>{question.text || question.q}</h2>
+        <div className="answers" role="group" aria-label="Các đáp án">
+          {question.options.map((option, optionIndex) => (
+            <button key={option} className={`answer ${selected === optionIndex ? 'selected' : ''}`} aria-pressed={selected === optionIndex} onClick={() => setPicked(previous => ({ ...previous, [index]: optionIndex }))}>
+              <span className="answer-letter">{'ABCD'[optionIndex]}</span><span>{option}</span><span className="answer-indicator">{selected === optionIndex ? '●' : ''}</span>
+            </button>
+          ))}
+        </div>
+        {source && <p className="source-line">▤ {source}</p>}
+        <div className="runner-note">
+          {selected === undefined ? <span>Chưa chọn — bạn có thể bỏ qua câu này.</span> : <button className="text-button" onClick={() => setPicked(previous => { const next = { ...previous }; delete next[index]; return next })}>Bỏ chọn</button>}
+          <span>{doneCount}/{items.length} câu đã chọn</span>
+        </div>
+        <div className="question-footer runner-actions">
+          <Button variant="secondary" disabled={index === 0} onClick={() => move(index - 1)}>← Câu trước</Button>
+          {index === items.length - 1 ? (
+            <Button onClick={() => onDone(items.map((_, itemIndex) => picked[itemIndex] ?? null), Object.assign(Array(items.length).fill(0), commit()))}>{submitLabel}</Button>
+          ) : (
+            <Button onClick={() => move(index + 1)}>{selected === undefined ? 'Bỏ qua' : 'Câu tiếp'} →</Button>
+          )}
+        </div>
+      </section>
+    </section>
+  )
+}
+
+function QuizResult({ session, state, onExplain, onDiagnose, onComplete }) {
+  const correct = state.records.filter(record => record.correct).length
+  const weak = state.records.some(record => !record.correct || record.flag === 'slow')
+  return (
+    <section>
+      <div className="result-summary"><strong>{correct}/{state.records.length}</strong><div><h2>Kết quả bài quiz</h2><p>Tổng thời gian {fmt(state.records.reduce((sum, record) => sum + record.sec, 0))}</p></div></div>
+      <AnswerReview items={session.questions} records={state.records} tree={session.tree} />
+      {weak ? (
+        <><h3 className="choice-title">Bạn muốn làm gì tiếp?</h3><div className="review-choices"><button onClick={onExplain}><span className="square-icon">✦</span><h2>Giải thích đáp án</h2><p>Hiểu mình sai điều gì và vì sao phương án kia chưa phù hợp.</p><strong>Xem giải thích →</strong></button><button onClick={onDiagnose}><span className="square-icon peach">◎</span><h2>Tìm phần nền bị hổng</h2><p>Tổng hợp toàn bộ tín hiệu để kiểm tra kiến thức nền.</p><strong>Bắt đầu chẩn đoán →</strong></button></div></>
+      ) : (
+        <Feedback title="Bạn trả lời đúng và dứt khoát tất cả câu hỏi."><Button onClick={onComplete}>Hoàn thành phiên →</Button></Feedback>
+      )}
+    </section>
+  )
+}
+
+function AnswerReview({ items, records, tree, showExplanation = false }) {
+  return <div className="answer-review">{records.map((record, index) => {
+    const question = items[index] || {}
+    return <section className={`review-answer ${record.correct ? record.flag === 'slow' ? 'shaky' : 'ok' : 'bad'}`} key={`${record.node}-${index}`}>
+      <div className="review-answer-head"><strong>{record.correct ? '✓' : record.flag === 'skip' ? '–' : '×'} Câu {index + 1}</strong><span>⏱ {fmt(record.sec)}</span></div>
+      <p>{question.text || question.q}</p>
+      <small>{record.sel === null ? 'Bạn đã bỏ trống' : `Bạn chọn: ${question.options?.[record.sel] || `Phương án ${record.sel + 1}`}`}</small>
+      {!record.correct && record.answer !== null && record.answer !== undefined && <small>Đáp án: <b>{question.options?.[record.answer] || `Phương án ${record.answer + 1}`}</b></small>}
+      {FLAG_TEXT[record.flag] && <p className={`signal ${record.flag}`}>{FLAG_TEXT[record.flag]}</p>}
+      {showExplanation && <div className="answer-explanation"><strong>Vì sao?</strong><p>{record.why || 'Phần giải thích chưa sẵn sàng.'}</p>{record.trap && <p><b>Bẫy:</b> {record.trap}</p>}</div>}
+      {tree?.[record.node]?.page && <p className="source-line">▤ {tree[record.node].page}</p>}
+    </section>
+  })}</div>
+}
+
+function AnalysisPanel({ session, state, onAccept, onPlan, onTrace }) {
+  const [open, setOpen] = useState(false)
+  const [draft, setDraft] = useState('')
+  const [chat, setChat] = useState([])
+  const [sending, setSending] = useState(false)
+  const targetRecords = state.records.filter(record => state.hits.includes(record.node))
+
+  async function send(message) {
+    if (!message.trim() || sending) return
+    const userMessage = { me: true, text: message.trim() }
+    const nextChat = [...chat, userMessage]
+    setChat(nextChat)
+    setDraft('')
+    setSending(true)
+    const reply = await learningService.chat({ session, target: state.target, records: targetRecords, message: message.trim(), history: chat })
+    setChat([...nextChat, { me: false, text: reply }])
+    onTrace([...state.trace, { t: 'Học viên hỏi lại', d: message.trim() }])
+    setSending(false)
+  }
+
+  return <section>
+    <div className="analysis-card"><span className="eyebrow">TÍN HIỆU THU ĐƯỢC</span><ul>{targetRecords.map((record, index) => <li key={index}>{session.tree[record.node]?.label || record.node} — {FLAG_TEXT[record.flag] || 'đúng'} ({fmt(record.sec)})</li>)}</ul><div className="divider" /><span className="eyebrow">GIẢ THUYẾT</span><h2>{session.tree[state.target]?.label || state.target}</h2><p>{state.hypothesis?.hypothesis_text}</p><p className="muted">Mức chắc chắn: <b>{state.hypothesis?.confidence || 'thấp'}</b></p>{session.tree[state.target]?.page && <p className="source-line">▤ {session.tree[state.target].page}</p>}</div>
+    <h3 className="choice-title">Bạn thấy suy luận này có hợp lý không?</h3>
+    <div className="action-row"><Button onClick={onAccept}>Hợp lý — kiểm tra câu nền →</Button><Button variant="secondary" onClick={onPlan}>Hợp lý — ôn luôn</Button><Button variant="ghost" onClick={() => setOpen(!open)}>Chưa thuyết phục — hỏi thêm</Button></div>
+    {open && <section className="chat-panel"><div className="chat">{chat.map((message, index) => <p key={index} className={`bub ${message.me ? 'me' : 'ai'}`}>{message.text}</p>)}{sending && <p className="muted">Đang trả lời…</p>}</div><div className="chat-compose"><input value={draft} onChange={event => setDraft(event.target.value)} onKeyDown={event => event.key === 'Enter' && send(draft)} placeholder="Hỏi về chẩn đoán này…" /><Button onClick={() => send(draft)}>Gửi</Button></div></section>}
+  </section>
+}
+
+function ReviewPanel({ state, tree, onRetry, onNext, onPlan }) {
+  const bad = state.roundRecs.filter(record => !record.correct).length
+  const messages = {
+    locate: `Bạn chỉ sai ${bad}/${state.roundRecs.length} câu. Lỗ hổng đã được khoanh vùng, không cần leo lên tầng trên.`,
+    escalate: `Bạn sai ${bad}/${state.roundRecs.length} câu nền. Nên kiểm tra tiếp “${tree[state.nextTarget]?.label || state.nextTarget}”.`,
+    restart: `Bạn sai ngay ở tầng nền và đã chạm giới hạn chẩn đoán. Nên xem lại toàn bài.`,
+  }
+  return <section>
+    <AnswerReview items={state.probeQuestions} records={state.roundRecs} tree={tree} showExplanation />
+    <Feedback type={state.decision === 'locate' ? 'success' : 'warning'} title="Hệ thống đọc được gì">{messages[state.decision]}</Feedback>
+    <div className="action-row">
+      {state.decision === 'escalate' && <Button onClick={onNext}>Kiểm tra tầng tiếp theo →</Button>}
+      {state.decision === 'locate' && <Button onClick={() => onPlan('located')}>Xem lộ trình ôn →</Button>}
+      {state.decision === 'restart' && <Button onClick={() => onPlan('restart')}>Xem tóm tắt cả bài →</Button>}
+      <Button variant="secondary" onClick={onRetry}>↻ Làm lại vòng này</Button>
+      {state.decision === 'escalate' && <Button variant="ghost" onClick={() => onPlan('self')}>Mình tự ôn được</Button>}
+    </div>
+  </section>
+}
+
+function PlanPanel({ state, tree, onRetest, onBack }) {
+  const plan = state.plan || {}
+  return <section>
+    <div className="plan-hero"><span className="eyebrow">LỘ TRÌNH CÁ NHÂN HÓA</span><h2>{plan.title}</h2><p>{plan.why_explanation}</p></div>
+    <div className="knowledge-list">{(plan.items || []).map((item, index) => <section className="knowledge-card" key={index}><div className="knowledge-number">0{index + 1}</div><div><h2>{item.text}</h2>{item.slide_page && <p className="source-line">▤ {item.slide_page}</p>}</div></section>)}</div>
+    {plan.advice_text && <section className="mini-lesson"><span className="eyebrow">AI GỢI Ý CÁCH ÔN</span><p className="pre-line">{plan.advice_text}</p></section>}
+    <section className="trace-card"><h3>Vì sao bạn nhận lộ trình này?</h3><ol>{state.trace.map((entry, index) => <li key={index}><b>{entry.t}:</b> {entry.d}</li>)}</ol></section>
+    <div className="action-row"><Button onClick={onRetest}>Mình ôn xong rồi — kiểm tra lại →</Button><Button variant="secondary" onClick={onBack}>Chưa ổn — cần thêm</Button></div>
+    <p className="muted small-note">Chỉ báo “đã ôn xong” chưa làm mất cờ lỗ hổng; bạn cần đúng toàn bộ bài kiểm tra lại.</p>
+  </section>
+}
+
+function RetestResult({ state, tree, onPlan, onFeedback, onComplete }) {
+  const passed = state.retestRecs.every(record => record.correct)
+  return <section>
+    <Feedback type={passed ? 'success' : 'error'} title={passed ? `Đã nắm: ${tree[state.target]?.label || state.target}` : 'Bạn thấy ổn rồi, nhưng vẫn còn phần chưa chắc'}>{passed ? 'Bạn trả lời đúng toàn bộ câu kiểm tra lại. Node kiến thức đã chuyển sang trạng thái ổn.' : `Bạn còn sai ${state.retestRecs.filter(record => !record.correct).length}/${state.retestRecs.length} câu. Cờ cần ôn vẫn được giữ.`}</Feedback>
+    <AnswerReview items={state.probeQuestions} records={state.retestRecs} tree={tree} showExplanation />
+    <Rating value={state.feedback} onSubmit={onFeedback} />
+    <div className="action-row">{!passed && <Button onClick={onPlan}>Xem lại lộ trình</Button>}<Button variant={passed ? 'primary' : 'secondary'} onClick={onComplete}>Kết thúc phiên →</Button></div>
+  </section>
+}
+
+function Rating({ value, onSubmit }) {
+  const [stars, setStars] = useState(value?.stars || 0)
+  const [reasons, setReasons] = useState(value?.reasons || [])
+  const options = ['Chung chung', 'Khó hiểu', 'Không đúng chỗ mình hổng', 'Vừa đủ, dùng được']
+  if (value) return <section className="rating-card"><h3>Cảm ơn bạn</h3><p>Bạn đã chấm lời tư vấn {value.stars}/5. Đánh giá này không làm thay đổi kết quả kiến thức.</p></section>
+  return <section className="rating-card"><h3>Lời tư vấn ôn tập có dùng được không?</h3><div className="rating-stars">{[1, 2, 3, 4, 5].map(number => <button key={number} className={number <= stars ? 'selected' : ''} onClick={() => setStars(number)} aria-label={`${number} sao`}>★</button>)}</div><div className="reason-chips">{options.map(option => <button key={option} className={reasons.includes(option) ? 'selected' : ''} onClick={() => setReasons(previous => previous.includes(option) ? previous.filter(item => item !== option) : [...previous, option])}>{option}</button>)}</div><Button disabled={!stars} onClick={() => onSubmit({ stars, reasons, node: null })}>Gửi đánh giá</Button></section>
+}
+
+function Completion({ state, total, onHome }) {
+  const correct = state.records.filter(record => record.correct).length
+  const answered = state.records.filter(record => record.flag !== 'skip').length
+  return <section className="completion"><div className="completion-icon">✓</div><span className="eyebrow">THÊM MỘT BƯỚC TIẾN</span><h2>Phiên học đã hoàn thành</h2><p>Kết quả quiz, lỗ hổng và lần kiểm tra lại đã được lưu vào tiến độ.</p><div className="completion-stats"><div><strong>{correct}/{total}</strong><span>Câu quiz đúng</span></div><div><strong>{answered}/{total}</strong><span>Câu đã trả lời</span></div></div><Button onClick={onHome}>Về trang chủ →</Button></section>
+}
+
+function LearningAside({ session, state, tree, onFinish }) {
+  return <aside className="learning-aside">
+    <section className="session-card"><span className="eyebrow">PHIÊN HỌC HIỆN TẠI</span><div className="book-art" aria-hidden="true">▤</div><h3>{session.topic}</h3><p>{session.document.title}</p><div className="divider" /><div className="meta-line"><span>Quiz</span><strong>{session.questions.length} câu</strong></div><div className="meta-line"><span>Nguồn</span><strong>{session.source === 'backend' ? 'Backend' : 'Demo'}</strong></div></section>
+    <KnowledgeTree tree={tree} status={state.status} target={state.target} />
+    {state.trace.length > 0 && <details className="trace-aside"><summary>Dấu vết quyết định ({state.trace.length})</summary><ol>{state.trace.map((entry, index) => <li key={index}><b>{entry.t}</b><span>{entry.d}</span></li>)}</ol></details>}
+    {state.stage !== 'complete' && <button className="text-button muted end-session" onClick={onFinish}>Kết thúc phiên học</button>}
+  </aside>
+}
+
+function KnowledgeTree({ tree, status, target }) {
+  if (!tree.root) return null
+  const children = id => Object.values(tree).filter(node => node.parent === id)
+  const render = (id, depth = 0) => {
+    const item = tree[id]
+    if (!item) return null
+    const itemStatus = id === target ? 'probing' : status[id]
+    return <li key={id} className={`knowledge-node ${itemStatus || ''}`} style={{ '--depth': depth }}><span className="knowledge-dot" /><span>{item.label}</span>{children(id).length > 0 && <ul>{children(id).map(child => render(child.id, depth + 1))}</ul>}</li>
+  }
+  return <details className="tree-panel" open><summary>Cây tri thức</summary><ul>{render('root')}</ul><p className="tree-legend"><span className="knowledge-dot probing" /> đang kiểm tra <span className="knowledge-dot weak" /> cần ôn <span className="knowledge-dot ok" /> đã ổn</p></details>
+}
+
+function Thinking() {
+  return <div className="adaptive-loading" role="status"><span className="loading-orbit" /><div><strong>Đang phân tích…</strong><p>Kết nối tín hiệu với cây tri thức và chuẩn bị bước tiếp theo.</p></div></div>
 }

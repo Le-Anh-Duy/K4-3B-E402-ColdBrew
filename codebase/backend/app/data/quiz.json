@@ -1,0 +1,92 @@
+[
+  {
+    "id": "q1",
+    "node": "l_quantinh",
+    "q": "Theo bài giảng, vì sao thói quen \"nghe yêu cầu là nhảy thẳng vào giải pháp\" lại nguy hiểm?",
+    "options": [
+      "Vì giải pháp thường tốn nhiều tiền",
+      "Vì não chạy theo tư duy nhanh và bỏ qua bước xác định vấn đề",
+      "Vì công nghệ thay đổi quá nhanh",
+      "Vì stakeholder không thích bị hỏi lại"
+    ],
+    "answer": 1,
+    "why": "Bài giảng dẫn \"Thinking, Fast and Slow\": não chạy tư duy nhanh theo thói quen, nghe vấn đề là phản ứng ngay bằng giải pháp, nên bước xác định vấn đề bị bỏ qua [T01-016].",
+    "traps": {
+      "0": "Tiền bạc không phải lý do được nêu — vấn đề nằm ở thói quen tư duy.",
+      "2": "Công nghệ đổi nhanh là chuyện khác; ở đây nói về quán tính của người ra quyết định.",
+      "3": "Bài giảng khuyến khích hỏi lại stakeholder, không nói họ khó chịu."
+    }
+  },
+  {
+    "id": "q2",
+    "node": "l_boctach",
+    "q": "Sếp đưa một yêu cầu rất chung chung. Cách làm được bài giảng khuyến nghị là gì?",
+    "options": [
+      "Bóc tách thành vài phương án cụ thể rồi hỏi lại để xác nhận",
+      "Chờ đến khi sếp mô tả rõ ràng hơn",
+      "Chọn giải pháp phổ biến nhất trên thị trường",
+      "Cứ làm thử một bản rồi sửa sau"
+    ],
+    "answer": 0,
+    "why": "Cách được nêu là tự biến cái mơ hồ thành cụ thể: đưa ra A, B, C rồi hỏi lại \"em hiểu đúng không, là cái nào\" để verify với stakeholder [T01-006].",
+    "traps": {
+      "1": "Chờ người giao việc nói rõ là kỳ vọng sai — nhiều khi chính họ cũng chưa biết mình muốn gì [T01-005].",
+      "2": "Chọn theo số đông chính là nhảy vào giải pháp, đúng cái bẫy bài giảng cảnh báo.",
+      "3": "Làm thử rồi sửa không thay được bước làm rõ đề bài."
+    }
+  },
+  {
+    "id": "q3",
+    "node": "l_dungcaisai",
+    "q": "Theo quan điểm của giảng viên, cái nào nguy hiểm hơn?",
+    "options": [
+      "Làm sai cái đúng",
+      "Làm đúng cái sai",
+      "Hai cái nguy hiểm như nhau",
+      "Tuỳ vào ngân sách dự án"
+    ],
+    "answer": 1,
+    "why": "Quan điểm của giảng viên: làm đúng cái sai nguy hiểm hơn, vì ta tự giới hạn không gian giải pháp cho một vấn đề vốn đã sai, lại còn có cảm giác đang tiến triển [T01-060] [T01-061].",
+    "traps": {
+      "0": "Làm sai cái đúng thì vấn đề vẫn đúng — chỉ cần đi tìm giải pháp khác [T01-059].",
+      "2": "Bài giảng nhận đây là vấn đề gây tranh cãi nhưng vẫn nêu quan điểm rõ, không coi hai cái ngang nhau.",
+      "3": "Ngân sách không phải tiêu chí được nhắc tới."
+    }
+  },
+  {
+    "id": "q4",
+    "node": "l_phanky",
+    "q": "Bước phân kỳ ở viên kim cương thứ nhất gồm những kỹ thuật nào?",
+    "options": [
+      "Quan sát, phỏng vấn, khảo sát, đọc log hành vi người dùng",
+      "Gom nhóm các vấn đề rồi lọc trùng",
+      "Vẽ ma trận tác động – nỗ lực",
+      "Viết user story cho đội phát triển"
+    ],
+    "answer": 0,
+    "why": "Phân kỳ là bước mở rộng góc nhìn: quan sát, phỏng vấn, khảo sát, đọc log hành vi — thu càng nhiều insight càng tốt [T01-071].",
+    "traps": {
+      "1": "Gom nhóm và lọc trùng là kỹ thuật của pha HỘI TỤ [T01-074] — đây là chỗ hay lẫn nhất.",
+      "2": "Ma trận tác động – nỗ lực dùng ở cuối pha hội tụ [T01-078].",
+      "3": "User story thuộc giai đoạn triển khai, không nằm trong viên kim cương thứ nhất."
+    }
+  },
+  {
+    "id": "q5",
+    "node": "l_hoitu",
+    "q": "Pha hội tụ dùng những kỹ thuật nào?",
+    "options": [
+      "Gom nhóm, hỏi Five Whys, lọc trùng",
+      "Phỏng vấn thêm thật nhiều người dùng mới",
+      "Mở rộng góc nhìn để có thêm insight",
+      "Tăng số lượng ý tưởng càng nhiều càng tốt"
+    ],
+    "answer": 0,
+    "why": "Hội tụ là gom lại: nhóm các vấn đề, hỏi Five Whys để đào sâu nguyên nhân, lọc trùng [T01-074].",
+    "traps": {
+      "1": "Phỏng vấn thêm là mở rộng, tức pha phân kỳ.",
+      "2": "Mở rộng góc nhìn chính là định nghĩa của phân kỳ — ngược với hội tụ.",
+      "3": "Tăng số ý tưởng cũng là phân kỳ."
+    }
+  }
+]
