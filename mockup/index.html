@@ -132,6 +132,12 @@
       @media (prefers-reduced-motion: reduce) {
         .spinner { animation: none; } .steps li { animation: none; }
       }
+      .dump {
+        width: 100%; margin-top: 8px; font: 12px/1.5 ui-monospace, Consolas, monospace;
+        border: 1px solid var(--latte); border-radius: 10px; padding: 8px; background: var(--cream);
+        color: var(--espresso); resize: vertical;
+      }
+      code { font: 12px ui-monospace, Consolas, monospace; background: var(--latte); padding: 1px 4px; border-radius: 4px; }
       .trace { padding-left: 18px; font-size: 13px; margin: 0; }
       .trace li { margin-bottom: 4px; }
       @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } }

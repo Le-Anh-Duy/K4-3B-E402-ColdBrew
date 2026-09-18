@@ -4,6 +4,8 @@ Sinh tự động bằng `node eval/run.js --write` · 2026-09-18
 
 **17/20 case đạt (85%)** — luật chẩn đoán trong `mockup/engine.js`, không gọi AI.
 
+20 case nhóm soạn + 0 case do thành viên chạy thật (👤).
+
 | Case | Tình huống | Kỳ vọng | Hệ thống trả về | |
 |---|---|---|---|---|
 | C01 | Sai 2 câu, cả hai đều thuộc 3.1 Embedding | 3.1 Embedding | 3.1 Embedding | ✅ |

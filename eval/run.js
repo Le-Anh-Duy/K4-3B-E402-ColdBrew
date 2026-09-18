@@ -8,6 +8,23 @@ const E = require('../mockup/engine.js');
 const { TREE, QUIZ, PROBES } = require('../mockup/data.js');
 
 const cases = JSON.parse(fs.readFileSync(path.join(__dirname, 'cases.json'), 'utf8')).cases;
+
+// thêm case do người trong nhóm tự chạy (eval/human/*.json); bỏ qua case chưa điền nhãn
+const humanDir = path.join(__dirname, 'human');
+let pending = 0;
+if (fs.existsSync(humanDir)) {
+  for (const f of fs.readdirSync(humanDir).filter((f) => f.endsWith('.json'))) {
+    const c = JSON.parse(fs.readFileSync(path.join(humanDir, f), 'utf8'));
+    if (!c.expect || c.expect.target === '?') {
+      pending++;
+      continue;
+    }
+    if (c.expect.target === 'null' || c.expect.target === 'không') c.expect.target = null;
+    if (c.expect.final && c.expect.final.verdict === '?') delete c.expect.final;
+    c.human = true;
+    cases.push(c);
+  }
+}
 const split = (pairs) => [pairs.map((p) => p[0]), pairs.map((p) => p[1])];
 
 function runCase(c) {
@@ -57,7 +74,7 @@ for (const c of cases) {
   if (ok) pass++;
 
   rows.push({
-    id: c.id,
+    id: c.id + (c.human ? ' 👤' : ''),
     desc: c.desc,
     expect:
       label(c.expect.target) +
@@ -73,7 +90,13 @@ for (const c of cases) {
 }
 
 const pct = ((pass / cases.length) * 100).toFixed(0);
-console.log(`\nColdBrew · golden set: ${pass}/${cases.length} đạt (${pct}%)\n`);
+const nHuman = cases.filter((c) => c.human).length;
+console.log(`\nColdBrew · golden set: ${pass}/${cases.length} đạt (${pct}%)`);
+console.log(
+  `  ${cases.length - nHuman} case nhóm soạn + ${nHuman} case chạy thật${
+    pending ? ` · ${pending} case chờ điền nhãn` : ''
+  }\n`
+);
 for (const r of rows) console.log(`${r.ok ? 'PASS' : 'FAIL'}  ${r.id}  ${r.desc}`);
 for (const r of rows.filter((r) => !r.ok))
   console.log(`\n${r.id} — kỳ vọng: ${r.expect}\n     thực tế: ${r.got}\n     vì sao kỳ vọng vậy: ${r.why}`);
@@ -85,6 +108,10 @@ if (process.argv.includes('--write')) {
     `Sinh tự động bằng \`node eval/run.js --write\` · ${new Date().toISOString().slice(0, 10)}`,
     '',
     `**${pass}/${cases.length} case đạt (${pct}%)** — luật chẩn đoán trong \`mockup/engine.js\`, không gọi AI.`,
+    '',
+    `${cases.length - nHuman} case nhóm soạn + ${nHuman} case do thành viên chạy thật (👤)${
+      pending ? ` · còn ${pending} case chờ điền nhãn` : ''
+    }.`,
     '',
     '| Case | Tình huống | Kỳ vọng | Hệ thống trả về | |',
     '|---|---|---|---|---|',

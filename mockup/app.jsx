@@ -29,6 +29,7 @@ const BLANK = {
   retry: 0,
   hits: [], // các lá dẫn tới giả thuyết hiện tại
   roundRecs: [], // kết quả vòng chẩn đoán vừa xong
+  probeLog: {}, // node -> [[chọn, giây]] của lần trả lời gần nhất, dùng để xuất case eval
   decision: null, // escalate | locate | restart
   nextTarget: null,
   trace: [],
@@ -446,6 +447,7 @@ function Result({ s, go, think }) {
               🔍 Tìm phần nền bị hổng
             </button>
           </div>
+          <ExportCase s={s} blind={true} />
           <p className="hint">
             Xem giải thích trước rồi vẫn đi chẩn đoán được — giải thích nói bạn sai <i>cái gì</i>,
             chẩn đoán tìm <i>phần nền</i> khiến bạn sai.
@@ -689,6 +691,7 @@ function Probe({ s, think }) {
     think([`Chấm ${qs.length} câu nền của "${node.label}"`, 'Đối chiếu với cây tri thức', conclusion], {
       stage: 'review',
       roundRecs: recs,
+      probeLog: { ...s.probeLog, [s.target]: recs.map((r) => [r.sel, r.sec]) },
       decision,
       nextTarget,
       trace,
@@ -949,10 +952,61 @@ function Plan({ s, go }) {
         </p>
       </div>
 
+      <ExportCase s={s} blind={false} />
+
       <button className="ghost" onClick={() => go({ stage: 'home' })}>
         Về đầu
       </button>
     </section>
+  );
+}
+
+/* ---------- xuất phiên thành case cho bộ eval ---------- */
+
+function ExportCase({ s, blind }) {
+  const [text, setText] = useState(null);
+
+  const build = () => {
+    const c = {
+      id: 'H' + new Date().toISOString().slice(5, 16).replace(/[-:T]/g, ''),
+      desc: 'ĐIỀN: bạn đã cố tình làm gì trong phiên này?',
+      author: 'ĐIỀN: tên bạn',
+      blind, // true = xuất trước khi thấy hệ thống chẩn đoán
+      quiz: s.records.map((r) => [r.sel, r.sec]),
+      expect: { target: '?', final: blind ? null : { verdict: '?', node: '?' } },
+      why: 'ĐIỀN: theo bạn hệ thống PHẢI chỉ ra chỗ nào, vì sao?',
+    };
+    if (!blind && Object.keys(s.probeLog || {}).length) c.probes = s.probeLog;
+    const json = JSON.stringify(c, null, 2);
+    setText(json);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    a.download = c.id + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  return (
+    <div className="card">
+      <h3>Góp một case cho bộ eval</h3>
+      <p className="muted">
+        {blind
+          ? 'Xuất NGAY BÂY GIỜ, trước khi xem hệ thống chẩn đoán — nhãn bạn điền sẽ không bị ảnh hưởng bởi câu trả lời của máy.'
+          : 'Xuất cả chuỗi (quiz + các vòng chẩn đoán). Bạn đã thấy kết luận của hệ thống rồi, nên case này được đánh dấu blind: false.'}
+      </p>
+      <button className="ghost" onClick={build}>
+        ⬇ Xuất phiên này thành case
+      </button>
+      {text && (
+        <>
+          <p className="hint">
+            File đã tải về. Chép vào <code>eval/human/</code>, điền 4 chỗ "ĐIỀN", rồi chạy{' '}
+            <code>node eval/run.js --write</code>.
+          </p>
+          <textarea className="dump" readOnly value={text} rows={10} />
+        </>
+      )}
+    </div>
   );
 }
 
