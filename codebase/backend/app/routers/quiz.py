@@ -42,7 +42,21 @@ def grade_quiz(body: QuizGradeIn):
     - Gắn nhãn: ok, slow (>25s), wrong, rush (<3s), skip.
     - Trả về đáp án đúng, giải thích why và bẫy trap cho từng câu.
     """
-    quiz_items = load_quiz_data()[:len(body.picked)]
+    all_quiz_items = load_quiz_data()
+    if len(body.picked) != len(body.times):
+        raise HTTPException(status_code=400, detail="picked và times phải có cùng số phần tử")
+
+    if body.question_ids is not None:
+        if len(body.question_ids) != len(body.picked):
+            raise HTTPException(status_code=400, detail="question_ids và picked phải có cùng số phần tử")
+        by_id = {item.get("id"): item for item in all_quiz_items}
+        missing = [question_id for question_id in body.question_ids if question_id not in by_id]
+        if missing:
+            raise HTTPException(status_code=400, detail=f"Không tìm thấy câu hỏi: {', '.join(missing)}")
+        quiz_items = [by_id[question_id] for question_id in body.question_ids]
+    else:
+        # Giữ tương thích với client cũ; client mới luôn gửi question_ids.
+        quiz_items = all_quiz_items[:len(body.picked)]
     records_raw = engine.grade(quiz_items, body.picked, body.times)
     records = []
 

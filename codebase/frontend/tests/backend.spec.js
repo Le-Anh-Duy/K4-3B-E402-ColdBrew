@@ -1,5 +1,33 @@
 import { test, expect } from '@playwright/test'
 
+test('Backend grading receives the exact question ids shown to the learner', async ({ page }) => {
+  let payload
+  await page.route('**/api/v0/quiz/grade', async route => {
+    payload = route.request().postDataJSON()
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        records: payload.question_ids.map((id, index) => ({ node: id, sel: payload.picked[index], correct: true, sec: payload.times[index], flag: 'ok', answer: payload.picked[index] })),
+        correct_count: payload.question_ids.length,
+        total_count: payload.question_ids.length,
+        total_sec: payload.times.reduce((sum, value) => sum + value, 0),
+      }),
+    })
+  })
+  await page.goto('/')
+  const records = await page.evaluate(async () => {
+    const { learningService } = await import('/src/services/learningService.js')
+    return learningService.gradeQuiz({
+      source: 'backend',
+      questions: [{ id: 'day1-q7' }, { id: 'day1-q2' }],
+    }, [2, 0], [11, 4])
+  })
+
+  expect(payload).toEqual({ question_ids: ['day1-q7', 'day1-q2'], picked: [2, 0], times: [11, 4] })
+  expect(records.map(record => record.node)).toEqual(['day1-q7', 'day1-q2'])
+})
+
 test('Adaptive backend catalog and quiz are mapped into the current UI', async ({ page }) => {
   const nodes = {
     root: { id: 'root', label: 'Bài học từ backend', parent: null, page: 'T01' },
@@ -42,6 +70,7 @@ test('Dashboard tries the adaptive graph endpoint and falls back cleanly when of
   expect(paths.every(path => path === '/api/v0/graph/tree')).toBe(true)
   await expect.poll(() => page.evaluate(async () => {
     const { learningService } = await import('/src/services/learningService.js')
+    await learningService.getCatalog()
     return learningService.getConnectionStatus().state
   })).toBe('unavailable')
 })

@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class ChatMessage(BaseModel):
     role: str  # "user" | "assistant"
@@ -13,9 +13,12 @@ class WeakSignalIn(BaseModel):
 
 class ChatIn(BaseModel):
     target_node_id: str
+    target_label: Optional[str] = None
+    source_page: Optional[str] = None
+    content_summary: Optional[str] = None
     weak_signals: List[WeakSignalIn]
     message: str
-    history: Optional[List[ChatMessage]] = []
+    history: List[ChatMessage] = Field(default_factory=list)
 
 class ChatOut(BaseModel):
     reply: str

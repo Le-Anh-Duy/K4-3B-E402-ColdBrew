@@ -40,10 +40,10 @@ export async function apiGetQuiz(count, doc) {
   return await fetchJson(`${API_BASE}/quiz${query}`);
 }
 
-export async function apiGradeQuiz(picked, times) {
+export async function apiGradeQuiz(questionIds, picked, times) {
   return await fetchJson(`${API_BASE}/quiz/grade`, {
     method: 'POST',
-    body: JSON.stringify({ picked, times }),
+    body: JSON.stringify({ question_ids: questionIds, picked, times }),
   });
 }
 

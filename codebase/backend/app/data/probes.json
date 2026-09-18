@@ -36,7 +36,7 @@
       }
     ],
     "review": [
-      "Nghe lại [T01-004] và [T01-006]: vấn đề trước, công nghệ sau",
+      "Xem lại [T01-004] và [T01-006]: vấn đề trước, công nghệ sau",
       "Thử bóc một yêu cầu mơ hồ của chính bạn thành 3 phương án A/B/C"
     ]
   },
@@ -117,7 +117,7 @@
       }
     ],
     "review": [
-      "Nghe lại [T01-049] và [T01-071]: bốn pha của Double Diamond",
+      "Xem lại [T01-049] và [T01-071]: bốn pha của Double Diamond",
       "Đối chiếu [T01-074] để phân biệt kỹ thuật phân kỳ với kỹ thuật hội tụ"
     ]
   },
@@ -158,7 +158,7 @@
       }
     ],
     "review": [
-      "Nghe lại [T01-060] và [T01-061] về \"làm đúng cái sai\""
+      "Xem lại [T01-060] và [T01-061] về \"làm đúng cái sai\""
     ]
   },
   "c2s2": {
@@ -198,8 +198,8 @@
       }
     ],
     "review": [
-      "Nghe lại [T02-032] về phổ Automation vs Augmentation",
-      "Nghe lại [T03-088] và [T03-090] về incident sai sót và vai trò của guardrail"
+      "Xem lại [T02-032] về phổ Automation vs Augmentation",
+      "Xem lại [T03-088] và [T03-090] về incident sai sót và vai trò của guardrail"
     ]
   },
   "c0s1": {
@@ -239,9 +239,9 @@
       }
     ],
     "review": [
-      "Nghe lại [T04-047] và [T06-136] về cơ chế dự đoán next token",
-      "Nghe lại [T06-138] và [T06-139] về bản chất ảo giác (hallucination)",
-      "Nghe lại [T04-051] và [T04-053] về quản lý context window và attention"
+      "Xem lại [T04-047] và [T06-136] về cơ chế dự đoán next token",
+      "Xem lại [T06-138] và [T06-139] về bản chất ảo giác (hallucination)",
+      "Xem lại [T04-051] và [T04-053] về quản lý context window và attention"
     ]
   },
   "c3": {

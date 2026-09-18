@@ -8,6 +8,7 @@ class QuizQuestionOut(BaseModel):
     options: List[str]
 
 class QuizGradeIn(BaseModel):
+    question_ids: Optional[List[str]] = None
     picked: List[Optional[int]]
     times: List[int]
 

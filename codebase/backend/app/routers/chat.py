@@ -23,9 +23,9 @@ def chat_message(body: ChatIn):
     """
     tree = get_tree()
     node_info = tree.get(body.target_node_id, {})
-    node_label = node_info.get("label", body.target_node_id)
-    slide_page = node_info.get("page", "(chưa có mã đoạn nguồn)")
-    summary = node_info.get("content_summary", "")
+    node_label = node_info.get("label") or body.target_label or body.target_node_id
+    slide_page = node_info.get("page") or body.source_page or "(chưa có mã đoạn nguồn)"
+    summary = node_info.get("content_summary") or body.content_summary or ""
 
     signals_desc = [
         f"- Concept '{s.label or s.node}': cờ {s.flag}, làm trong {s.sec}s"

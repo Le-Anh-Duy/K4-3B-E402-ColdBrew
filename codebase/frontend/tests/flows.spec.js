@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  // These flows exercise the deterministic offline/demo experience.
+  await page.route('**/api/v0/graph/tree', route => route.fulfill({ status: 503, body: 'Offline in demo flow test' }))
+})
+
 async function login(page, email = 'learner@example.com') {
   await page.goto('/')
   await page.getByLabel('Email', { exact: true }).fill(email)
@@ -52,6 +57,26 @@ test('quiz supports back, skip, deselect and preserves state while navigating', 
   await expect(page.locator('.answer.selected')).toHaveCount(0)
 })
 
+test('quiz draft survives a reload and ending a session requires confirmation', async ({ page }) => {
+  await login(page, 'draft-reload@example.com')
+  await choose(page, 0)
+  await expect.poll(() => page.evaluate(() => Object.keys(localStorage)
+    .filter(key => key.startsWith('coldbrew-flow:'))
+    .some(key => JSON.parse(localStorage.getItem(key) || '{}').drafts?.quiz?.picked?.[0] === 0))).toBe(true)
+
+  await page.reload()
+  await page.getByRole('button', { name: 'Tiếp tục phiên học' }).click()
+  await expect(page.getByText('Câu 1/5', { exact: true })).toBeVisible()
+  await expect(page.locator('.answer.selected')).toHaveCount(1)
+
+  await page.getByRole('button', { name: 'Kết thúc phiên học' }).click()
+  const confirmation = page.getByRole('alertdialog', { name: 'Xác nhận kết thúc phiên học' })
+  await expect(confirmation).toBeVisible()
+  await confirmation.getByRole('button', { name: 'Tiếp tục học' }).click()
+  await expect(confirmation).toHaveCount(0)
+  await expect(page.getByText('Câu 1/5', { exact: true })).toBeVisible()
+})
+
 test('quiz is graded only after the whole batch is submitted', async ({ page }) => {
   await login(page)
   await choose(page, 1)
@@ -73,18 +98,81 @@ test('result offers separate explanation and diagnosis paths', async ({ page }) 
   await expect(page.getByText('GIẢ THUYẾT')).toBeVisible()
 })
 
+test('each quiz result has an individual explanation toggle', async ({ page }) => {
+  await login(page)
+  await completeQuiz(page)
+  await expect(page.getByRole('button', { name: 'Giải thích', exact: true })).toHaveCount(5)
+  await expect(page.locator('.source-citation')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Giải thích', exact: true }).first().click()
+  await expect(page.locator('.answer-explanation')).toHaveCount(1)
+  const sourceLink = page.getByRole('button', { name: /Mở nguồn:/ }).first()
+  await expect(sourceLink).toBeVisible()
+  await sourceLink.click()
+  await expect(page.locator('.source-popover')).toHaveCount(1)
+  await expect(page.locator('.source-popover')).toContainText('TRÍCH NGUỒN')
+  await page.getByRole('button', { name: 'Đóng trích nguồn' }).click()
+  await expect(page.locator('.source-popover')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Ẩn giải thích' })).toHaveAttribute('aria-expanded', 'true')
+  const firstCard = page.locator('.review-answer').first()
+  const togglePosition = await firstCard.evaluate(card => {
+    const button = card.querySelector('.explanation-toggle')
+    const cardBox = card.getBoundingClientRect()
+    const buttonBox = button.getBoundingClientRect()
+    return { isLast: card.lastElementChild === button, rightGap: cardBox.right - buttonBox.right }
+  })
+  expect(togglePosition.isLast).toBe(true)
+  expect(togglePosition.rightGap).toBeLessThanOrEqual(22)
+  await page.getByRole('button', { name: 'Ẩn giải thích' }).click()
+  await expect(page.locator('.answer-explanation')).toHaveCount(0)
+
+  await page.getByRole('button', { name: 'Giải thích', exact: true }).first().click()
+  await page.getByRole('button', { name: 'Giải thích đáp án' }).click()
+  await page.getByRole('button', { name: 'Về kết quả' }).click()
+  await expect(page.locator('.answer-explanation')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Giải thích', exact: true })).toHaveCount(5)
+})
+
 test('learner confirms the hypothesis before entering a probe round', async ({ page }) => {
   await login(page)
   await reachProbe(page)
-  await expect(page.getByText('Câu 1/2', { exact: true })).toBeVisible()
+  await expect(page.getByText('Câu 1/3', { exact: true })).toBeVisible()
   await expect(page.getByText('Cây tri thức', { exact: true })).toBeVisible()
   await expect(page.getByText(/Dấu vết quyết định/)).toBeVisible()
+})
+
+test('diagnosis chat calls Gemini through the backend even for a demo session', async ({ page }) => {
+  let requestBody
+  await page.route('**/api/v0/ai/chat/message', async route => {
+    requestBody = route.request().postDataJSON()
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        reply: 'Phản hồi từ Gemini',
+        grounded_node: requestBody.target_label,
+        slide_page: requestBody.source_page || '(chưa có mã đoạn nguồn)',
+        suggested_actions: [],
+      }),
+    })
+  })
+
+  await login(page, 'gemini-chat@example.com')
+  await completeQuiz(page)
+  await page.getByRole('button', { name: 'Tìm phần nền bị hổng' }).click()
+  await page.getByRole('button', { name: /Chưa thuyết phục/ }).click()
+  await page.getByPlaceholder('Hỏi về chẩn đoán này…').fill('Vì sao lại chẩn đoán như vậy?')
+  await page.getByRole('button', { name: 'Gửi' }).click()
+
+  await expect(page.getByText('Phản hồi từ Gemini')).toBeVisible()
+  expect(requestBody.message).toBe('Vì sao lại chẩn đoán như vậy?')
+  expect(requestBody.target_label).toBeTruthy()
+  expect(requestBody.weak_signals.length).toBeGreaterThan(0)
 })
 
 test('passing a probe produces a sourced remediation plan', async ({ page }) => {
   await login(page)
   await reachProbe(page)
-  await answerProbe(page, [0, 0])
+  await answerProbe(page, [0, 0, 1])
   await expect(page.getByRole('heading', { name: 'Kết quả vòng 1' })).toBeVisible()
   await page.getByRole('button', { name: 'Xem lộ trình ôn' }).click()
   await expect(page.getByRole('heading', { name: 'Lộ trình ôn tập' })).toBeVisible()
@@ -95,7 +183,7 @@ test('passing a probe produces a sourced remediation plan', async ({ page }) => 
 test('failing the foundation probe recommends reviewing the whole lesson', async ({ page }) => {
   await login(page)
   await reachProbe(page)
-  await answerProbe(page, [1, 1])
+  await answerProbe(page, [1, 1, 0])
   await page.getByRole('button', { name: 'Xem tóm tắt cả bài' }).click()
   await expect(page.getByText('Nên xem lại bài này từ đầu')).toBeVisible()
 })
@@ -103,11 +191,11 @@ test('failing the foundation probe recommends reviewing the whole lesson', async
 test('retest requires every answer to be correct before mastery is cleared', async ({ page }) => {
   await login(page)
   await reachProbe(page)
-  await answerProbe(page, [0, 0])
+  await answerProbe(page, [0, 0, 1])
   await page.getByRole('button', { name: 'Xem lộ trình ôn' }).click()
   await page.getByRole('button', { name: 'Mình ôn xong rồi — kiểm tra lại' }).click()
   await expect(page.getByRole('heading', { name: 'Kiểm tra lại sau khi ôn' })).toBeVisible()
-  await answerProbe(page, [0, 0])
+  await answerProbe(page, [0, 0, 1])
   await expect(page.getByText(/Đã nắm:/)).toBeVisible()
   await page.getByRole('button', { name: '5 sao' }).click()
   await page.getByRole('button', { name: 'Vừa đủ, dùng được' }).click()
@@ -162,10 +250,10 @@ test('quiz wheel exposes 5–20 and updates the selected question count', async 
   await page.goto('/')
   await page.getByLabel('Email', { exact: true }).fill('wheel@example.com')
   await page.getByLabel('Mật khẩu', { exact: true }).fill('demo123')
-  await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click()
+  await page.getByRole('button', { name: 'Đăng nhập' }).click()
 
   await expect(page.locator('.quiz-wheel-number')).toHaveCount(16)
-  const spin = page.getByRole('button', { name: 'Quay số câu' })
+  const spin = page.locator('.count-options button')
   await spin.click()
   await expect(spin).toBeDisabled()
   await expect(spin).toBeEnabled({ timeout: 4000 })

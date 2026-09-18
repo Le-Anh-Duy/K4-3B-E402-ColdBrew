@@ -176,44 +176,9 @@ export const learningService = {
   },
   async gradeQuiz(session, picked, times) {
     if (session.source === 'backend') {
-      const isDefaultBackendQuiz = session.questions.length === 5 && session.questions[0].id === 'q1' && session.questions.every(q => q.id.startsWith('q'))
-      if (isDefaultBackendQuiz) {
-        try {
-          const result = await apiGradeQuiz(picked, times)
-          if (result?.records) return result.records
-        } catch (e) {
-          console.warn('apiGradeQuiz fallback to local grading:', e)
-        }
-      }
-
-      return session.questions.map((question, index) => {
-        const answer = picked[index]
-        const sec = times[index] || 0
-        if (answer === null || answer === undefined) {
-          return {
-            node: question.node || question.id,
-            sel: null,
-            correct: false,
-            sec,
-            flag: 'skip',
-            answer: question.answer,
-            why: question.why || '',
-            trap: null,
-          }
-        }
-        const correct = answer === question.answer
-        const trap = (!correct && question.traps) ? question.traps[String(answer)] : null
-        return {
-          node: question.node || question.id,
-          sel: answer,
-          correct,
-          sec,
-          flag: correct ? (sec > 25 ? 'slow' : 'ok') : (sec < 3 ? 'rush' : 'wrong'),
-          answer: question.answer,
-          why: question.why || '',
-          trap,
-        }
-      })
+      const result = await apiGradeQuiz(session.questions.map(question => question.id), picked, times)
+      if (result?.records?.length === session.questions.length) return result.records
+      throw new Error('Chưa thể chấm bài lúc này. Đáp án của bạn vẫn được giữ để thử lại.')
     }
     return Promise.all(session.questions.map(async (question, index) => {
       const answer = picked[index]
@@ -252,16 +217,18 @@ export const learningService = {
     }
   },
   async chat({ session, target, records, message, history }) {
-    if (session.source === 'backend') {
-      const result = await apiChatMessage({
-        target_node_id: target,
-        weak_signals: records.map(record => ({ node: record.node, label: session.tree[record.node]?.label || record.node, flag: record.flag, sec: record.sec })),
-        message,
-        history: history.map(item => ({ role: item.me ? 'user' : 'assistant', content: item.text })),
-      })
-      if (result?.reply) return result.reply
-    }
-    return `Nhận định hiện dựa trên các tín hiệu cùng thuộc “${session.tree[target]?.label || target}”. Bản offline chưa thể trả lời sâu hơn.`
+    const targetNode = session.tree[target] || {}
+    const result = await apiChatMessage({
+      target_node_id: target,
+      target_label: targetNode.label || target,
+      source_page: targetNode.page || null,
+      content_summary: targetNode.content_summary || null,
+      weak_signals: records.map(record => ({ node: record.node, label: session.tree[record.node]?.label || record.node, flag: record.flag, sec: record.sec })),
+      message,
+      history: history.map(item => ({ role: item.me ? 'user' : 'assistant', content: item.text })),
+    })
+    if (result?.reply) return result.reply
+    return 'Gemini đang tạm thời chưa phản hồi. Bạn vui lòng thử lại sau ít phút.'
   },
   async getProbes(session, target) {
     if (session.source === 'backend') {
@@ -269,7 +236,7 @@ export const learningService = {
       if (result?.questions?.length) return result.questions.map(question => normalizeQuestion(question, 'backend'))
     }
     const support = await demoLearningService.getSupport(session.topic)
-    return support.checks.map(question => normalizeQuestion(question, 'demo'))
+    return [...support.checks, support.similar].slice(0, 3).map(question => normalizeQuestion(question, 'demo'))
   },
   async evaluateRound({ session, target, round, questions, picked, times, lastFailed }) {
     if (session.source === 'backend') {

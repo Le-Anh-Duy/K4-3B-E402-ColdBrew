@@ -3,7 +3,13 @@ import json
 import os
 import logging
 from openai import OpenAI
-from .config import OPENAI_BASE_URL, MODEL
+from .config import (
+    LLM_MAX_TOKENS,
+    LLM_REASONING_EFFORT,
+    LLM_TIMEOUT_SEC,
+    MODEL,
+    OPENAI_BASE_URL,
+)
 
 logger = logging.getLogger("coldbrew.llm")
 
@@ -15,6 +21,8 @@ def get_client() -> OpenAI:
     return OpenAI(
         api_key=api_key or "dummy_key",
         base_url=OPENAI_BASE_URL,
+        timeout=LLM_TIMEOUT_SEC,
+        max_retries=0,
     )
 
 def ask(
@@ -41,6 +49,8 @@ def ask(
         "model": MODEL,
         "messages": messages,
         "temperature": temperature,
+        "max_tokens": LLM_MAX_TOKENS,
+        "reasoning_effort": LLM_REASONING_EFFORT,
     }
     if json_mode:
         kwargs["response_format"] = {"type": "json_object"}

@@ -34,7 +34,7 @@ from dotenv import load_dotenv  # noqa: E402
 from openai import OpenAI  # noqa: E402
 
 load_dotenv(os.path.join(ROOT, ".env"))
-MODEL = os.environ.get("MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("MODEL", "gemini-3.5-flash-lite")
 # Chặn rate limit ở hai tầng: giãn tối thiểu giữa hai lời gọi, và nghỉ dài sau mỗi lô.
 BATCH, PAUSE = 10, 6      # 10 lời gọi -> nghỉ 6s
 MIN_GAP = 1.5             # và không bao giờ gọi hai lần cách nhau dưới 1.5s

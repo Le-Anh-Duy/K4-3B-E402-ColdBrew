@@ -126,6 +126,114 @@ input:focus, select:focus { border-color: var(--coffee-medium); box-shadow: 0 0 
   .quiz-wheel { transition-duration: .01ms; }
 }
 
+.explanation-toggle {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  gap: 8px;
+  min-height: 35px;
+  margin: 13px 0 0 auto;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid #d9bda9;
+  border-radius: 10px;
+  background: #fffaf6;
+  color: #654634;
+  box-shadow: 0 3px 10px rgb(76 45 30 / 7%);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0;
+  transition: color .18s, background .18s, border-color .18s, box-shadow .18s, transform .18s;
+}
+.signal + .explanation-toggle { margin-top: 15px; }
+.explanation-toggle:hover {
+  border-color: #9c6d4f;
+  color: #fffaf6;
+  background: #6f4e37;
+  box-shadow: 0 6px 16px rgb(76 45 30 / 14%);
+  transform: translateY(-1px);
+}
+.explanation-toggle[aria-expanded="true"] {
+  border-color: #5b3b2b;
+  color: #fffaf6;
+  background: #513428;
+  box-shadow: 0 5px 14px rgb(76 45 30 / 15%);
+}
+.explanation-bean {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  border-radius: 7px;
+  color: #fff8f2;
+  background: var(--coffee);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 14%);
+}
+.explanation-bean .coffee-bean-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+.explanation-bean .bean-seam {
+  fill: none;
+  stroke: #bc8f70;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+.explanation-toggle[aria-expanded="true"] .explanation-bean {
+  color: #543529;
+  background: #f4ded0;
+}
+.explanation-toggle[aria-expanded="true"] .explanation-bean .bean-seam {
+  stroke: #fff8f2;
+}
+.explanation-toggle:hover .explanation-bean { color: #543529; background: #f4ded0; }
+.explanation-toggle:hover .explanation-bean .bean-seam { stroke: #fff8f2; }
+.answer-explanation {
+  margin-top: 13px;
+  padding: 15px 16px;
+  border: 1px solid #dce8dd;
+  border-radius: 9px;
+  background: #f7faf5;
+}
+.source-citation-wrap { position: relative; margin-top: 13px; padding-top: 11px; border-top: 1px dashed #ddcabe; }
+.source-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 0;
+  border: 0;
+  color: #76665e;
+  background: transparent;
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: #c1a28d;
+  text-decoration-style: dotted;
+  text-underline-offset: 4px;
+}
+.source-citation:hover { color: var(--coffee); text-decoration-style: solid; }
+.source-citation:focus-visible { border-radius: 4px; }
+.source-citation > span:nth-child(2) { overflow-wrap: anywhere; }
+.source-popover {
+  width: min(430px, 100%);
+  margin-top: 9px;
+  padding: 15px 16px;
+  border: 1px solid #dbc6b6;
+  border-radius: 10px;
+  color: #4c382e;
+  background: #fffaf6;
+  box-shadow: 0 12px 28px rgb(70 42 28 / 13%);
+}
+.source-popover-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.source-popover-head strong { color: #987158; font-size: 9px; letter-spacing: 1.4px; }
+.source-popover-head button { display: grid; place-items: center; width: 23px; height: 23px; padding: 0; border: 0; border-radius: 50%; color: #80695c; background: #f1e3d9; font-size: 16px; line-height: 1; }
+.source-popover-head button:hover { color: #fffaf6; background: var(--coffee); }
+.source-popover p { margin: 9px 0 10px; color: #4e3a30; font-size: 12px; font-style: italic; line-height: 1.75; }
+.source-popover small { display: block; color: #927764; font-size: 9px; }
+
 /* Sticky navigation with the demo notice always above the header. */
 .app-topbar {
   position: sticky;
@@ -161,3 +269,11 @@ input:focus, select:focus { border-color: var(--coffee-medium); box-shadow: 0 0 
   .header-inner > a { padding: 10px 0; }
   .header-inner nav { height: 31px; }
 }
+
+.result-next { margin-bottom: 20px; }
+.result-next .choice-title { margin-top: 0; }
+.end-session-confirm { margin-top: 12px; padding: 16px; border: 1px solid #ead8d4; border-radius: 12px; background: #fff7f5; }
+.end-session-confirm strong { font-size: 12px; color: #8c554d; }
+.end-session-confirm p { margin: 6px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.end-session-confirm .action-row { gap: 7px; }
+.end-session-confirm .button { padding: 8px 10px; font-size: 9px; }
