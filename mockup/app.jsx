@@ -130,6 +130,15 @@ function Thinking({ lines }) {
 }
 
 function Header({ onReset }) {
+  // tự kiểm backend: có chạy thì nói rõ đang dùng AI thật và model nào
+  const [be, setBe] = useState(null); // null = đang kiểm · {model} · false = không nối được
+  useEffect(() => {
+    fetch(API + '/api/v0/health')
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => setBe(d))
+      .catch(() => setBe(false));
+  }, []);
+
   return (
     <header className="head">
       <div className="brand">
@@ -140,7 +149,13 @@ function Header({ onReset }) {
         </div>
       </div>
       <div className="head-right">
-        <span className="badge">MOCK DATA · chưa nối AI</span>
+        <span className={'badge' + (be ? ' live' : '')} title={API}>
+          {be === null
+            ? 'đang kiểm backend…'
+            : be
+            ? `AI THẬT · ${be.model}`
+            : 'MOCK DATA · backend chưa chạy'}
+        </span>
         <button className="ghost" onClick={onReset}>
           Xoá phiên
         </button>
