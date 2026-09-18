@@ -38,6 +38,7 @@ const BLANK = {
   trace: [],
   status: {}, // nodeId -> 'ok' | 'shaky' | 'weak' | 'probing'
   verdict: null, // located | restart | self | accepted
+  refuseReason: null, // lý do luật từ chối chẩn đoán
   retestRecs: [], // kết quả bài kiểm tra lại sau khi ôn
   feedback: null, // {stars, reasons[], node} — đánh giá LỜI TƯ VẤN, không phải mastery
 };
@@ -90,6 +91,7 @@ function App() {
               {s.stage === 'quiz' && <Quiz go={go} />}
               {s.stage === 'result' && <Result s={s} go={go} think={think} />}
               {s.stage === 'explain' && <Explain s={s} go={go} think={think} />}
+              {s.stage === 'refuse' && <Refuse s={s} go={go} />}
               {s.stage === 'analysis' && <Analysis s={s} go={go} think={think} />}
               {s.stage === 'probe' && <Probe s={s} think={think} />}
               {s.stage === 'review' && <Review s={s} go={go} think={think} />}
@@ -193,6 +195,7 @@ const labelOfStage = (st) =>
     result: 'đã có kết quả',
     explain: 'đang xem giải thích đáp án',
     analysis: 'đang xem phân tích của AI',
+    refuse: 'hệ thống từ chối chẩn đoán',
     probe: 'đang chẩn đoán',
     review: 'đang xem kết quả vòng chẩn đoán',
     plan: 'đã có lộ trình',
@@ -388,7 +391,22 @@ function Quiz({ go }) {
 // dùng chung cho nút ở màn kết quả và ở màn giải thích
 function startDiagnosis(s, think) {
   const { missed, shaky, candidates } = weakSignals(s.records);
-  const { target, hits } = pickTarget(s.records, TREE);
+  const { target, hits, reason } = pickTarget(s.records, TREE);
+
+  // Luật TỪ CHỐI chẩn đoán (toàn tín hiệu bấm bừa, hoặc chỉ chậm mà tản mát).
+  // Đây là hành vi đúng, không phải lỗi — nhưng phải hiện ra màn hình.
+  if (!target) {
+    think(
+      [`Đọc ${s.records.length} câu trả lời và thời gian làm từng câu`, 'Tín hiệu quá mỏng để khoanh vùng'],
+      {
+        stage: 'refuse',
+        refuseReason: reason || 'Tín hiệu chưa đủ để khoanh vùng.',
+        trace: [...s.trace, { t: 'Từ chối chẩn đoán', d: reason || 'tín hiệu quá mỏng' }],
+      },
+      1500
+    );
+    return;
+  }
 
   const trace = [...s.trace];
   if (missed.length)
@@ -533,6 +551,51 @@ function Explain({ s, go, think }) {
         <button className="ghost" onClick={() => go({ stage: 'result' })}>
           ← Về bảng kết quả
         </button>
+      </div>
+    </section>
+  );
+}
+
+function Refuse({ s, go }) {
+  const rush = s.records.filter((r) => r.flag === 'rush');
+  const slow = s.records.filter((r) => r.flag === 'slow');
+  return (
+    <section>
+      <h2>Chưa đủ căn cứ để chỉ chỗ hổng</h2>
+      <div className="card bad">
+        <p>{s.refuseReason}</p>
+        {rush.length > 0 && (
+          <p className="muted">
+            {rush.length} câu bạn bấm dưới {RUSH_SEC}s — nhanh hơn thời gian đọc hết đề, nên mình
+            không coi đó là bằng chứng bạn không biết.
+          </p>
+        )}
+        {slow.length > 0 && rush.length === 0 && (
+          <p className="muted">
+            {slow.length} câu đúng nhưng chậm, lại nằm ở các mục khác nhau — chưa chụm vào đâu.
+          </p>
+        )}
+        <p className="muted">
+          Đoán bừa một mục rồi bắt bạn ôn nhầm còn tệ hơn là nói thẳng chưa đủ căn cứ.
+        </p>
+      </div>
+      <div className="row">
+        <button className="primary" onClick={() => go({ ...BLANK, stage: 'quiz' })}>
+          Làm lại quiz, lần này đọc kỹ đề →
+        </button>
+        <button className="ghost" onClick={() => go({ stage: 'result' })}>
+          ← Về bảng kết quả
+        </button>
+      </div>
+      <div className="card">
+        <h3>Vì sao bạn nhận kết luận này</h3>
+        <ol className="trace">
+          {s.trace.map((t, i) => (
+            <li key={i}>
+              <b>{t.t}:</b> {t.d}
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
