@@ -8,11 +8,16 @@ class TraceStep(BaseModel):
 class PlanGenerateIn(BaseModel):
     verdict: str  # "located" | "restart" | "self" | "accepted"
     target_node_id: Optional[str] = None
-    trace: List[TraceStep]
+    trace: List[TraceStep] = []
+    # đường mới: luật đưa thẳng kịch bản + chỗ hổng + trần, AI chỉ viết chữ
+    scenario: Optional[str] = None       # y_le | muc_nong | muc_duoi_tran | nen_bai
+    gap_node_id: Optional[str] = None    # None = hổng ở chính ý trong quiz
+    ceiling_node_id: Optional[str] = None
+    records: Optional[List[Dict[str, Any]]] = None  # kết quả quiz, để nêu đúng ý bị sai
 
 class RemediationItem(BaseModel):
     text: str
-    slide_page: str
+    slide_page: str = ""   # giữ tên cũ cho frontend; nay chứa nguồn dạng "file · [T01-xxx]"
 
 class PlanGenerateOut(BaseModel):
     title: str
@@ -22,6 +27,10 @@ class PlanGenerateOut(BaseModel):
     why_explanation: str
     compact_summary: Optional[List[str]] = None
     provenance_confirmed: bool = True
+    scenario: Optional[str] = None
+    prompt_key: Optional[str] = None
+    advice_text: Optional[str] = None      # nguyên văn AI viết, dùng cho bộ đo
+    allowed_spans: Optional[List[str]] = None  # mã đoạn ĐÃ CẤP cho prompt — bộ đo chấm theo đây
 
 class SessionStateIn(BaseModel):
     stage: str

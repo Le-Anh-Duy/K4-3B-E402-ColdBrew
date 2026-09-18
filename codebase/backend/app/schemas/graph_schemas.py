@@ -29,6 +29,9 @@ class EvaluateRoundIn(BaseModel):
     round_num: int
     picked: List[Optional[int]]
     times: List[int]
+    # node sâu nhất đã TRƯỢT ở các vòng trước — thiếu nó thì không xác định được
+    # chỗ hổng khi vòng hiện tại trả lời đạt (xem docs/data-model.md §9)
+    last_failed: Optional[str] = None
 
 class EvaluateRoundOut(BaseModel):
     decision: str  # locate | escalate | restart
@@ -38,3 +41,10 @@ class EvaluateRoundOut(BaseModel):
     slow_count: int
     records: List[Dict[str, Any]]
     trace_entry: Dict[str, str]
+    # kết luận theo kịch bản: chỗ hổng là node SÂU NHẤT bị trượt, node đạt là TRẦN
+    gap: Optional[str] = None
+    gap_label: Optional[str] = None
+    ceiling: Optional[str] = None
+    ceiling_label: Optional[str] = None
+    scenario: Optional[str] = None      # y_le | muc_nong | muc_duoi_tran | nen_bai | leo
+    prompt_key: Optional[str] = None    # system prompt mà luật giao cho AI

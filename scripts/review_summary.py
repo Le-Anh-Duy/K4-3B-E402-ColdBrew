@@ -20,7 +20,10 @@ except Exception:
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIR = os.path.join(ROOT, "eval", "review")
-ROWS = json.load(open(os.path.join(ROOT, "eval", "grounding.json"), encoding="utf-8"))["rows"]
+_g = json.load(open(os.path.join(ROOT, "eval", "grounding.json"), encoding="utf-8"))
+ROWS = _g["rows"]
+RUN_ID = _g.get("run_id", "?")
+HASH = {r["id"]: r.get("hash") for r in ROWS}
 CAU = [("nhan_xet", "① nhận xét AI ổn"), ("nhanh", "② chọn đúng chỗ hổng"),
        ("noi_vong", "③ không mâu thuẫn vòng trước")]
 
@@ -28,13 +31,27 @@ files = sorted(f for f in os.listdir(DIR) if f.endswith(".json")) if os.path.isd
 if not files:
     sys.exit("Chưa ai chấm. Chạy: python scripts/review_ui.py")
 
-raters = {}
+raters, lac_hau = {}, {}
 for f in files:
     d = json.load(open(os.path.join(DIR, f), encoding="utf-8"))
-    raters[d.get("rater", f[:-5])] = d.get("cham", {})
+    ten = d.get("rater", f[:-5])
+    cham = d.get("cham", {})
+    # chỉ giữ bản chấm gắn đúng câu trả lời hiện tại; còn lại là chấm cho bản cũ
+    hop_le = {cid: v for cid, v in cham.items() if v.get("hash") == HASH.get(cid)}
+    cu = [cid for cid in cham if cid not in hop_le]
+    raters[ten] = hop_le
+    if cu:
+        lac_hau[ten] = cu
 
-print(f"\n{len(raters)} người chấm: {', '.join(raters)}\n")
-md = ["# Kết quả chấm tay", "", f"{len(raters)} người chấm: {', '.join(raters)}", ""]
+print("")
+print(f"Lượt chạy đang chấm: {RUN_ID} · {len(raters)} người chấm: {chr(44).join(raters)}")
+for _ten, _cu in lac_hau.items():
+    print(f"  CANH BAO {_ten}: {len(_cu)} ban cham cho CAU TRA LOI CU, khong tinh ({chr(44).join(_cu)})")
+print("")
+md = ["# Kết quả chấm tay", "", f"Lượt chạy: `{RUN_ID}` · {len(raters)} người chấm: {chr(44).join(raters)}", ""]
+for _ten, _cu in lac_hau.items():
+    md.append(f"> ⚠ **{_ten}** có {len(_cu)} bản chấm cho câu trả lời CŨ — không tính vào bảng dưới.")
+md.append("")
 
 for key, ten in CAU:
     md += [f"## {ten}", "", "| Người chấm | Đã chấm | Ổn | Tỉ lệ |", "|---|---|---|---|"]

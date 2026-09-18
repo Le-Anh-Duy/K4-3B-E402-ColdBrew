@@ -6,16 +6,18 @@ __pycache__/
 node_modules/
 dist/
 package-lock.json
+.cache/
 
-# Data & Metadata files (Slide PDFs, raw hackathon packs, session logs)
+# Data pack của khoá (KHÔNG commit) + metadata/log phiên
 /data/
 **/data/metadata/
 **/data/sessions/
 *.pdf
 
-# Giữ lại các file JSON định nghĩa Cây tri thức & Đề thi để teammates pull về chạy được
+# Giữ lại JSON định nghĩa cây tri thức & đề — teammate pull về chạy được ngay
 !codebase/backend/app/data/tree.json
 !codebase/backend/app/data/quiz.json
 !codebase/backend/app/data/probes.json
 data/
 .cache/
+

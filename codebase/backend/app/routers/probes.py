@@ -63,7 +63,8 @@ def evaluate_round(body: EvaluateRoundIn):
         recs=recs,
         round_num=body.round_num,
         tree=tree,
-        probes=probes_data
+        probes=probes_data,
+        last_failed=body.last_failed,
     )
 
     node_label = tree.get(body.target_node_id, {}).get("label", body.target_node_id)
@@ -79,7 +80,15 @@ def evaluate_round(body: EvaluateRoundIn):
         "d": detail
     }
 
+    gap = decision_info.get("gap")
+    ceiling = decision_info.get("ceiling")
     return EvaluateRoundOut(
+        gap=gap,
+        gap_label=(tree.get(gap, {}).get("label") if gap else None),
+        ceiling=ceiling,
+        ceiling_label=(tree.get(ceiling, {}).get("label") if ceiling else None),
+        scenario=decision_info.get("scenario"),
+        prompt_key=decision_info.get("prompt_key"),
         decision=decision_info["decision"],
         next_target=decision_info["next_target"],
         next_target_label=next_label,

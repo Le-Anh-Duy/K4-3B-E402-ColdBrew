@@ -642,3 +642,82 @@ curl http://localhost:8000/api/v0/probes/c3s1
 # 6. Đánh giá vòng Probe
 curl -X POST http://localhost:8000/api/v0/probes/evaluate-round -H "Content-Type: application/json" -d '{\"target_node_id\":\"c3s1\",\"round_num\":1,\"picked\":[0,0,0],\"times\":[5,6,7]}'
 ```
+
+---
+
+# Bổ sung sau khi hoà với nhánh `mockup` (v0.2)
+
+> Ba bản luật (backend · bộ đo · trang mock) nay chạy **cùng một cơ chế**, kiểm bằng
+> `python scripts/parity.py`. Rà toàn bộ endpoint: `python scripts/api_smoke.py`.
+
+## 1 · Dữ liệu đổi nguồn — provenance là MÃ ĐOẠN, không phải số trang slide
+
+`app/data/{tree,quiz,probes}.json` giờ **sinh tự động** từ `mockup/data.js` bằng
+`node scripts/export_graph.js`. **Đừng sửa tay ba file này**, sửa xong chạy lại là mất.
+
+Cây dựng từ `transcript-01-clean.md` (Day 2 sáng · Xác định bài toán kinh doanh cho AI).
+Mỗi node có thêm `file` · `span` (mã đoạn `[T01-xxx]`) · `conf` (0.9 nói thẳng / 0.7 nhóm lại)
+· `prereq` (tiền đề, **khác** `parent` là quan hệ mục lục).
+
+Số trang slide cũ (`"Slide d1 · trang 21–22"`) **đã bỏ** — chưa đối chiếu PDF nên ghi vào là trích dẫn bịa.
+
+## 2 · `POST /probes/evaluate-round`
+
+**Thêm vào request:**
+
+| Trường | Kiểu | Ý nghĩa |
+|---|---|---|
+| `last_failed` | `string?` | Node sâu nhất đã TRƯỢT ở các vòng trước. **FE phải mang theo qua từng vòng** |
+
+**Thêm vào response:**
+
+| Trường | Ý nghĩa |
+|---|---|
+| `gap` / `gap_label` | Chỗ hổng thật — node sâu nhất bị trượt. `null` = hổng ở chính ý trong quiz |
+| `ceiling` / `ceiling_label` | Trần: node trả lời ĐẠT, tức nền từ đó trở lên ổn |
+| `scenario` | `y_le` · `muc_nong` · `muc_duoi_tran` · `nen_bai` · `leo` |
+| `prompt_key` | System prompt mà luật giao cho AI ở kịch bản đó |
+
+**Vì sao cần `last_failed`:** node trả lời đạt là *trần*, không phải chỗ hổng. Không mang
+theo lịch sử thì vòng 2 đúng hết sẽ bị kết luận nhầm là "hổng ở chương" — trong khi chương
+vừa làm đúng.
+
+```
+vòng 1: POST {target_node_id:"c3s1", round_num:1, picked, times}
+        → decision "escalate", next_target "c3"      (ghi nhớ failed = "c3s1")
+vòng 2: POST {target_node_id:"c3", round_num:2, picked, times, last_failed:"c3s1"}
+        → decision "locate", scenario "muc_duoi_tran", gap "c3s1", ceiling "c3"
+```
+
+## 3 · `POST /ai/plan/generate`
+
+**Đường mới (nên dùng):** truyền `scenario` + `gap_node_id` + `ceiling_node_id` + `records`
+→ backend chọn **system prompt theo kịch bản**, AI chỉ viết chữ trong khung.
+Không truyền `scenario` thì vẫn chạy đường cũ.
+
+| Thêm vào response | Ý nghĩa |
+|---|---|
+| `advice_text` | Nguyên văn AI viết — **FE hiển thị trường này** |
+| `allowed_spans` | Danh sách mã đoạn đã cấp cho prompt. Bộ đo chấm "có trích lạc không" theo đây |
+| `scenario` · `prompt_key` | Để hiển thị và để đối chiếu |
+
+`items[].slide_page` giữ tên cũ cho FE khỏi phải đổi, nhưng nội dung nay là nguồn dạng
+`transcript-01-clean.md · [T01-049] [T01-071]`.
+
+## 4 · Bốn kịch bản → bốn prompt
+
+| Kịch bản | Khi nào | AI được giao |
+|---|---|---|
+| `y_le` | probe tầng trên đúng hết | giải thích đúng ý bị sai, cấm mở rộng |
+| `muc_nong` | sai 1/3 câu nền | nhắc mảnh còn thiếu |
+| `muc_duoi_tran` | mục trượt, tầng trên đạt | nhắc nền đã ổn rồi vá mục |
+| `nen_bai` | trượt tới nền, hết đường leo | tóm tắt cả bài + thứ tự chương |
+
+Mọi prompt đều buộc: chỉ dùng tư liệu được cấp · mỗi ý kèm mã đoạn · không lấy lý do
+"tư liệu không đề cập" thay cho giải thích · kết bằng dòng `Tự kiểm:`.
+
+## 5 · Chống rate limit
+
+Mọi script gọi LLM đều giãn **tối thiểu 1.5s/lời gọi** và nghỉ 6s sau mỗi 10 lời gọi
+(`scripts/grounding.py`, `scripts/api_smoke.py`). FE gọi liên tiếp nhiều node thì nên
+làm tương tự, hoặc gom về một lời gọi.

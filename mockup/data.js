@@ -6,18 +6,21 @@
 // Slide d2 chưa đối chiếu trang -> KHÔNG ghi số trang, để tránh trích dẫn sai.
 
 const SRC = 'transcript-01-clean.md';
-const cite = (spans) => `${SRC} · ${spans.map((s) => `[${s}]`).join(' ')}`;
+const cite = (spans, file = SRC) => `${file} · ${spans.map((s) => `[${s}]`).join(' ')}`;
 
-const N = (id, label, parent, spans, conf, extra = {}) => ({
-  id,
-  label,
-  parent,
-  file: SRC,
-  span: spans,
-  conf,
-  page: cite(spans), // chuỗi hiển thị trong UI
-  ...extra,
-});
+const N = (id, label, parent, spans, conf, extra = {}) => {
+  const file = extra.file || SRC;
+  return {
+    id,
+    label,
+    parent,
+    file,
+    span: spans,
+    conf,
+    page: cite(spans, file), // chuỗi hiển thị trong UI
+    ...extra,
+  };
+};
 
 const TREE = {
   root: N('root', 'Day 2 (sáng) · Xác định bài toán kinh doanh cho AI', null, ['T01-001', 'T01-089'], 0.9, {
@@ -28,13 +31,47 @@ const TREE = {
     ],
   }),
 
+  // --- DAY 1 (PREREQUISITE TECH FOUNDATION) TỪ transcript-04 & transcript-06 ---
+  c0: N('c0', 'Nền tảng Day 1 · Bản chất kỹ thuật của LLM', 'root', ['T04-046', 'T06-136'], 0.9, {
+    file: 'transcript-04-clean.md',
+  }),
+  c0s1: N('c0s1', 'Day 1.1 Cơ chế sinh token xác suất & Ảo giác', 'c0', ['T06-136', 'T06-138'], 0.9, {
+    file: 'transcript-06-clean.md',
+  }),
+  l_probabilistic: N('l_probabilistic', 'LLM dự đoán next token theo xác suất, không phải tri thức chắc chắn', 'c0s1', ['T04-047', 'T06-136'], 0.9, {
+    file: 'transcript-04-clean.md',
+  }),
+  l_hallucination: N('l_hallucination', 'Ảo giác (Hallucination) là tất yếu do bias dữ liệu và autoregressive', 'c0s1', ['T04-048', 'T06-138', 'T06-139'], 0.9, {
+    file: 'transcript-06-clean.md',
+  }),
+  l_context_rot: N('l_context_rot', 'Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)', 'c0s1', ['T04-051', 'T04-052', 'T06-147'], 0.9, {
+    file: 'transcript-04-clean.md',
+  }),
+
+  // --- DAY 2 CHƯƠNG 1 ---
   c1: N('c1', 'Chương 1 · Vì sao phải tìm đúng bài toán', 'root', ['T01-001', 'T01-017'], 0.7),
   c1s1: N('c1s1', '1.1 Từ yêu cầu mơ hồ đến bài toán cụ thể', 'c1', ['T01-004', 'T01-006', 'T01-016'], 0.9),
   c1s2: N('c1s2', '1.2 Product manager và project manager', 'c1', ['T01-008', 'T01-011'], 0.9),
 
+  // --- DAY 2 CHƯƠNG 2 & BỔ SUNG TỪ transcript-02 & transcript-03 ---
   c2: N('c2', 'Chương 2 · Đặc thù của sản phẩm AI', 'root', ['T01-018', 'T01-029'], 0.7),
-  c2s1: N('c2s1', '2.1 Vì sao làm sản phẩm AI khó hơn', 'c2', ['T01-019', 'T01-021', 'T01-025'], 0.9),
+  c2s1: N('c2s1', '2.1 Vì sao làm sản phẩm AI khó hơn', 'c2', ['T01-019', 'T01-021', 'T01-025'], 0.9, {
+    prereq: ['c0s1'], // Cạnh tiên quyết: sản phẩm AI khó hơn vì bản chất xác suất của Day 1
+  }),
+  c2s2: N('c2s2', '2.2 Mức độ tự động hoá & Chi phí sai sót (Cost of error)', 'c2', ['T02-032', 'T03-088', 'T03-090'], 0.9, {
+    file: 'transcript-02-clean.md',
+    prereq: ['c0s1'], // Cạnh tiên quyết mục: muốn hiểu mức tự động hoá phải hiểu giới hạn kỹ thuật Day 1
+  }),
+  l_cost_of_error: N('l_cost_of_error', 'Chi phí lỗi cao thì phải giữ Human-in-the-loop (Augmentation)', 'c2s2', ['T02-032', 'T03-088'], 0.9, {
+    file: 'transcript-02-clean.md',
+    prereq: ['l_hallucination'], // Cạnh tiên quyết lá: chi phí lỗi bắt nguồn từ ảo giác tất yếu
+  }),
+  l_guardrail_odd: N('l_guardrail_odd', 'Ràng buộc phạm vi ODD và guardrail chặn rủi ro', 'c2s2', ['T03-090', 'T03-097'], 0.9, {
+    file: 'transcript-03-clean.md',
+    prereq: ['l_context_rot'], // Cạnh tiên quyết lá: guardrail và giới hạn ngữ cảnh
+  }),
 
+  // --- DAY 2 CHƯƠNG 3 ---
   c3: N('c3', 'Chương 3 · Tìm đúng vấn đề', 'root', ['T01-030', 'T01-073'], 0.7),
   c3s1: N('c3s1', '3.1 Double Diamond: phân kỳ – hội tụ', 'c3', ['T01-049', 'T01-069', 'T01-071', 'T01-074'], 0.9, {
     prereq: ['c1s1'], // phải phân biệt được vấn đề với giải pháp trước đã
@@ -45,6 +82,7 @@ const TREE = {
   c3s3: N('c3s3', '3.3 First principle thinking', 'c3', ['T01-062', 'T01-064', 'T01-068'], 0.9),
   c3s4: N('c3s4', '3.4 Kỹ thuật khám phá vấn đề', 'c3', ['T01-042', 'T01-045', 'T01-048', 'T01-072'], 0.7),
 
+  // --- DAY 2 CHƯƠNG 4 ---
   c4: N('c4', 'Chương 4 · Chọn bài toán để làm', 'root', ['T01-074', 'T01-086'], 0.7),
   c4s1: N('c4s1', '4.1 Ma trận tác động – nỗ lực', 'c4', ['T01-074', 'T01-078', 'T01-079'], 0.9, {
     prereq: ['c3s1'], // ma trận chỉ dùng được sau khi đã phân kỳ rồi gom nhóm
@@ -250,6 +288,70 @@ const PROBES = {
       answer: 0,
     },
   ],
+  c2s2: [
+    {
+      q: 'Khi nào nên chọn mức tự động hoá hoàn toàn (Automation) thay vì có con người trợ giúp (Augmentation)?',
+      options: [
+        'Khi chi phí sai sót (cost of error) thấp và có thể chấp nhận lỗi',
+        'Khi bài toán liên quan đến y tế hoặc chẩn đoán quan trọng',
+        'Khi sếp yêu cầu tự động hoá 100% để giảm chi phí nhân sự',
+        'Bất kỳ khi nào mô hình đạt độ chính xác trên 80%',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Theo bài giảng, vì sao việc cấp quyền tự động cho AI (như gửi email, xác nhận chuyển tiền) lại nguy hiểm?',
+      options: [
+        'Nếu không có guardrail và con người kiểm duyệt, sai sót có thể gây thiệt hại pháp lý và tài chính nghiêm trọng',
+        'Vì AI gửi email chậm hơn con người viết tay',
+        'Vì chi phí API sẽ tăng gấp 10 lần',
+        'Vì nhà cung cấp mô hình sẽ cấm tài khoản',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Khái niệm ODD (Operational Design Domain) và ràng buộc phạm vi trong bài giảng nhằm mục đích gì?',
+      options: [
+        'Xác định rõ điều kiện và phạm vi hệ thống chạy đúng, từ chối hoặc cảnh báo khi vượt ngoài phạm vi',
+        'Huấn luyện lại mô hình từ đầu mỗi tuần',
+        'Đo tốc độ phản hồi tính bằng mili-giây của server',
+        'Tăng độ sáng tạo (temperature) của mô hình lên tối đa',
+      ],
+      answer: 0,
+    },
+  ],
+  c0s1: [
+    {
+      q: 'Bản chất quá trình sinh văn bản của các mô hình LLM là gì?',
+      options: [
+        'Dự đoán token tiếp theo theo xác suất thống kê trong không gian toán học, không phải hiểu biết chắc chắn',
+        'Tra cứu dữ liệu từ một cơ sở dữ liệu bách khoa toàn thư đã lưu sẵn',
+        'Thực thi các luật logic if-else được lập trình sẵn',
+        'Dịch nguyên văn từng từ một từ tiếng Anh sang tiếng Việt',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Vì sao hiện tượng ảo giác (hallucination) trong LLM được coi là tất yếu?',
+      options: [
+        'Do dữ liệu huấn luyện luôn có bias và mô hình chỉ tối ưu việc nối các token cho thuận tai',
+        'Do server bị quá tải phần cứng',
+        'Do người dùng không mua gói trả phí cao cấp',
+        'Chỉ xảy ra ở các mô hình đời cũ, các mô hình mới đã loại bỏ hoàn toàn',
+      ],
+      answer: 0,
+    },
+    {
+      q: 'Hiện tượng Context Rot (suy giảm ngữ cảnh) trong LLM xảy ra khi nào?',
+      options: [
+        'Khi đưa quá nhiều thông tin vào context window khiến mô hình phân tán sự chú ý và quên thông tin ở đầu',
+        'Khi mô hình không được kết nối internet trong 24 giờ',
+        'Khi văn bản đầu vào chứa ký tự đặc biệt',
+        'Khi nhiệt độ (temperature) được đặt về 0',
+      ],
+      answer: 0,
+    },
+  ],
   c3: [
     {
       q: 'Câu của Don Norman "Do not solve the problem I am asked to solve" ý nói gì?',
@@ -293,6 +395,15 @@ const REVIEW = {
   c1s2: ['Nghe lại [T01-010] và [T01-011] về khác biệt PM / project manager / product owner'],
   c1: ['Đi lại cả chương 1 [T01-001…T01-017] theo thứ tự trước khi sang chương 3'],
   c2s1: ['Nghe lại [T01-020] và [T01-021] về kỳ vọng người dùng và chi phí chuyển đổi'],
+  c2s2: [
+    'Nghe lại [T02-032] về phổ Automation vs Augmentation',
+    'Nghe lại [T03-088] và [T03-090] về incident sai sót và vai trò của guardrail',
+  ],
+  c0s1: [
+    'Nghe lại [T04-047] và [T06-136] về cơ chế dự đoán next token',
+    'Nghe lại [T06-138] và [T06-139] về bản chất ảo giác (hallucination)',
+    'Nghe lại [T04-051] và [T04-053] về quản lý context window và attention',
+  ],
   c3s1: [
     'Nghe lại [T01-049] và [T01-071]: bốn pha của Double Diamond',
     'Đối chiếu [T01-074] để phân biệt kỹ thuật phân kỳ với kỹ thuật hội tụ',
@@ -348,6 +459,46 @@ const EXPLAIN = {
       3: 'Tăng số ý tưởng cũng là phân kỳ.',
     },
   },
+  l_cost_of_error: {
+    why: 'Chi phí lỗi là tiêu chí cốt lõi để quyết định mức tự động hoá: chi phí sai sót càng cao thì càng phải giữ con người ở khâu kiểm duyệt cuối (Human-in-the-loop) [T02-032] [T03-088].',
+    traps: {
+      1: 'Độ chính xác cao không thay thế được chi phí lỗi — 1% sai sót trong y tế/pháp lý vẫn có thể gây hậu quả nghiêm trọng [T03-099].',
+      2: 'Tự động hoá 100% khi chưa đánh giá rủi ro là bẫy nguy hiểm nhất của sản phẩm AI [T03-090].',
+      3: 'Ngân sách không quyết định mức an toàn vận hành của hệ thống.',
+    },
+  },
+  l_guardrail_odd: {
+    why: 'Hệ thống AI bắt buộc phải có phạm vi thiết kế vận hành (ODD) và lớp bảo vệ (guardrail) để từ chối yêu cầu ngoài phạm vi hoặc ngăn rò rỉ thông tin [T03-090] [T03-097].',
+    traps: {
+      1: 'Nghĩ rằng AI xử lý được mọi tình huống ngoài scope là nhận thức sai lầm cơ bản [T03-098].',
+      2: 'Guardrail là lớp kiểm soát độc lập, không phải dựa vào bản thân mô hình tự giác.',
+      3: 'ODD không phải chỉ dùng cho xe tự hành mà áp dụng cho mọi hệ thống AI thực tế [T03-095].',
+    },
+  },
+  l_probabilistic: {
+    why: 'Mô hình ngôn ngữ lớn hoạt động bằng cách dự đoán xác suất xuất hiện của token tiếp theo dựa trên hàng triệu mẫu văn bản đã học, không phải tra cứu chân lý [T04-047] [T06-136].',
+    traps: {
+      1: 'Nhầm LLM với cơ sở dữ liệu tra cứu dẫn đến việc tin tưởng mù quáng vào mọi câu trả lời.',
+      2: 'LLM không phải hệ thống suy luận logic tất định như mã nguồn thông thường.',
+      3: 'Token là đơn vị số học được biểu diễn trong không gian vector, không phải từ nguyên vẹn [T06-135].',
+    },
+  },
+  l_hallucination: {
+    why: 'Ảo giác (Hallucination) là đặc tính cố hữu của cơ chế autoregressive và bias dữ liệu đầu vào, khiến mô hình sinh ra thông tin nghe rất thuyết phục nhưng sai sự thật [T04-048] [T06-138].',
+    traps: {
+      1: 'Nghĩ rằng mô hình lớn hơn hoặc prompt dài hơn sẽ triệt tiêu hoàn toàn hallucination là sai lầm [T06-138].',
+      2: 'Hallucination không phải lỗi phần cứng hay mạng mà là tính chất toán học của mô hình sinh.',
+      3: 'RAG giảm thiểu nhưng không xóa bỏ hoàn toàn nguy cơ ảo giác nếu trích xuất sai context [T06-139].',
+    },
+  },
+  l_context_rot: {
+    why: 'Context window quá tải sẽ gây ra hiện tượng Context Rot: mô hình mất tập trung vào các thông tin cốt lõi ban đầu và chi phí API tăng đột biến [T04-051] [T04-052] [T04-057].',
+    traps: {
+      1: 'Càng nhét nhiều tài liệu vào prompt thì chất lượng câu trả lời càng giảm nếu không chọn lọc ngữ cảnh.',
+      2: 'Cửa sổ ngữ cảnh 1 triệu token không đồng nghĩa với việc mô hình xử lý thông minh hơn 100k token [T04-052].',
+      3: 'Quản lý context là trách nhiệm của kỹ sư thiết kế hệ thống, không thể phó mặc cho mô hình tự tóm tắt.',
+    },
+  },
 };
 
 // Giải thích cho câu hỏi chẩn đoán — cùng thứ tự với PROBES.
@@ -361,6 +512,16 @@ const PROBE_WHY = {
     'Nghiên cứu được dẫn trong bài: khoảng 70% đến từ con người và vận hành, không phải công nghệ [T01-003].',
     'Thị trường tuyển rất nhiều AI engineer nhưng thiếu người đặt ra đề bài đáng làm [T01-002].',
     'Product manager tự đi tìm bài toán và thị trường; project manager đảm bảo dự án đúng tiến độ, trong ngân sách [T01-010] [T01-011].',
+  ],
+  c2s2: [
+    'Bài giảng nhấn mạnh: cho AI toàn quyền thì phải chấp nhận rủi ro; chi phí lỗi cao bắt buộc phải giữ con người trong vòng lặp [T02-032].',
+    'Incident muối tẩy và chatbot hoàn vé cho thấy nếu cấp quyền tự động không có guardrail, công ty phải đối mặt với hậu quả pháp lý [T03-088] [T03-090].',
+    'Phải xác định ODD và ràng buộc: hệ thống chỉ chạy đúng khi đủ điều kiện, không nhận định bừa ngoài scope [T03-097] [T03-098].',
+  ],
+  c0s1: [
+    'LLM bản chất là dự đoán xác suất token tiếp theo từ các mẫu đã học, không phải tra cứu tri thức chắc chắn [T04-047] [T06-136].',
+    'Dữ liệu có bias và cơ chế autoregressive khiến mô hình luôn có xác suất ảo giác không thể triệt tiêu 100% [T04-048] [T06-138].',
+    'Context window lớn dễ bị context rot và phân tán attention; quản lý context chất lượng quan trọng hơn tống nhiều token [T04-051] [T04-053].',
   ],
   c3s1: [
     'Double Diamond gồm bốn pha: mở rộng – hội tụ cho vấn đề, rồi mở rộng – hội tụ cho giải pháp [T01-049].',

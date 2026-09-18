@@ -31,10 +31,14 @@ const BLANK = {
   roundRecs: [], // kết quả vòng chẩn đoán vừa xong
   probeLog: {}, // node -> [[chọn, giây]] của lần trả lời gần nhất, dùng để xuất case eval
   decision: null, // escalate | locate | restart
+  scenario: null, // y_le | muc_nong | muc_duoi_tran | nen_bai
+  gap: null, // chỗ hổng (null = hổng ở chính ý trong quiz)
+  ceilingNode: null, // node đã xác nhận ổn
   nextTarget: null,
   trace: [],
   status: {}, // nodeId -> 'ok' | 'shaky' | 'weak' | 'probing'
   verdict: null, // located | restart | self | accepted
+  refuseReason: null, // lý do luật từ chối chẩn đoán
   retestRecs: [], // kết quả bài kiểm tra lại sau khi ôn
   feedback: null, // {stars, reasons[], node} — đánh giá LỜI TƯ VẤN, không phải mastery
 };
@@ -87,6 +91,7 @@ function App() {
               {s.stage === 'quiz' && <Quiz go={go} />}
               {s.stage === 'result' && <Result s={s} go={go} think={think} />}
               {s.stage === 'explain' && <Explain s={s} go={go} think={think} />}
+              {s.stage === 'refuse' && <Refuse s={s} go={go} />}
               {s.stage === 'analysis' && <Analysis s={s} go={go} think={think} />}
               {s.stage === 'probe' && <Probe s={s} think={think} />}
               {s.stage === 'review' && <Review s={s} go={go} think={think} />}
@@ -127,6 +132,15 @@ function Thinking({ lines }) {
 }
 
 function Header({ onReset }) {
+  // tự kiểm backend: có chạy thì nói rõ đang dùng AI thật và model nào
+  const [be, setBe] = useState(null); // null = đang kiểm · {model} · false = không nối được
+  useEffect(() => {
+    fetch(API + '/api/v0/health')
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d) => setBe(d))
+      .catch(() => setBe(false));
+  }, []);
+
   return (
     <header className="head">
       <div className="brand">
@@ -137,7 +151,13 @@ function Header({ onReset }) {
         </div>
       </div>
       <div className="head-right">
-        <span className="badge">MOCK DATA · chưa nối AI</span>
+        <span className={'badge' + (be ? ' live' : '')} title={API}>
+          {be === null
+            ? 'đang kiểm backend…'
+            : be
+            ? `AI THẬT · ${be.model}`
+            : 'MOCK DATA · backend chưa chạy'}
+        </span>
         <button className="ghost" onClick={onReset}>
           Xoá phiên
         </button>
@@ -175,6 +195,7 @@ const labelOfStage = (st) =>
     result: 'đã có kết quả',
     explain: 'đang xem giải thích đáp án',
     analysis: 'đang xem phân tích của AI',
+    refuse: 'hệ thống từ chối chẩn đoán',
     probe: 'đang chẩn đoán',
     review: 'đang xem kết quả vòng chẩn đoán',
     plan: 'đã có lộ trình',
@@ -370,7 +391,22 @@ function Quiz({ go }) {
 // dùng chung cho nút ở màn kết quả và ở màn giải thích
 function startDiagnosis(s, think) {
   const { missed, shaky, candidates } = weakSignals(s.records);
-  const { target, hits } = pickTarget(s.records, TREE);
+  const { target, hits, reason } = pickTarget(s.records, TREE);
+
+  // Luật TỪ CHỐI chẩn đoán (toàn tín hiệu bấm bừa, hoặc chỉ chậm mà tản mát).
+  // Đây là hành vi đúng, không phải lỗi — nhưng phải hiện ra màn hình.
+  if (!target) {
+    think(
+      [`Đọc ${s.records.length} câu trả lời và thời gian làm từng câu`, 'Tín hiệu quá mỏng để khoanh vùng'],
+      {
+        stage: 'refuse',
+        refuseReason: reason || 'Tín hiệu chưa đủ để khoanh vùng.',
+        trace: [...s.trace, { t: 'Từ chối chẩn đoán', d: reason || 'tín hiệu quá mỏng' }],
+      },
+      1500
+    );
+    return;
+  }
 
   const trace = [...s.trace];
   if (missed.length)
@@ -515,6 +551,51 @@ function Explain({ s, go, think }) {
         <button className="ghost" onClick={() => go({ stage: 'result' })}>
           ← Về bảng kết quả
         </button>
+      </div>
+    </section>
+  );
+}
+
+function Refuse({ s, go }) {
+  const rush = s.records.filter((r) => r.flag === 'rush');
+  const slow = s.records.filter((r) => r.flag === 'slow');
+  return (
+    <section>
+      <h2>Chưa đủ căn cứ để chỉ chỗ hổng</h2>
+      <div className="card bad">
+        <p>{s.refuseReason}</p>
+        {rush.length > 0 && (
+          <p className="muted">
+            {rush.length} câu bạn bấm dưới {RUSH_SEC}s — nhanh hơn thời gian đọc hết đề, nên mình
+            không coi đó là bằng chứng bạn không biết.
+          </p>
+        )}
+        {slow.length > 0 && rush.length === 0 && (
+          <p className="muted">
+            {slow.length} câu đúng nhưng chậm, lại nằm ở các mục khác nhau — chưa chụm vào đâu.
+          </p>
+        )}
+        <p className="muted">
+          Đoán bừa một mục rồi bắt bạn ôn nhầm còn tệ hơn là nói thẳng chưa đủ căn cứ.
+        </p>
+      </div>
+      <div className="row">
+        <button className="primary" onClick={() => go({ ...BLANK, stage: 'quiz' })}>
+          Làm lại quiz, lần này đọc kỹ đề →
+        </button>
+        <button className="ghost" onClick={() => go({ stage: 'result' })}>
+          ← Về bảng kết quả
+        </button>
+      </div>
+      <div className="card">
+        <h3>Vì sao bạn nhận kết luận này</h3>
+        <ol className="trace">
+          {s.trace.map((t, i) => (
+            <li key={i}>
+              <b>{t.t}:</b> {t.d}
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -697,6 +778,9 @@ function Probe({ s, think }) {
     think([`Chấm ${qs.length} câu nền của "${node.label}"`, 'Đối chiếu với cây tri thức', conclusion], {
       stage: 'review',
       roundRecs: recs,
+      scenario: d.scenario,
+      gap: d.gap,
+      ceilingNode: d.ceiling,
       probeLog: { ...s.probeLog, [s.target]: recs.map((r) => [r.sel, r.sec]) },
       decision,
       nextTarget,
@@ -1011,15 +1095,49 @@ const LEVEL_META = {
   bai: { ten: 'Học lại cả bài', phut: '~45 phút' },
 };
 
+// Địa chỉ backend. Đổi được ngay trong trình duyệt:
+//   localStorage.setItem('coldbrew-api', 'http://localhost:8001')
+const API = (typeof localStorage !== 'undefined' && localStorage.getItem('coldbrew-api')) ||
+  'http://localhost:8001';
+
 function Advice({ s }) {
   const [state, setState] = useState(null); // null | 'loading' | 'shown'
+  const [aiText, setAiText] = useState(null); // chữ do Gemini viết thật
+  const [loi, setLoi] = useState(null);
   const node = TREE[s.target];
-  const level = adviceLevel(s.target, s.verdict, TREE);
+  const level = adviceLevel(s.gap || s.target, s.verdict, TREE);
   const meta = LEVEL_META[level];
 
   const run = () => {
     setState('loading');
-    setTimeout(() => setState('shown'), 1500);
+    fetch(API + '/api/v0/ai/plan/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        verdict: s.verdict === 'restart' ? 'restart' : 'located',
+        scenario: s.scenario || (s.verdict === 'restart' ? 'nen_bai' : 'muc_duoi_tran'),
+        gap_node_id: s.gap || null,
+        ceiling_node_id: s.ceilingNode || s.target,
+        target_node_id: s.gap || s.target,
+        records: s.records.map((r) => ({
+          node: r.node, sel: r.sel, correct: r.correct, sec: r.sec, flag: r.flag,
+        })),
+        trace: s.trace.map((t) => ({ t: t.t, d: t.d })),
+      }),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+      .then((d) => {
+        const t = (d.advice_text || '').trim();
+        // backend trả 200 nhưng rỗng = Gemini chặn vì rate limit (free tier 15 lượt/phút)
+        if (!t) setLoi('Gemini đang chặn vì vượt 15 lượt/phút — chờ ~30 giây rồi bấm lại');
+        setAiText(t || null);
+        setState('shown');
+      })
+      .catch((e) => {
+        // backend chưa chạy -> vẫn demo được bằng nội dung mock, nhưng nói rõ ra
+        setLoi(e.message);
+        setState('shown');
+      });
   };
 
   if (state === null)
@@ -1048,11 +1166,22 @@ function Advice({ s }) {
       <h3>
         {meta.ten} · {meta.phut}
       </h3>
-      <AdviceBody level={level} node={node} />
-      <p className="hint">
-        Nội dung mock. Khi nối Gemini, phần chữ này do model viết nhưng khung vẫn cố định theo mức, và
-        mỗi ý bắt buộc gắn một trang slide — model không được nhắc khái niệm ngoài cây.
-      </p>
+      {aiText ? (
+        <>
+          <p className="ai-badge">✨ Gemini viết, khung do luật chốt · kịch bản {s.scenario || '—'}</p>
+          <p style={{ whiteSpace: 'pre-wrap' }}>{aiText}</p>
+          <Source node={TREE[s.gap || s.target]} />
+        </>
+      ) : (
+        <>
+          <AdviceBody level={level} node={node} />
+          <p className="hint">
+            {loi
+              ? `Đang hiện nội dung mock — ${loi}.`
+              : 'Nội dung mock.'}
+          </p>
+        </>
+      )}
     </div>
   );
 }
