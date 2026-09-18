@@ -127,6 +127,10 @@ const QUIZ = [
 ];
 
 // Câu hỏi chẩn đoán cho node cha — đơn giản hơn quiz, dùng để định vị chỗ hổng.
+// ponytail: bộ câu TĨNH, chung cho cả node cha. Hạn chế: học viên sai ý A mà 3 câu nền
+// lại hỏi khía cạnh B/C/D thì "đúng hết" không chứng minh được nền của A vững.
+// Nâng cấp: AI sinh câu nền CÓ ĐIỀU KIỆN theo (node cha, lá bị sai, phương án đã chọn),
+// trích từ span của node cha; bộ tĩnh này giữ làm dự phòng khi API chết. Xem spec.md.
 const PROBES = {
   c1s1: [
     {

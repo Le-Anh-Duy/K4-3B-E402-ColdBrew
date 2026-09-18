@@ -167,6 +167,12 @@ Ba con số rút ra được khi có nhiều phiên: **% lời tư vấn ≥4 sa
 
 `adviceLevel()` trong `engine.js` quyết định mức theo **vị trí node trên cây**, không để LLM chọn. LLM chỉ viết chữ trong khung, và mỗi ý phải gắn một trang slide.
 
+## Hạn chế đã biết của cách hỏi hiện tại
+
+Bộ câu hỏi nền (`PROBES`) là **tĩnh và chung cho cả node cha**: học viên sai ý *A* nhưng ba câu nền có thể đang hỏi về khía cạnh *B, C, D*. Trả lời đúng hết vì thế **chưa đủ** để kết luận nền của *A* vững.
+
+Hướng xử lý: **sinh câu nền có điều kiện** — cho (node cha · lá bị sai · phương án đã chọn) sinh 3 câu nằm trên đường phụ thuộc dẫn tới đúng lá đó, trích từ `span` của node cha. Chi tiết và ràng buộc: `spec.md`, mục "Skill AI cần có".
+
 ## Chưa có trong bản mock
 
 Gọi AI thật · sinh câu hỏi từ slide · learner state lưu server · giao diện giảng viên.

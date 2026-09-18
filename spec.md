@@ -94,6 +94,22 @@ Bản mock CP2: `mockup/` — HTML tĩnh + React qua CDN, **chưa gọi AI**, ch
   | PAIR · *Anchor on familiarity / show your work* | Mọi câu hỏi và mục ôn đều gắn một node có `page` (slide + trang); không có nội dung nào không trỏ về được nguồn |
   | HAX G1 · *Make clear what the system can do* | Màn đầu nói thẳng phạm vi: một bài giảng, cây 15–30 concept; badge "MOCK DATA · chưa nối AI" khi chưa có AI thật |
 
+### Skill AI cần có · **Sinh câu hỏi nền có điều kiện** (chưa làm — ghi để không quên)
+
+**Vấn đề.** `PROBES` hiện là bộ câu hỏi **tĩnh, chung cho cả node cha**. Học viên sai ý *A* nhưng 3 câu nền lại hỏi về khía cạnh *B, C, D* của cùng mục đó → trả lời đúng hết **không** chứng minh được là nền của *A* vững. Kết luận "hổng đúng ở ý A" vì thế đang dựa trên một phép đo không bám đúng chỗ.
+
+**Cần.** Câu hỏi nền phải **sinh theo điều kiện**: cho (node cha N · lá bị sai L · phương án học viên đã chọn) → sinh 3 câu ở tầng N **nằm trên đường phụ thuộc dẫn tới L**, không phải 3 câu bất kỳ của N.
+
+**Ràng buộc khi nối AI:**
+- Chỉ được dùng nội dung trong `span` của N; mỗi câu sinh ra phải kèm mã đoạn nguồn.
+- Rule vẫn giữ quyền quyết định leo tầng; AI **chỉ soạn đề**, không chấm, không chọn nhánh.
+- Phải có **bộ câu tĩnh làm dự phòng** khi API chết giữa demo.
+- Giảng viên duyệt/loại được câu sinh ra (educator control).
+
+**Kéo theo trong eval — chiều đo mới:** *câu nền sinh ra có thật sự liên quan tới lá bị sai không.* Đo được bằng máy một phần (câu sinh ra có trích `span` nằm trong phạm vi của N không · có nhắc concept nằm trên đường L→N không), phần còn lại phải người chấm. Chưa có chiều này thì mọi kết luận "nền ổn" đều có dấu hỏi.
+
+**Rủi ro phải nói rõ:** nếu AI vừa soạn đề vừa là căn cứ để kết luận thì vòng lặp tự tham chiếu. Giữ rule làm trọng tài và cho người duyệt đề là cách chặn.
+
 ## §5. Kiểu lỗi — 4 lớp chỗ khó (≥8 kịch bản)
 
 `TODO` — bảng đầy đủ. Khung theo 4 lớp:
