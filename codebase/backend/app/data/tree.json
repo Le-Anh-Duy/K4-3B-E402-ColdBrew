@@ -16,6 +16,68 @@
       "Chọn việc bằng ma trận tác động – nỗ lực, ưu tiên high impact / low effort [T01-079]"
     ]
   },
+  "c0": {
+    "id": "c0",
+    "label": "Nền tảng Day 1 · Bản chất kỹ thuật của LLM",
+    "parent": "root",
+    "file": "transcript-04-clean.md",
+    "span": [
+      "T04-046",
+      "T06-136"
+    ],
+    "conf": 0.9,
+    "page": "transcript-04-clean.md · [T04-046] [T06-136]"
+  },
+  "c0s1": {
+    "id": "c0s1",
+    "label": "Day 1.1 Cơ chế sinh token xác suất & Ảo giác",
+    "parent": "c0",
+    "file": "transcript-06-clean.md",
+    "span": [
+      "T06-136",
+      "T06-138"
+    ],
+    "conf": 0.9,
+    "page": "transcript-06-clean.md · [T06-136] [T06-138]"
+  },
+  "l_probabilistic": {
+    "id": "l_probabilistic",
+    "label": "LLM dự đoán next token theo xác suất, không phải tri thức chắc chắn",
+    "parent": "c0s1",
+    "file": "transcript-04-clean.md",
+    "span": [
+      "T04-047",
+      "T06-136"
+    ],
+    "conf": 0.9,
+    "page": "transcript-04-clean.md · [T04-047] [T06-136]"
+  },
+  "l_hallucination": {
+    "id": "l_hallucination",
+    "label": "Ảo giác (Hallucination) là tất yếu do bias dữ liệu và autoregressive",
+    "parent": "c0s1",
+    "file": "transcript-06-clean.md",
+    "span": [
+      "T04-048",
+      "T06-138",
+      "T06-139"
+    ],
+    "conf": 0.9,
+    "page": "transcript-06-clean.md · [T04-048] [T06-138] [T06-139]"
+  },
+  "l_context_rot": {
+    "id": "l_context_rot",
+    "label": "Giới hạn context window và hiện tượng suy giảm chú ý (Context rot)",
+    "parent": "c0s1",
+    "file": "transcript-04-clean.md",
+    "span": [
+      "T04-051",
+      "T04-052",
+      "T06-147"
+    ],
+    "conf": 0.9,
+    "page": "transcript-04-clean.md · [T04-051] [T04-052] [T06-147]"
+  },
   "c1": {
     "id": "c1",
     "label": "Chương 1 · Vì sao phải tìm đúng bài toán",
@@ -76,7 +138,56 @@
       "T01-025"
     ],
     "conf": 0.9,
-    "page": "transcript-01-clean.md · [T01-019] [T01-021] [T01-025]"
+    "page": "transcript-01-clean.md · [T01-019] [T01-021] [T01-025]",
+    "prereq": [
+      "c0s1"
+    ]
+  },
+  "c2s2": {
+    "id": "c2s2",
+    "label": "2.2 Mức độ tự động hoá & Chi phí sai sót (Cost of error)",
+    "parent": "c2",
+    "file": "transcript-02-clean.md",
+    "span": [
+      "T02-032",
+      "T03-088",
+      "T03-090"
+    ],
+    "conf": 0.9,
+    "page": "transcript-02-clean.md · [T02-032] [T03-088] [T03-090]",
+    "prereq": [
+      "c0s1"
+    ]
+  },
+  "l_cost_of_error": {
+    "id": "l_cost_of_error",
+    "label": "Chi phí lỗi cao thì phải giữ Human-in-the-loop (Augmentation)",
+    "parent": "c2s2",
+    "file": "transcript-02-clean.md",
+    "span": [
+      "T02-032",
+      "T03-088"
+    ],
+    "conf": 0.9,
+    "page": "transcript-02-clean.md · [T02-032] [T03-088]",
+    "prereq": [
+      "l_hallucination"
+    ]
+  },
+  "l_guardrail_odd": {
+    "id": "l_guardrail_odd",
+    "label": "Ràng buộc phạm vi ODD và guardrail chặn rủi ro",
+    "parent": "c2s2",
+    "file": "transcript-03-clean.md",
+    "span": [
+      "T03-090",
+      "T03-097"
+    ],
+    "conf": 0.9,
+    "page": "transcript-03-clean.md · [T03-090] [T03-097]",
+    "prereq": [
+      "l_context_rot"
+    ]
   },
   "c3": {
     "id": "c3",
