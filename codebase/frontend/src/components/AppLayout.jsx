@@ -4,6 +4,7 @@ export default function AppLayout({ user, page, onNavigate, onLogout, children }
   return (
     <>
       <div className="app-topbar">
+        <div className="demo-strip"><span className="status-dot" /> Bản trải nghiệm · Dữ liệu học tập và đăng nhập minh họa</div>
         <header className="app-header">
           <div className="header-inner">
             <a href="#home" onClick={event => { event.preventDefault(); onNavigate('home') }} aria-label="ColdBrew trang chủ"><Logo /></a>
@@ -22,7 +23,6 @@ export default function AppLayout({ user, page, onNavigate, onLogout, children }
             </details>
           </div>
         </header>
-        <div className="demo-strip"><span className="status-dot" /> Bản trải nghiệm · Dữ liệu học tập và đăng nhập minh họa</div>
       </div>
       <main className="app-main" id="main-content">{children}</main>
       <footer className="app-footer"><Logo /><span>Hiểu từ gốc. Tiến xa hơn.</span><span>Không cần học lại tất cả, chỉ cần đúng phần.</span></footer>
